@@ -1,13 +1,19 @@
-$main-color: #3498db;
-$background: #F6F6EF;
-$header-button-color: #000;
-$logo-color: #FFF;
+@import 'colors';
+@import 'mixins';
 
 html {
   box-sizing: border-box;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 13px;
 }
 *, *:before, *:after {
   box-sizing: inherit;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 a {
@@ -22,9 +28,7 @@ header {
   min-height: 24px;
 
   ul {
-    margin: 0;
     padding: 3px;
-    list-style: none;
     li {
       display: inline-block;
 
@@ -35,21 +39,42 @@ header {
     }
   }
 
-}
+  .logo span {
+    padding: 0 4px;
+    border: 1px solid $logo-color;
 
-.logo span {
-  padding: 0 4px;
-  border: 1px solid $logo-color;
+    a {
+      color: $logo-color;
+    }
+  }
 
-  a {
-    color: $logo-color;
+  .heading a{
+    font-weight: bold;
+    text-decoration: none;
   }
 }
 
-.heading a{
-  font-weight: bold;
-  text-decoration: none;
+footer {
+  ul {
+    padding: 10px 0 0 0;
+    text-align: center;
+
+    li {
+      font-size: 8pt;
+      display: inline-block;
+    }
+  }
+  form {
+    padding: 14px 0 0 0;
+    text-align: center;
+    color: $a-link-color;
+    input {
+      width: 142px;
+      min-height: 19px;
+    }
+  }
 }
+
 
 
 
