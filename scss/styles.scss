@@ -1,0 +1,60 @@
+$main-color: #3498db;
+$background: #F6F6EF;
+$header-button-color: #000;
+
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+header {
+  height: 24px;
+  background: $main-color;
+
+  span {
+    color: $header-button-color;
+    vertical-align: middle;
+
+    a {
+      text-decoration: none;
+      font-weight: bold;
+      vertical-align: middle;
+    }
+  }
+}
+
+.logo {
+  border: 1px solid #FFF;
+  height: 2px;
+  width: 2px;
+  vertical-align: middle;
+  span {
+    margin: 2px;
+  }
+}
+
+a:visited {
+  color: #000;
+}
+
+.container {
+  width: 85%;
+  margin: 0 auto;
+}
+
+.body {
+  height: 796px;
+  background: $background;
+}
+
+.spacer {
+  height: 2px;
+  background: $main-color;
+}
+
+footer {
+  background: $background;
+  height: 95px;
+}
