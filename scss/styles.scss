@@ -18,10 +18,12 @@ ul {
 
 a {
   text-decoration: none;
-  color: $header-button-color;
+  color: $main-button-color;
 }
 
-
+a:visited {
+  color: $a-link-color;
+}
 
 header {
   background: $main-color;
@@ -39,22 +41,32 @@ header {
     }
   }
 
-  .logo span {
-    padding: 0 4px;
-    border: 1px solid $logo-color;
+  .logo {
+    font-size: 12px;
+    span {
+      padding: 0 4px;
+      border: 1px solid $logo-color;
 
-    a {
-      color: $logo-color;
+      a {
+
+        color: $logo-color;
+      }
     }
   }
 
+
+
   .heading a{
+    color: $main-button-color;
     font-weight: bold;
     text-decoration: none;
   }
 }
 
 footer {
+  background: $main-background;
+  min-height: 95px;
+
   ul {
     padding: 10px 0 0 0;
     text-align: center;
@@ -67,7 +79,7 @@ footer {
   form {
     padding: 14px 0 0 0;
     text-align: center;
-    color: $a-link-color;
+    color: $main-button-color;
     input {
       width: 142px;
       min-height: 19px;
@@ -75,31 +87,48 @@ footer {
   }
 }
 
-
-
-
-
-a:visited {
-  color: #000;
-}
-
 .container {
-  width: 85%;
   margin: 0 auto;
+  width: 85%;
 }
 
 .main {
-  height: 796px;
-  background: $background;
+  background: $main-background;
+  min-height: 796px;
+  padding: 12px 0;
 }
 
 .spacer {
-  height: 2px;
   background: $main-color;
+  min-height: 2px;
 }
 
-footer {
-  background: $background;
-  height: 95px;
+.up-arrow {
+  @include arrow('up', $a-link-color);
+  float: right;
+  margin: 8px 0 0 0;
 }
+
+.down-arrow {
+  @include arrow('down', $a-link-color);
+}
+
+.stories {
+
+  li {
+    margin: 0 0 5px 0;
+
+    .story-wrapper {
+      .story-subtext {
+        color: $a-link-color;
+        font-size: 9px;
+        a {
+          color: $a-link-color;
+        }
+      }
+    }
+  }
+
+}
+
 

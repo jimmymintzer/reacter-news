@@ -5,3 +5,17 @@
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
+
+@mixin arrow($direction, $color) {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  @if $direction == 'up' {
+    border-bottom: 5px solid $color;
+  }
+  @else {
+    border-top: 5px solid $color;
+  }
+
+}
