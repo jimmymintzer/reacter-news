@@ -21,7 +21,6 @@ gulp.task('javascript', ['serve'], function() {
       .pipe(plumber())
       .on('error', gutil.log.bind(gutil, 'Browserify Error'))
       .pipe(source('bundle.js'))
-      .pipe(plumber.stop())
       .pipe(gulp.dest('./dist'))
       .pipe(reload({ stream:true }));
   }

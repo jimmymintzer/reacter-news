@@ -33,6 +33,7 @@ header {
     padding: 3px;
     li {
       display: inline-block;
+      padding-right: 5px;
 
       .nested-list {
         padding: 0;
@@ -54,8 +55,6 @@ header {
     }
   }
 
-
-
   .heading a{
     color: $main-button-color;
     font-weight: bold;
@@ -72,6 +71,7 @@ footer {
     text-align: center;
 
     li {
+      padding-right: 4px;
       font-size: 8pt;
       display: inline-block;
     }
