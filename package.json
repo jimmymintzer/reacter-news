@@ -20,6 +20,7 @@
     "gulp-sourcemaps": "^1.2.8",
     "gulp-util": "^3.0.1",
     "keymirror": "^0.1.0",
+    "moment": "^2.8.4",
     "object-assign": "^2.0.0",
     "react": "^0.12.1",
     "react-router": "^0.11.4",
