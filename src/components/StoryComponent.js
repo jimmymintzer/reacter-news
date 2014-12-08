@@ -29,7 +29,7 @@ var StoryComponent = React.createClass({
     comhead = comhead ? '('+comhead+')' : '';
 
     var comments = this.props.story.kids;
-    
+
     var time = moment(this.props.story.time * 1000).fromNow();
 
     return (

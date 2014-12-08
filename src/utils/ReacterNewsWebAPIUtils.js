@@ -7,7 +7,7 @@ var topstoriesRef = fb.child('topstories');
 var itemsRef = fb.child('item');
 
 var _getTopStoryIds = new Promise(function(resolve, reject) {
-  topstoriesRef.once('value', function(snapshot) {
+  topstoriesRef.limitToFirst(30).once('value', function(snapshot) {
     resolve(snapshot.val());
   }, function(errorObject) {
     reject(errorObject);
