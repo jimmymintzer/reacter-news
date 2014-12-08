@@ -10,8 +10,11 @@ html {
   box-sizing: inherit;
 }
 
-ul {
+ol, ul {
   margin: 0;
+}
+
+ul{
   padding: 0;
   list-style: none;
 }
@@ -95,7 +98,7 @@ footer {
 .main {
   background: $main-background;
   min-height: 796px;
-  padding: 12px 0;
+  padding: 7px 0;
 }
 
 .spacer {
@@ -114,7 +117,7 @@ footer {
 }
 
 .stories {
-  padding: 0 0 0 30px;
+//  padding: 0 0 0 30px;
   li {
     margin: 0 0 5px 0;
 
