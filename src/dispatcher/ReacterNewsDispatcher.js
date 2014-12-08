@@ -7,7 +7,6 @@ var PayloadSource = ReacterNewsConstants.PayloadSource;
 var ReacterNewsDispatcher = assign(new Dispatcher(), {
 
   handleServerAction: function(action) {
-    console.log(action);
     var payload = {
       source: PayloadSource.SERVER_ACTION,
       action: action
