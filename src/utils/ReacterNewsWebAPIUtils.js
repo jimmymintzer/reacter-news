@@ -7,7 +7,7 @@ var topstoriesRef = fb.child('topstories');
 var itemsRef = fb.child('item');
 
 var _getTopStoryIds = new Promise(function(resolve, reject) {
-  topstoriesRef.limitToFirst(30).once('value', function(snapshot) {
+  topstoriesRef.limitToFirst(20).once('value', function(snapshot) {
     resolve(snapshot.val());
   }, function(errorObject) {
     reject(errorObject);
@@ -20,7 +20,7 @@ var _getTopStoryDetails = function(stories) {
     var promiseArr = [];
 
     stories.forEach(function(story) {
-      promiseArr.push( _buildTopStoryDetails(story) );
+      promiseArr.push( _getItem(story) );
     });
 
     Promise.all(promiseArr).then(function(values) {
@@ -32,13 +32,41 @@ var _getTopStoryDetails = function(stories) {
   });
 };
 
-var _buildTopStoryDetails = function(storyId) {
+var _getItem = function(item) {
   return new Promise(function(resolve, reject) {
-    itemsRef.child(storyId).on('value', function(itemDetails) {
-      resolve(itemDetails.val());
+    itemsRef.child(item).on('value', function(itemData) {
+      resolve(itemData.val());
     }, function(errorObject) {
       reject(errorObject);
     })
+  });
+};
+
+var _getComments = function(kids) {
+  return new Promise(function(resolve, reject) {
+    var promiseArr = [];
+
+    kids.forEach(function(kid) {
+      promiseArr.push(_getItem(kid));
+    });
+
+    Promise.all(promiseArr).then(function(values) {
+      resolve(values);
+    }, function(errObject) {
+      reject(errObject);
+    });
+  })
+};
+
+var _getNestedComments = function(storyDetails) {
+  storyDetails.forEach(function(story) {
+    _getComments(story.kids).then(function(comments) {
+      story.kids = comments;
+      story.size = comments.length;
+      if(story.kids && story.kids.length > 0) {
+        _getNestedComments(story.kids);
+      }
+    });
   });
 };
 
@@ -53,6 +81,8 @@ ReacterNewsWebAPIUtils = {
         console.log(errorObject);
       })
       .then(function(storyDetails) {
+        _getNestedComments(storyDetails);
+        console.log(storyDetails);
         TopStoriesActionCreators.receiveAll(storyDetails);
       }, function(errorObject) {
         console.log(errorObject);

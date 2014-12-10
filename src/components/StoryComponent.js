@@ -28,7 +28,7 @@ var StoryComponent = React.createClass({
       .replace(/\.io.*$/, '.io');
     comhead = comhead ? '('+comhead+')' : '';
 
-    var comments = this.props.story.kids;
+    var comments = this.props.story.kids.length;
 
     var time = moment(this.props.story.time * 1000).fromNow();
 
@@ -39,7 +39,7 @@ var StoryComponent = React.createClass({
           <span className='comhead'> {comhead} </span>
         </div>
         <div className='story-subtext'>
-          <span>{this.props.story.score} {pointsLabel}</span> by <a href={userHref}>{this.props.story.by}</a> {time} | <a href={itemHref}>{} {commentsLabel}</a>
+          <span>{this.props.story.score} {pointsLabel}</span> by <a href={userHref}>{this.props.story.by}</a> {time} | <a href={itemHref}>{comments} {commentsLabel}</a>
         </div>
       </div>
     )
