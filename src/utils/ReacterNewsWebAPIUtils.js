@@ -7,7 +7,7 @@ var topstoriesRef = fb.child('topstories');
 var itemsRef = fb.child('item');
 
 var _getTopStoryIds = new Promise(function(resolve, reject) {
-  topstoriesRef.limitToFirst(20).once('value', function(snapshot) {
+  topstoriesRef.limitToFirst(25).on('value', function(snapshot) {
     resolve(snapshot.val());
   }, function(errorObject) {
     reject(errorObject);
@@ -62,7 +62,6 @@ var _getNestedComments = function(storyDetails) {
   storyDetails.forEach(function(story) {
     _getComments(story.kids).then(function(comments) {
       story.kids = comments;
-      story.size = comments.length;
       if(story.kids && story.kids.length > 0) {
         _getNestedComments(story.kids);
       }

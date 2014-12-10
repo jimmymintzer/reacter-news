@@ -25,7 +25,8 @@ var StoryComponent = React.createClass({
       .replace(/\.gov.*$/, '.gov')
       .replace(/\.cc.*$/, '.cc')
       .replace(/\.us.*$/, '.us')
-      .replace(/\.io.*$/, '.io');
+      .replace(/\.io.*$/, '.io')
+      .replace(/\.cl.*$/, '.cl');
     comhead = comhead ? '('+comhead+')' : '';
 
     var comments = this.props.story.kids.length;
