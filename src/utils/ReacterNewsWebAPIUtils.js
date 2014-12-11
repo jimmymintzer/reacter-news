@@ -7,7 +7,7 @@ var topstoriesRef = fb.child('topstories');
 var itemsRef = fb.child('item');
 
 var _getTopStoryIds = new Promise(function(resolve, reject) {
-  topstoriesRef.limitToFirst(25).on('value', function(snapshot) {
+  topstoriesRef.limitToFirst(30).on('value', function(snapshot) {
     resolve(snapshot.val());
   }, function(errorObject) {
     reject(errorObject);
@@ -82,6 +82,7 @@ ReacterNewsWebAPIUtils = {
       .then(function(storyDetails) {
         _getNestedComments(storyDetails);
         console.log(storyDetails);
+        itemsRef.off();
         TopStoriesActionCreators.receiveAll(storyDetails);
       }, function(errorObject) {
         console.log(errorObject);

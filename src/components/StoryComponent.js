@@ -4,7 +4,6 @@ var moment = require('moment');
 var StoryComponent = React.createClass({
   render: function() {
     var pointsLabel = (this.props.story.score === 1) ? 'point' : 'points';
-    var commentsLabel = (this.props.numberOfComments === 1) ? 'comment' : 'comments';
     var userHref= 'user?id=' + this.props.user;
     var itemHref = 'item?id=' + this.props.story.id;
     var comhead = this.props.story.url
@@ -29,9 +28,24 @@ var StoryComponent = React.createClass({
       .replace(/\.cl.*$/, '.cl');
     comhead = comhead ? '('+comhead+')' : '';
 
-    var comments = this.props.story.kids.length;
+    var comments = 0;
+    if( this.props.story.kids ) {
+      comments = this.props.story.kids.length;
+    }
+
+    var commentsLabel;
+    if( comments === 0 ) {
+      commentsLabel = 'discuss';
+    }
+    else if(comments === 1) {
+      commentsLabel = comments + ' comment'
+    }
+    else {
+      commentsLabel = comments + ' comments';
+    }
 
     var time = moment(this.props.story.time * 1000).fromNow();
+
 
     return (
       <div className='story-wrapper'>
@@ -40,7 +54,7 @@ var StoryComponent = React.createClass({
           <span className='comhead'> {comhead} </span>
         </div>
         <div className='story-subtext'>
-          <span>{this.props.story.score} {pointsLabel}</span> by <a href={userHref}>{this.props.story.by}</a> {time} | <a href={itemHref}>{comments} {commentsLabel}</a>
+          <span>{this.props.story.score} {pointsLabel}</span> by <a href={userHref}>{this.props.story.by}</a> {time} | <a href={itemHref}>{commentsLabel}</a>
         </div>
       </div>
     )
