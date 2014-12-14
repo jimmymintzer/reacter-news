@@ -1,92 +1,51 @@
 var Firebase = require('firebase');
 var TopStoriesActionCreators = require('../actions/TopStoriesActionCreators');
-var Promise = require('es6-promise').Promise;
+var Promise = require('bluebird');
 
 var fb = new Firebase("http://hacker-news.firebaseio.com/v0/");
-var topstoriesRef = fb.child('topstories');
 var itemsRef = fb.child('item');
 
-var _getTopStoryIds = new Promise(function(resolve, reject) {
-  topstoriesRef.limitToFirst(30).on('value', function(snapshot) {
-    resolve(snapshot.val());
-  }, function(errorObject) {
-    reject(errorObject);
-  });
-});
 
-var _getTopStoryDetails = function(stories) {
-  return new Promise(function(resolve, reject) {
-
-    var promiseArr = [];
-
-    stories.forEach(function(story) {
-      promiseArr.push( _getItem(story) );
+function _fetchTopStories() {
+  var promise = new Promise(function(resolve, reject) {
+    fb.child('topstories').limitToFirst(30).on('value', function(snapshot) {
+      resolve(snapshot.val());
+    }, function(err) {
+      reject(err);
     });
-
-    Promise.all(promiseArr).then(function(values) {
-      resolve(values);
-    }, function(errorObject) {
-      reject(errorObject);
-    });
-
   });
+
+  return promise;
+}
+
+var _fetchAllStories = function(stories) {
+  var promises = stories.map(function(story) {
+    return _fetchItem(story);
+  });
+
+  return Promise.all(promises);
 };
 
-var _getItem = function(item) {
-  return new Promise(function(resolve, reject) {
+var _fetchItem = function(item) {
+  var promise = new Promise(function(resolve, reject) {
     itemsRef.child(item).on('value', function(itemData) {
       resolve(itemData.val());
     }, function(errorObject) {
       reject(errorObject);
     })
   });
+
+  return promise;
 };
 
-var _getComments = function(kids) {
-  return new Promise(function(resolve, reject) {
-    var promiseArr = [];
-
-    kids.forEach(function(kid) {
-      promiseArr.push(_getItem(kid));
-    });
-
-    Promise.all(promiseArr).then(function(values) {
-      resolve(values);
-    }, function(errObject) {
-      reject(errObject);
-    });
-  })
-};
-
-var _getNestedComments = function(storyDetails) {
-  storyDetails.forEach(function(story) {
-    _getComments(story.kids).then(function(comments) {
-      story.kids = comments;
-      if(story.kids && story.kids.length > 0) {
-        _getNestedComments(story.kids);
-      }
-    });
-  });
-};
 
 ReacterNewsWebAPIUtils = {
 
   getAllMessages: function() {
 
-    _getTopStoryIds
-      .then(function(storyIds) {
-        return _getTopStoryDetails(storyIds);
-      }, function(errorObject) {
-        console.log(errorObject);
-      })
-      .then(function(storyDetails) {
-        _getNestedComments(storyDetails);
-        console.log(storyDetails);
-        itemsRef.off();
-        TopStoriesActionCreators.receiveAll(storyDetails);
-      }, function(errorObject) {
-        console.log(errorObject);
-      })
+    _fetchTopStories()
+      .then(_fetchAllStories)
+      .then(TopStoriesActionCreators.receiveAll);
 
   }
 
