@@ -9,6 +9,7 @@
   "author": "Jimmy Mintzer",
   "license": "ISC",
   "devDependencies": {
+    "bluebird": "^2.3.11",
     "browser-sync": "^1.7.2",
     "browserify": "^7.0.0",
     "es6-promise": "^2.0.0",
