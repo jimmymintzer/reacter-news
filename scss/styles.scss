@@ -32,6 +32,10 @@ header {
   background: $main-color;
   min-height: 24px;
 
+  a:visited {
+    color: $main-button-color;
+  }
+
   ul {
     padding: 3px;
     li {
@@ -116,8 +120,20 @@ footer {
   @include arrow('down', $a-link-color);
 }
 
+.user-component {
+  background: $main-background;
+  color: $a-link-color;
+
+  table {
+    padding: 18px 0;
+  }
+}
+
 .stories {
-//  padding: 0 0 0 30px;
+  .story-link:hover {
+    text-decoration: underline;
+  }
+
   li {
     margin: 0 0 5px 0;
 

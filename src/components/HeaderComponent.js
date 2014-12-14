@@ -1,4 +1,6 @@
 var React = require('react');
+var Router = require('react-router');
+var Link = Router.Link;
 
 var HeaderComponent = React.createClass({
   render: function() {
@@ -12,22 +14,18 @@ var HeaderComponent = React.createClass({
           </li>
           <li>
             <div className="heading">
-              <a href="/">Reacter News</a>
+              <Link to="new">Reacter News</Link>
             </div>
           </li>
           <li>
             <ul className="nested-list">
-              <li><a href="/new">new</a></li>
+              <li><Link to="new">new</Link></li>
               <li>|</li>
-              <li><a href="/comments">comments</a></li>
+              <li><Link to="newcomments">comments</Link></li>
               <li>|</li>
-              <li><a href="/show">show</a></li>
+              <li><Link to="show">show</Link></li>
               <li>|</li>
-              <li><a href="/ask">ask</a></li>
-              <li>|</li>
-              <li><a href="/jobs">jobs</a></li>
-              <li>|</li>
-              <li><a href="/submit">submit</a></li>
+              <li><Link to="ask">ask</Link></li>
             </ul>
           </li>
         </ul>

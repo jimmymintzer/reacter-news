@@ -1,6 +1,9 @@
 var React = require('react');
 var StoryComponent = require('./StoryComponent');
 var TopStoriesStore = require('../stores/TopStoriesStore');
+var ReacterNewsWebAPIUtils = require('../utils/ReacterNewsWebAPIUtils');
+var SpacerComponent = require('./SpacerComponent');
+var FooterComponent = require('./FooterComponent');
 
 function getStateFromStores() {
   return {
@@ -9,6 +12,11 @@ function getStateFromStores() {
 }
 
 var StoriesComponent = React.createClass({
+  statics :{
+    willTransitionTo: function() {
+      ReacterNewsWebAPIUtils.getAllMessages();
+    }
+  },
   getInitialState: function() {
     return getStateFromStores();
   },
@@ -20,6 +28,7 @@ var StoriesComponent = React.createClass({
   },
   render: function() {
     return (
+      <div>
       <div className="main">
         <ol className="stories">
           {this.state.stories.map(function(story, index) {
@@ -30,6 +39,9 @@ var StoriesComponent = React.createClass({
             )
           })}
         </ol>
+      </div>
+      <SpacerComponent />
+      <FooterComponent />
       </div>
     )
   },

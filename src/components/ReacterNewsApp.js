@@ -1,20 +1,25 @@
 var React = require('react');
 var HeaderComponent = require('./HeaderComponent');
-var StoriesComponent = require('./StoriesComponent');
-var SpacerComponent = require('./SpacerComponent');
-var FooterComponent = require('./FooterComponent');
+
+
+
+var Router = require('react-router');
+var RouterHandler = Router.RouteHandler;
 
 var ReacterNewsApp = React.createClass({
   render: function() {
     return (
       <div>
         <HeaderComponent />
-        <StoriesComponent />
-        <SpacerComponent />
-        <FooterComponent />
+
+        <RouterHandler />
+
+
       </div>
     )
   }
 });
+
+
 
 module.exports = ReacterNewsApp;

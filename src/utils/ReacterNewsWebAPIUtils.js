@@ -1,5 +1,6 @@
 var Firebase = require('firebase');
 var TopStoriesActionCreators = require('../actions/TopStoriesActionCreators');
+var UserActionCreators = require('../actions/UserActionCreators');
 var Promise = require('bluebird');
 
 var fb = new Firebase("http://hacker-news.firebaseio.com/v0/");
@@ -11,7 +12,7 @@ var _fetchTopStories = function() {
     fb.child('topstories').limitToFirst(30).on('value', function(snapshot) {
       resolve(snapshot.val());
     }, function(err) {
-      reject(err);
+      reject("_fetchTopStories",err);
     });
   });
 
@@ -31,8 +32,20 @@ var _fetchItem = function(item) {
     itemsRef.child(item).on('value', function(itemData) {
       resolve(itemData.val());
     }, function(errorObject) {
-      reject(errorObject);
+      reject("_fetchItem",errorObject);
     })
+  });
+
+  return promise;
+};
+
+var _fetchUser = function(user) {
+  var promise = new Promise(function(resolve, reject) {
+    fb.child('user').child(user).on('value', function(snapshot) {
+      resolve(snapshot.val());
+    }, function(err) {
+      reject("_fetchUser",err);
+    });
   });
 
   return promise;
@@ -45,6 +58,12 @@ ReacterNewsWebAPIUtils = {
     _fetchTopStories()
       .then(_fetchAllStories)
       .then(TopStoriesActionCreators.receiveAll);
+
+  },
+
+  getUser: function(userId) {
+    _fetchUser(userId)
+      .then(UserActionCreators.receiveUser);
 
   }
 

@@ -6,13 +6,13 @@ var assign = require('object-assign');
 var ActionTypes = ReacterNewsConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _topStories = [];
+var _users = [];
 
-function _addTopStories(rawMessages) {
-  _topStories = rawMessages;
+function _addUser(rawMessages) {
+  _users[rawMessages.id] = rawMessages;
 }
 
-var TopStoriesStore = assign({}, EventEmitter.prototype, {
+var UsersStore = assign({}, EventEmitter.prototype, {
 
   emitChange: function() {
     this.emit(CHANGE_EVENT);
@@ -27,21 +27,18 @@ var TopStoriesStore = assign({}, EventEmitter.prototype, {
   },
 
   get: function(id) {
-    return _topStories[id];
-  },
-
-  getAll: function() {
-    return _topStories;
+    return _users[id];
   }
+
 });
 
-TopStoriesStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
+UsersStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
   var action = payload.action;
 
   switch(action.type) {
-    case ActionTypes.RECEIVE_RAW_MESSAGES:
-      _addTopStories(action.rawMessages);
-      TopStoriesStore.emitChange();
+    case ActionTypes.RECEIVE_USER:
+      _addUser(action.rawMessages);
+      UsersStore.emitChange();
       break;
     default:
       break;
@@ -49,4 +46,4 @@ TopStoriesStore.dispatchToken = ReacterNewsDispatcher.register(function(payload)
 
 });
 
-module.exports = TopStoriesStore;
+module.exports = UsersStore;
