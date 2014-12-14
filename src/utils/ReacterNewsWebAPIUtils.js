@@ -6,7 +6,7 @@ var fb = new Firebase("http://hacker-news.firebaseio.com/v0/");
 var itemsRef = fb.child('item');
 
 
-function _fetchTopStories() {
+var _fetchTopStories = function() {
   var promise = new Promise(function(resolve, reject) {
     fb.child('topstories').limitToFirst(30).on('value', function(snapshot) {
       resolve(snapshot.val());
@@ -16,7 +16,7 @@ function _fetchTopStories() {
   });
 
   return promise;
-}
+};
 
 var _fetchAllStories = function(stories) {
   var promises = stories.map(function(story) {
@@ -37,7 +37,6 @@ var _fetchItem = function(item) {
 
   return promise;
 };
-
 
 ReacterNewsWebAPIUtils = {
 
