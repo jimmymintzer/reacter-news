@@ -5,13 +5,8 @@ var ReacterNewsWebAPIUtils = require('../utils/ReacterNewsWebAPIUtils');
 var ItemComponent = React.createClass({
   mixins: [Router.State],
   statics :{
-    willTransitionTo: function(transition, params) {
-      ReacterNewsWebAPIUtils.getUser(params);
-    },
-
-    willTransitionFrom: function(transition, component) {
-      console.log("transition", transition);
-      console.log("component", component);
+    willTransitionTo: function(transition, params, query) {
+      console.log("willTransitionTo");
     }
   },
   render: function() {

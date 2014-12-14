@@ -29,7 +29,6 @@ var UserComponent = React.createClass({
     UsersStore.removeChangeListener(this._onChange);
   },
   render: function() {
-    console.log("user:", this.state.user);
     return (
       <div className="user-component">
         <UserItemComponent user={this.state.user} />
@@ -41,7 +40,6 @@ var UserComponent = React.createClass({
    */
   _onChange: function() {
     var id = this.getQuery().id;
-    console.log("id:", id);
     this.setState(getStateFromStores(id));
   }
 });
