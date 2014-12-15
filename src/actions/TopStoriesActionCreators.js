@@ -10,6 +10,13 @@ module.exports = {
       type: ActionTypes.RECEIVE_RAW_MESSAGES,
       rawMessages: rawMessages
     });
+  },
+
+  receiveStory: function(rawMessages) {
+    ReacterNewsDispatcher.handleServerAction({
+      type: ActionTypes.RECEIVE_STORY_MESSAGE,
+      rawMessages: rawMessages
+    });
   }
 
 };

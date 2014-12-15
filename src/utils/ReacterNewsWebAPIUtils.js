@@ -2,10 +2,11 @@ var Firebase = require('firebase');
 var TopStoriesActionCreators = require('../actions/TopStoriesActionCreators');
 var UserActionCreators = require('../actions/UserActionCreators');
 var Promise = require('bluebird');
+var request = require('superagent');
+
 
 var fb = new Firebase("http://hacker-news.firebaseio.com/v0/");
 var itemsRef = fb.child('item');
-
 
 var _fetchTopStories = function() {
   var promise = new Promise(function(resolve, reject) {
@@ -39,6 +40,16 @@ var _fetchItem = function(item) {
   return promise;
 };
 
+var _fetchItemWithComments = function(item) {
+  var promise = new Promise(function(resolve, reject) {
+    request.get('https://hn.algolia.com/api/v1/items/' + item, function(res) {
+      resolve(res.body);
+    });
+  });
+
+  return promise;
+};
+
 var _fetchUser = function(user) {
   var promise = new Promise(function(resolve, reject) {
     fb.child('user').child(user).on('value', function(snapshot) {
@@ -51,20 +62,30 @@ var _fetchUser = function(user) {
   return promise;
 };
 
+
+
 ReacterNewsWebAPIUtils = {
 
-  getAllMessages: function() {
-
+  getAllTopStories: function() {
     _fetchTopStories()
-      .then(_fetchAllStories)
-      .then(TopStoriesActionCreators.receiveAll);
+      .then(_fetchAllStories, function(result) {
 
+        console.log("result", result);
+        return result;
+      }, function(err) {
+        console.log("error", err);
+      })
+      .then(TopStoriesActionCreators.receiveAll);
+  },
+
+  getStory: function(storyId) {
+    _fetchItemWithComments(storyId)
+      .then(TopStoriesActionCreators.receiveStory);
   },
 
   getUser: function(userId) {
     _fetchUser(userId)
       .then(UserActionCreators.receiveUser);
-
   }
 
 };

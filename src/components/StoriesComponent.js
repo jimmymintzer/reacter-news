@@ -14,7 +14,7 @@ function getStateFromStores() {
 var StoriesComponent = React.createClass({
   statics :{
     willTransitionTo: function() {
-      ReacterNewsWebAPIUtils.getAllMessages();
+      ReacterNewsWebAPIUtils.getAllTopStories();
     }
   },
   getInitialState: function() {

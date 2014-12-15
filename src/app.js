@@ -1,6 +1,5 @@
 var React = require('react');
 var ReacterNewsApp = require('./components/ReacterNewsApp');
-var ReacterNewsWebAPIUtils = require('./utils/ReacterNewsWebAPIUtils');
 var StoriesComponent = require('./components/StoriesComponent');
 var UserComponent = require('./components/UserComponent');
 var ItemComponent = require('./components/ItemComponent');
@@ -8,6 +7,7 @@ var ItemComponent = require('./components/ItemComponent');
 var Router = require('react-router');
 var Route = Router.Route;
 var DefaultRoute = Router.DefaultRoute;
+var HistoryLocation = Router.HistoryLocation;
 
 var routes = (
   <Route name="app" path="/" handler={ReacterNewsApp}>

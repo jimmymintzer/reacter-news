@@ -9,7 +9,13 @@ var CHANGE_EVENT = 'change';
 var _topStories = [];
 
 function _addTopStories(rawMessages) {
+  // TODO normalize data between APIs
   _topStories = rawMessages;
+}
+
+function _addStory(rawMessages) {
+  // TODO fix logic
+  _topStories.push(rawMessages);
 }
 
 var TopStoriesStore = assign({}, EventEmitter.prototype, {
@@ -27,7 +33,12 @@ var TopStoriesStore = assign({}, EventEmitter.prototype, {
   },
 
   get: function(id) {
-    return _topStories[id];
+    for(var i=0, len=_topStories.length; i < len; i++) {
+      var idStr = _topStories[i].id + "";
+      if(idStr === id) {
+        return _topStories[i];
+      }
+    }
   },
 
   getAll: function() {
@@ -41,6 +52,10 @@ TopStoriesStore.dispatchToken = ReacterNewsDispatcher.register(function(payload)
   switch(action.type) {
     case ActionTypes.RECEIVE_RAW_MESSAGES:
       _addTopStories(action.rawMessages);
+      TopStoriesStore.emitChange();
+      break;
+    case ActionTypes.RECEIVE_STORY_MESSAGE:
+      _addStory(action.rawMessages);
       TopStoriesStore.emitChange();
       break;
     default:
