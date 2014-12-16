@@ -28,7 +28,7 @@ var ItemComponent = React.createClass({
     TopStoriesStore.removeChangeListener(this._onChange);
   },
   render: function() {
-    var kids = this.state.item && this.state.item.kids;
+    var kids = this.state.item && this.state.item.author;
     return (
       <div>
         <h1>Items Here</h1>

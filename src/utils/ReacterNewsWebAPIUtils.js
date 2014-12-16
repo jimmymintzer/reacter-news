@@ -25,7 +25,7 @@ var _fetchAllStories = function(stories) {
     return new Promise(function(resolve, reject) {
       return itemsRef.child(story).on('value', function(itemData) {
         if(itemData.val().type !== "job") {
-          return _fetchItemWithComments(itemData.val()).then(function(result) {
+          return _fetchItem(itemData.val().id).then(function(result) {
             resolve(result);
           });
         }
@@ -41,9 +41,9 @@ var _fetchAllStories = function(stories) {
   return Promise.all(promises);
 };
 
-var _fetchItemWithComments = function(item) {
+var _fetchItem = function(item) {
   var promise = new Promise(function(resolve, reject) {
-    var url = 'https://hn.algolia.com/api/v1/items/' + item.id;
+    var url = 'https://hn.algolia.com/api/v1/items/' + item;
 
     var request = new XMLHttpRequest();
     request.open('GET', url, true);
@@ -54,7 +54,7 @@ var _fetchItemWithComments = function(item) {
           var responseText = JSON.parse(this.responseText);
           resolve(responseText);
         } else {
-          // Error :(
+          // Error
         }
       }
     };
@@ -88,7 +88,7 @@ ReacterNewsWebAPIUtils = {
   },
 
   getStory: function(storyId) {
-    _fetchItemWithComments(storyId)
+    _fetchItem(storyId)
       .then(TopStoriesActionCreators.receiveStory);
   },
 

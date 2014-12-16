@@ -13,8 +13,22 @@ function _addTopStories(rawMessages) {
 }
 
 function _addStory(rawMessages) {
-  // TODO fix logic
-  _topStories.push(rawMessages);
+  var found = false;
+  var foundIndex = -1;
+
+  _topStories.forEach(function(story, index) {
+    if(story.id === rawMessages.id) {
+      found = true;
+      foundIndex = index;
+    }
+  });
+
+  if(!found) {
+    _topStories.push(rawMessages);
+  }
+  else {
+    _topStories[foundIndex] = rawMessages;
+  }
 }
 
 var TopStoriesStore = assign({}, EventEmitter.prototype, {
@@ -32,12 +46,15 @@ var TopStoriesStore = assign({}, EventEmitter.prototype, {
   },
 
   get: function(id) {
-    for(var i=0, len=_topStories.length; i < len; i++) {
-      var idStr = _topStories[i].id + "";
-      if(idStr === id) {
-        return _topStories[i];
+    var foundStory = {};
+
+    _topStories.forEach(function(story) {
+      if(story.id == id) {
+        foundStory = story;
       }
-    }
+    });
+
+    return foundStory;
   },
 
   getAll: function() {
