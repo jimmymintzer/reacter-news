@@ -31,16 +31,23 @@ var parseUrl = function(url) {
 
 var StoryComponent = React.createClass({
   render: function() {
-    var pointsLabel = (this.props.story.score === 1) ? 'point' : 'points';
-    pointsLabel = this.props.story.score + " " + pointsLabel;
+    var pointsLabel = this.props.story.points + " point";
+    if(this.props.story.points !== 1) {
+      pointsLabel += 's';
+    }
+
     var comhead = "";
     if(this.props.story.url) {
       comhead = parseUrl(this.props.story.url);
     }
 
-    var commentsLabel;
+    var comments = 0;
 
-    var comments = ( this.props.story.kids ) ? this.props.story.kids.length : 0;
+    if( this.props.story.children && this.props.story.children.length > 0 ) {
+      comments = JSON.stringify(this.props.story.children).match(/:"comment"/g).length
+    }
+
+    var commentsLabel;
 
     if( comments === 0 ) {
       commentsLabel = 'discuss';
@@ -52,9 +59,9 @@ var StoryComponent = React.createClass({
       commentsLabel = comments + ' comments';
     }
 
-    var time = moment(this.props.story.time * 1000).fromNow();
+    var time = moment(this.props.story.created_at_i * 1000).fromNow();
 
-    var UserLink = <Link to="user" className="story-link" query={{ id: this.props.story.by }}>{this.props.story.by}</Link>;
+    var UserLink = <Link to="user" className="story-link" query={{ id: this.props.story.author }}>{this.props.story.author}</Link>;
 
     var ItemLink = <Link to="item" className="story-link" query={{ id: this.props.story.id }}>{commentsLabel}</Link>;
 
