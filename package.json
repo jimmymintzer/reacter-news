@@ -12,7 +12,6 @@
     "bluebird": "^2.3.11",
     "browser-sync": "^1.7.2",
     "browserify": "^7.0.0",
-    "es6-promise": "^2.0.0",
     "firebase": "^2.0.6",
     "flux": "^2.0.1",
     "gulp": "^3.8.10",
@@ -27,7 +26,6 @@
     "react-router": "^0.11.4",
     "reactfire": "^0.4.0",
     "reactify": "^0.17.1",
-    "superagent": "^0.21.0",
     "vinyl-source-stream": "^1.0.0",
     "watchify": "^2.1.1"
   }

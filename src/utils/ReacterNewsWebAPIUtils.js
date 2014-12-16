@@ -22,29 +22,44 @@ var _fetchTopStories = function() {
 
 var _fetchAllStories = function(stories) {
   var promises = stories.map(function(story) {
-    return _fetchItem(story);
+    return new Promise(function(resolve, reject) {
+      return itemsRef.child(story).on('value', function(itemData) {
+        if(itemData.val().type !== "job") {
+          return _fetchItemWithComments(itemData.val()).then(function(result) {
+            resolve(result);
+          });
+        }
+        else {
+          resolve(itemData.val());
+        }
+      }, function(errorObject) {
+        reject("_fetchItem",errorObject);
+      })
+    });
   });
 
   return Promise.all(promises);
 };
 
-var _fetchItem = function(item) {
-  var promise = new Promise(function(resolve, reject) {
-    itemsRef.child(item).on('value', function(itemData) {
-      resolve(itemData.val());
-    }, function(errorObject) {
-      reject("_fetchItem",errorObject);
-    })
-  });
-
-  return promise;
-};
-
 var _fetchItemWithComments = function(item) {
   var promise = new Promise(function(resolve, reject) {
-    request.get('https://hn.algolia.com/api/v1/items/' + item, function(res) {
-      resolve(res.body);
-    });
+    var url = 'https://hn.algolia.com/api/v1/items/' + item.id;
+
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+
+    request.onreadystatechange = function() {
+      if (this.readyState === 4){
+        if (this.status >= 200 && this.status < 400){
+          var responseText = JSON.parse(this.responseText);
+          resolve(responseText);
+        } else {
+          // Error :(
+        }
+      }
+    };
+    request.send();
+    request = null;
   });
 
   return promise;
@@ -68,13 +83,7 @@ ReacterNewsWebAPIUtils = {
 
   getAllTopStories: function() {
     _fetchTopStories()
-      .then(_fetchAllStories, function(result) {
-
-        console.log("result", result);
-        return result;
-      }, function(err) {
-        console.log("error", err);
-      })
+      .then(_fetchAllStories)
       .then(TopStoriesActionCreators.receiveAll);
   },
 

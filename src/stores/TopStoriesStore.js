@@ -9,7 +9,6 @@ var CHANGE_EVENT = 'change';
 var _topStories = [];
 
 function _addTopStories(rawMessages) {
-  // TODO normalize data between APIs
   _topStories = rawMessages;
 }
 
