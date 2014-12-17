@@ -26,7 +26,15 @@ var _fetchAllStories = function(stories) {
       return itemsRef.child(story).on('value', function(itemData) {
         if(itemData.val().type !== "job") {
           return _fetchItem(itemData.val().id).then(function(result) {
-            resolve(result);
+            if(result === "error") {
+              var editedResult = itemData.val();
+              editedResult.points = editedResult.score;
+              resolve(editedResult)
+            }
+            else {
+              resolve(result);
+            }
+
           });
         }
         else {
@@ -54,6 +62,7 @@ var _fetchItem = function(item) {
           var responseText = JSON.parse(this.responseText);
           resolve(responseText);
         } else {
+          resolve("error");
           // Error
         }
       }
