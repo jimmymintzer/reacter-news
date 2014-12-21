@@ -68,17 +68,23 @@ var StoryComponent = React.createClass({
 
     var StoryLink = <a href={ this.props.story.url }>{this.props.story.title}</a>;
 
-    return (
-      <div className='story-wrapper'>
-        <div className='story-title'>
+    if(!this.props.story.title) {
+      return null;
+    }
+    else {
+      return (
+        <div className='story-wrapper'>
+          <div className='story-title'>
           {StoryLink}
-          <span className='comhead'> {comhead} </span>
+            <span className='comhead'> {comhead} </span>
+          </div>
+          <div className='story-subtext'>
+            <span>{pointsLabel}</span> by {UserLink} {time} | {ItemLink}
+          </div>
         </div>
-        <div className='story-subtext'>
-          <span>{pointsLabel}</span> by {UserLink} {time} | {ItemLink}
-        </div>
-      </div>
-    )
+      )
+    }
+
   }
 });
 

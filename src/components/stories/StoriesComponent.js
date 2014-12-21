@@ -34,6 +34,7 @@ var StoriesComponent = React.createClass({
         </li>
       );
     });
+    document.title = "Reacter News";
     return (
       <div>
         <div className="main">

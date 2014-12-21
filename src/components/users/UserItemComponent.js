@@ -14,6 +14,8 @@ var UserItemComponent = React.createClass({
     }
 
     var karma = this.props.user && this.props.user.karma;
+
+    document.title = "Profile: " + id + " | Reacter News";
     return (
       <table>
         <tr>
