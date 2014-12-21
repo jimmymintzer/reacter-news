@@ -1,21 +1,21 @@
 var React = require('react');
 var Router = require('react-router');
-var ReacterNewsWebAPIUtils = require('../utils/ReacterNewsWebAPIUtils');
-var UsersStore = require('../stores/UsersStore');
-var UserItemComponent = require('./UserItemComponent');
+var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
+var TopStoriesStore = require('../../stores/TopStoriesStore');
+var StoryComponent = require('../stories/StoryComponent');
 
 function getStateFromStores(id) {
   return {
-    user: UsersStore.get(id)
+    item: TopStoriesStore.get(id)
   };
 }
 
-var UserComponent = React.createClass({
+var ItemComponent = React.createClass({
   mixins: [Router.State],
   statics :{
     willTransitionTo: function(transition, params, query) {
       var id = query.id || '';
-      ReacterNewsWebAPIUtils.getUser(id);
+      ReacterNewsWebAPIUtils.getStory(id);
     }
   },
   getInitialState: function() {
@@ -23,15 +23,15 @@ var UserComponent = React.createClass({
     return getStateFromStores(id);
   },
   componentDidMount: function() {
-    UsersStore.addChangeListener(this._onChange);
+    TopStoriesStore.addChangeListener(this._onChange);
   },
   componentWillUnmount: function() {
-    UsersStore.removeChangeListener(this._onChange);
+    TopStoriesStore.removeChangeListener(this._onChange);
   },
   render: function() {
     return (
-      <div className="user-component">
-        <UserItemComponent user={this.state.user} />
+      <div className="item-wrapper">
+        <StoryComponent story={this.state.item} />
       </div>
     );
   },
@@ -44,4 +44,4 @@ var UserComponent = React.createClass({
   }
 });
 
-module.exports = UserComponent;
+module.exports = ItemComponent;

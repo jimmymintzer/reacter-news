@@ -1,7 +1,5 @@
 var React = require('react');
-var HeaderComponent = require('./HeaderComponent');
-
-
+var HeaderComponent = require('./common/HeaderComponent');
 
 var Router = require('react-router');
 var RouterHandler = Router.RouteHandler;
@@ -11,10 +9,7 @@ var ReacterNewsApp = React.createClass({
     return (
       <div>
         <HeaderComponent />
-
         <RouterHandler />
-
-
       </div>
     )
   }

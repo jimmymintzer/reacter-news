@@ -153,7 +153,24 @@ footer {
       }
     }
   }
+}
 
+.item-wrapper {
+  padding: 10px 0 0 10px;
+
+  .story-link:hover {
+    text-decoration: underline;
+  }
+
+  .story-wrapper {
+    .story-subtext {
+      color: $a-link-color;
+      font-size: 9px;
+      a {
+        color: $a-link-color;
+      }
+    }
+  }
 }
 
 

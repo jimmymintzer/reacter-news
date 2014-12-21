@@ -1,9 +1,9 @@
 var React = require('react');
 var StoryComponent = require('./StoryComponent');
-var TopStoriesStore = require('../stores/TopStoriesStore');
-var ReacterNewsWebAPIUtils = require('../utils/ReacterNewsWebAPIUtils');
-var SpacerComponent = require('./SpacerComponent');
-var FooterComponent = require('./FooterComponent');
+var TopStoriesStore = require('../../stores/TopStoriesStore');
+var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
+var SpacerComponent = require('./../common/SpacerComponent');
+var FooterComponent = require('./../common/FooterComponent');
 
 function getStateFromStores() {
   return {
@@ -27,21 +27,22 @@ var StoriesComponent = React.createClass({
     TopStoriesStore.removeChangeListener(this._onChange);
   },
   render: function() {
+    var stories = this.state.stories.map(function(story, index) {
+      return (
+        <li key={index}>
+          <StoryComponent story={story} />
+        </li>
+      );
+    });
     return (
       <div>
-      <div className="main">
-        <ol className="stories">
-          {this.state.stories.map(function(story, index) {
-            return (
-              <li key={index}>
-                <StoryComponent story={story}/>
-              </li>
-            )
-          })}
-        </ol>
-      </div>
-      <SpacerComponent />
-      <FooterComponent />
+        <div className="main">
+          <ol className="stories">
+          {stories}
+          </ol>
+        </div>
+        <SpacerComponent />
+        <FooterComponent />
       </div>
     )
   },

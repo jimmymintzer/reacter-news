@@ -3,7 +3,10 @@ var moment = require('moment');
 var Router = require('react-router');
 var Link = Router.Link;
 
-var parseUrl = function(url) {
+var buildComhead = function(url) {
+  if(!url) {
+    return "";
+  }
   var comhead = url
     // TODO: Add http reg ex
     .replace('http://','')
@@ -24,6 +27,7 @@ var parseUrl = function(url) {
     .replace(/\.cc.*$/, '.cc')
     .replace(/\.us.*$/, '.us')
     .replace(/\.io.*$/, '.io')
+    .replace(/\.int.*$/, '.int')
     .replace(/\.cl.*$/, '.cl');
   comhead = comhead ? '('+comhead+')' : '';
   return comhead;
@@ -36,15 +40,12 @@ var StoryComponent = React.createClass({
       pointsLabel += 's';
     }
 
-    var comhead = "";
-    if(this.props.story.url) {
-      comhead = parseUrl(this.props.story.url);
-    }
+    var comhead = buildComhead(this.props.story.url);
 
     var comments = 0;
 
     if( this.props.story.children && this.props.story.children.length > 0 ) {
-      comments = JSON.stringify(this.props.story.children).match(/:"comment"/g).length
+      comments = JSON.stringify(this.props.story.children).match(/:"comment"/g).length;
     }
 
     var commentsLabel;

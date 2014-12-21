@@ -1,8 +1,9 @@
 var React = require('react');
 var ReacterNewsApp = require('./components/ReacterNewsApp');
-var StoriesComponent = require('./components/StoriesComponent');
-var UserComponent = require('./components/UserComponent');
-var ItemComponent = require('./components/ItemComponent');
+var StoriesComponent = require('./components/stories/StoriesComponent');
+var UserComponent = require('./components/users/UserComponent');
+var ItemComponent = require('./components/items/ItemComponent');
+require('../scss/styles.scss');
 
 var Router = require('react-router');
 var Route = Router.Route;
