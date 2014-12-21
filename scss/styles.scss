@@ -155,14 +155,40 @@ footer {
   }
 }
 
+
+
 .item-wrapper {
   padding: 10px 0 0 10px;
+  background: $main-background;
+
+  .comment-wrapper {
+
+    .comment-wrapper {
+      margin: 0 0 0 30px;
+    }
+  }
+
+  .username-row {
+    margin: 0 0 -13px 0;
+    color: $a-link-color;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 8pt;
+
+    a {
+      color: $a-link-color;
+    }
+  }
 
   .story-link:hover {
     text-decoration: underline;
   }
 
   .story-wrapper {
+    padding: 0 0 25px 0;
+    font-size: 10pt;
+    font-family: Verdana, Geneva, sans-serif;
+    color: $a-link-color;
+
     .story-subtext {
       color: $a-link-color;
       font-size: 9px;

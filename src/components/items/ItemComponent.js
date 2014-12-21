@@ -3,6 +3,9 @@ var Router = require('react-router');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 var TopStoriesStore = require('../../stores/TopStoriesStore');
 var StoryComponent = require('../stories/StoryComponent');
+var CommentsComponent = require('../comments/CommentsComponent');
+var SpacerComponent = require('../common/SpacerComponent');
+var FooterComponent = require('../common/FooterComponent');
 
 function getStateFromStores(id) {
   return {
@@ -32,6 +35,9 @@ var ItemComponent = React.createClass({
     return (
       <div className="item-wrapper">
         <StoryComponent story={this.state.item} />
+        <CommentsComponent comments={this.state.item.children} />
+        <SpacerComponent />
+        <FooterComponent />
       </div>
     );
   },
