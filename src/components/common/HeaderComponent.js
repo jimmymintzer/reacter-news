@@ -14,12 +14,12 @@ var HeaderComponent = React.createClass({
           </li>
           <li>
             <div className="heading">
-              <Link to="new">Reacter News</Link>
+              <Link to="news">Reacter News</Link>
             </div>
           </li>
           <li>
             <ul className="nested-list">
-              <li><Link to="new">new</Link></li>
+              <li><Link to="news">new</Link></li>
               <li>|</li>
               <li><Link to="newcomments">comments</Link></li>
               <li>|</li>

@@ -103,6 +103,10 @@ footer {
   background: $main-background;
   min-height: 796px;
   padding: 7px 0;
+
+  .more-link {
+    margin: 15px 0 0 40px;
+  }
 }
 
 .spacer {
@@ -136,6 +140,9 @@ footer {
 }
 
 .stories {
+
+  color: $a-link-color;
+
   .story-link:hover {
     text-decoration: underline;
   }
