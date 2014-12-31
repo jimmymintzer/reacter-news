@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "npm run serve | npm run dev",
-    "serve": "httpster -p 8080",
+    "serve": "httpster -p 8080 -s",
     "dev": "webpack-dev-server --inline --hot --progress --colors --port 8090"
   },
   "author": "Jimmy Mintzer",
