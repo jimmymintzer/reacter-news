@@ -28,6 +28,7 @@ var buildComhead = function(url) {
     .replace(/\.us.*$/, '.us')
     .replace(/\.io.*$/, '.io')
     .replace(/\.int.*$/, '.int')
+    .replace(/\.info.*$/, '.info')
     .replace(/\.cl.*$/, '.cl');
   comhead = comhead ? '('+comhead+')' : '';
   return comhead;
@@ -45,7 +46,10 @@ var StoryComponent = React.createClass({
     var comments = 0;
 
     if( this.props.story.children && this.props.story.children.length > 0 ) {
-      comments = JSON.stringify(this.props.story.children).match(/:"comment"/g).length;
+      var commentsStringify = JSON.stringify(this.props.story.children).match(/:"comment"/g);
+      if(commentsStringify) {
+        comments = commentsStringify.length;
+      }
     }
 
     var commentsLabel;

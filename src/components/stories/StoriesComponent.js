@@ -8,9 +8,9 @@ var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 var SpacerComponent = require('./../common/SpacerComponent');
 var FooterComponent = require('./../common/FooterComponent');
 
-function getStateFromStores() {
+function getStateFromStores(page) {
   return {
-    stories: TopStoriesStore.getAll()
+    stories: TopStoriesStore.getStories(page)
   };
 }
 
@@ -32,7 +32,8 @@ var StoriesComponent = React.createClass({
     }
   },
   getInitialState: function() {
-    return getStateFromStores();
+    var page = parseInt(this.getQuery().p) || 1;
+    return getStateFromStores(page);
   },
   componentDidMount: function() {
     TopStoriesStore.addChangeListener(this._onChange);
@@ -75,9 +76,20 @@ var StoriesComponent = React.createClass({
       }
     }
 
+    var renderedHTML = null;
+
+    if(this.state.stories && this.state.stories.length === 0 ) {
+      renderedHTML = (
+        <div className="spinner-center">
+          <i className="fa fa-refresh fa-spin"></i>
+        </div>
+      );
+    }
+
     return (
       <div>
         <div className="main">
+        {renderedHTML}
           <ol className="stories" start={index}>
           {stories}
           </ol>
@@ -95,7 +107,8 @@ var StoriesComponent = React.createClass({
    * Event handler for 'change' events coming from TopStoriesStore
    */
   _onChange: function() {
-    this.setState(getStateFromStores());
+    var page = parseInt(this.getQuery().p) || 1;
+    this.setState(getStateFromStores(page));
   }
 });
 

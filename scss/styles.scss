@@ -206,4 +206,30 @@ footer {
   }
 }
 
+.animate-enter {
+  opacity: 0.01;
+  transition: opacity .5s ease-in;
+  &.animate-enter-active {
+    opacity: 1;
+  }
+}
+
+.animate-leave {
+  opacity: 1;
+  transition: opacity .5s ease-in;
+  &.animate-leave-active {
+    opacity: 0.01;
+  }
+}
+
+.spinner-center {
+  text-align: center;
+  
+  .fa.fa-refresh {
+    font-size: 100px;
+  }
+}
+
+
+
 

@@ -118,20 +118,36 @@ ReacterNewsWebAPIUtils = {
   getTopStories: function(page) {
     _fetchTopStories(page)
       .then(_fetchAllStories)
-      .then(TopStoriesActionCreators.receiveAll)
+      .then(function(stories) {
+
+        stories = stories.filter(function(story){
+          return story != undefined;
+        });
+
+        TopStoriesActionCreators.receiveAll({
+          page: page,
+          stories: stories
+        });
+      })
       .catch(function (e) {
-        console.log(e);
+        console.log("getTopStories", e);
       });
   },
 
   getStory: function(storyId) {
     _fetchItem(storyId)
-      .then(TopStoriesActionCreators.receiveStory);
+      .then(TopStoriesActionCreators.receiveStory)
+      .catch(function(e) {
+        console.log("getStory", e);
+      });
   },
 
   getUser: function(userId) {
     _fetchUser(userId)
-      .then(UserActionCreators.receiveUser);
+      .then(UserActionCreators.receiveUser)
+      .catch(function(e) {
+        console.log("getUser", e);
+      })
   }
 
 };
