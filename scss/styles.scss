@@ -45,6 +45,10 @@ header {
       .nested-list {
         padding: 0;
         margin: 0 0 0 11px;
+
+        .active {
+          color: $logo-color;
+        }
       }
     }
   }

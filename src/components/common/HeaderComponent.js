@@ -19,7 +19,7 @@ var HeaderComponent = React.createClass({
           </li>
           <li>
             <ul className="nested-list">
-              <li><Link to="news">new</Link></li>
+              <li><Link to="newest">new</Link></li>
               <li>|</li>
               <li><Link to="newcomments">comments</Link></li>
               <li>|</li>

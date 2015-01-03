@@ -14,6 +14,7 @@ var HistoryLocation = Router.HistoryLocation;
 var routes = (
   <Route name="app" path="/" handler={ReacterNewsApp}>
     <Route name="news" handler={StoriesComponent} />
+    <Route name="newest" handler={StoriesComponent} />
     <Route name="newcomments" handler={StoriesComponent} />
     <Route name="show" handler={StoriesComponent} />
     <Route name="ask" handler={StoriesComponent} />
