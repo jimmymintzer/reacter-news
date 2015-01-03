@@ -26,6 +26,8 @@ var HeaderComponent = React.createClass({
               <li><Link to="show">show</Link></li>
               <li>|</li>
               <li><Link to="ask">ask</Link></li>
+              <li>|</li>
+              <li><Link to="jobs">jobs</Link></li>
             </ul>
           </li>
         </ul>

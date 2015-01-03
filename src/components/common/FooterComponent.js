@@ -23,7 +23,7 @@ var FooterComponent = React.createClass({
           <li>|</li>
           <li><a href="/Contact">Contact</a></li>
         </ul>
-        <form method="get" action="//hn.algolia.com/">Search: <input type="text" name="q" value="" size="17" /></form>
+        <form method="get" action="https://hn.algolia.com/">Search: <input type="text" name="q" size="17" /></form>
       </footer>
     )
   }

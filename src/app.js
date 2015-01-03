@@ -19,6 +19,7 @@ var routes = (
     <Route name="ask" handler={StoriesComponent} />
     <Route name="user" handler={UserComponent} />
     <Route name="item" handler={ItemComponent} />
+    <Route name="jobs" handler={StoriesComponent} />
     <DefaultRoute handler={StoriesComponent} />
   </Route>
 );
