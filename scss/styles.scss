@@ -203,6 +203,10 @@ footer {
         color: $a-link-color;
       }
     }
+
+    .story-subtext-padding {
+      padding: 0 0 10px 0;
+    }
   }
 }
 
@@ -224,7 +228,7 @@ footer {
 
 .spinner-center {
   text-align: center;
-  
+
   .fa.fa-refresh {
     font-size: 100px;
   }

@@ -57,7 +57,8 @@ var ItemComponent = React.createClass({
       );
     }
     else {
-      document.title = this.state.item.title + " | Reacter News";
+      var stateTitle = this.state.item.title ? this.state.item.title + " | ": "";
+      document.title = stateTitle +  "Reacter News";
       return (
         <div className="item-wrapper">
           <StoryComponent story={this.state.item} />

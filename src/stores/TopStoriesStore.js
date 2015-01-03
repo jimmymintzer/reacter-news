@@ -16,7 +16,6 @@ function _addTopStories(rawMessages) {
 }
 
 function _addStory(rawMessages) {
-  console.log("_addStory", rawMessages);
   var found = false;
   var foundIndex = -1;
   var foundOuterIndex = -1;
@@ -36,7 +35,6 @@ function _addStory(rawMessages) {
     _topStories[0].push(rawMessages);
   }
   else {
-    console.log(_topStories[foundOuterIndex][foundIndex]);
     _topStories[foundOuterIndex][foundIndex] = rawMessages;
   }
 

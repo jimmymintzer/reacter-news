@@ -51,6 +51,11 @@ var StoryComponent = React.createClass({
         comments = commentsStringify.length;
       }
     }
+    else {
+      if(this.props.story.kids && this.props.story.kids ) {
+        comments = this.props.story.kids.length;
+      }
+    }
 
     var commentsLabel;
 
@@ -64,13 +69,32 @@ var StoryComponent = React.createClass({
       commentsLabel = comments + ' comments';
     }
 
-    var time = moment(this.props.story.created_at_i * 1000).fromNow();
+    var story_time = this.props.story.created_at_i || this.props.story.time;
 
-    var UserLink = <Link to="user" className="story-link" query={{ id: this.props.story.author }}>{this.props.story.author}</Link>;
+    var time = moment(story_time * 1000).fromNow();
+
+    var author = this.props.story.author || this.props.story.by;
+
+    var UserLink = <Link to="user" className="story-link" query={{ id: author }}>{author}</Link>;
 
     var ItemLink = <Link to="item" className="story-link" query={{ id: this.props.story.id }}>{commentsLabel}</Link>;
 
     var StoryLink = <a href={ this.props.story.url }>{this.props.story.title}</a>;
+
+    var subtext = null;
+
+    if(this.props.story.type !== "job") {
+      subtext =  (
+        <div className='story-subtext'>
+          <span>{pointsLabel}</span> by {UserLink} {time} | {ItemLink}
+        </div>
+      )
+    }
+    else {
+      subtext = (
+        <div className='story-subtext-padding'></div>
+      )
+    }
 
     if(!this.props.story.title) {
       return null;
@@ -82,9 +106,7 @@ var StoryComponent = React.createClass({
           {StoryLink}
             <span className='comhead'> {comhead} </span>
           </div>
-          <div className='story-subtext'>
-            <span>{pointsLabel}</span> by {UserLink} {time} | {ItemLink}
-          </div>
+        {subtext}
         </div>
       )
     }
