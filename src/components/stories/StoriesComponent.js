@@ -3,7 +3,7 @@ var Router = require('react-router');
 var Link = Router.Link;
 
 var StoryComponent = require('./StoryComponent');
-var TopStoriesStore = require('../../stores/TopStoriesStore');
+var TopStoriesStore = require('../../stores/StoriesStore');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 var SpacerComponent = require('./../common/SpacerComponent');
 var FooterComponent = require('./../common/FooterComponent');

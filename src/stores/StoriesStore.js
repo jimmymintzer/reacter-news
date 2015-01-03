@@ -6,13 +6,13 @@ var assign = require('object-assign');
 var ActionTypes = ReacterNewsConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _topStories = {};
+var _stories = {};
 
 function _addTopStories(rawMessages) {
   var page = rawMessages.page || 1;
   var stories = rawMessages.stories;
 
-  _topStories[page] = stories;
+  _stories[page] = stories;
 }
 
 function _addStory(rawMessages) {
@@ -20,8 +20,8 @@ function _addStory(rawMessages) {
   var foundIndex = -1;
   var foundOuterIndex = -1;
 
-  Object.keys(_topStories).forEach(function(page, outerIndex) {
-    _topStories[page].forEach(function( story, index ) {
+  Object.keys(_stories).forEach(function(page, outerIndex) {
+    _stories[page].forEach(function( story, index ) {
       if ( story.id === rawMessages.id ) {
         found = true;
         foundIndex = index;
@@ -31,16 +31,16 @@ function _addStory(rawMessages) {
   });
 
   if(!found) {
-    _topStories[0] = _topStories[0] || [];
-    _topStories[0].push(rawMessages);
+    _stories[0] = _topStories[0] || [];
+    _stories[0].push(rawMessages);
   }
   else {
-    _topStories[foundOuterIndex][foundIndex] = rawMessages;
+    _stories[foundOuterIndex][foundIndex] = rawMessages;
   }
 
 }
 
-var TopStoriesStore = assign({}, EventEmitter.prototype, {
+var StoriesStore = assign({}, EventEmitter.prototype, {
 
   emitChange: function() {
     this.emit(CHANGE_EVENT);
@@ -57,8 +57,8 @@ var TopStoriesStore = assign({}, EventEmitter.prototype, {
   get: function(id) {
     var foundStory = {};
 
-    Object.keys(_topStories).forEach(function(page) {
-      _topStories[page].forEach(function(story) {
+    Object.keys(_stories).forEach(function(page) {
+      _stories[page].forEach(function(story) {
         if(story.id == id) {
           foundStory = story;
         }
@@ -69,22 +69,22 @@ var TopStoriesStore = assign({}, EventEmitter.prototype, {
   },
 
   getStories: function(page) {
-    var stories =_topStories[page] || [];
+    var stories =_stories[page] || [];
     return stories;
   }
 });
 
-TopStoriesStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
+StoriesStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
   var action = payload.action;
 
   switch(action.type) {
     case ActionTypes.RECEIVE_RAW_MESSAGES:
       _addTopStories(action.rawMessages);
-      TopStoriesStore.emitChange();
+      StoriesStore.emitChange();
       break;
     case ActionTypes.RECEIVE_STORY_MESSAGE:
       _addStory(action.rawMessages);
-      TopStoriesStore.emitChange();
+      StoriesStore.emitChange();
       break;
     default:
       break;
@@ -92,4 +92,4 @@ TopStoriesStore.dispatchToken = ReacterNewsDispatcher.register(function(payload)
 
 });
 
-module.exports = TopStoriesStore;
+module.exports = StoriesStore;
