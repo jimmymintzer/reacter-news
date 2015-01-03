@@ -12,7 +12,6 @@
   "license": "ISC",
   "devDependencies": {
     "bluebird": "^2.4.1",
-    "browserify": "^7.0.3",
     "css-loader": "^0.9.0",
     "file-loader": "^0.8.1",
     "firebase": "^2.0.6",
@@ -26,11 +25,9 @@
     "react": "^0.12.2",
     "react-hot-loader": "^1.0.2",
     "react-router": "^0.11.6",
-    "reactify": "^0.17.1",
     "sass-loader": "^0.3.1",
     "style-loader": "^0.8.2",
     "url-loader": "^0.5.5",
-    "watchify": "^2.2.1",
     "webpack": "^1.4.13",
     "webpack-dev-server": "^1.6.6"
   }
