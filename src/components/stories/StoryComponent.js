@@ -29,6 +29,8 @@ var buildComhead = function(url) {
     .replace(/\.io.*$/, '.io')
     .replace(/\.int.*$/, '.int')
     .replace(/\.info.*$/, '.info')
+    .replace(/\.fr.*$/, '.fr')
+    .replace(/\.nl.*$/, '.nl')
     .replace(/\.cl.*$/, '.cl');
   comhead = comhead ? '('+comhead+')' : '';
   return comhead;
