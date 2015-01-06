@@ -1,21 +1,39 @@
 var React = require('react');
 var moment = require('moment');
 
+var buildCreatedDate = function(created) {
+  if(created === 0) {
+    return;
+  }
+  var created = moment.unix(created);
+  var current = moment();
+
+  var numberOfDays = current.diff(created, 'days');
+  var days = (numberOfDays === 1) ? ' day ago' : ' days ago';
+  return numberOfDays + days;
+};
+
 var UserItemComponent = React.createClass({
+  getDefaultProps: function() {
+    return {
+      user: {
+        about: "",
+        created: 0,
+        delay: 0,
+        id: "",
+        karma: 0,
+        submitted: []
+      }
+    };
+  },
   render: function() {
-    var id = this.props.user && this.props.user.id || "";
-    if(this.props.user && this.props.user.created) {
-      var created = moment(this.props.user.created * 1000);
-      var current = moment();
 
-      var numberOfDays = current.diff(created, 'days');
-      var days = (numberOfDays === 1) ? ' day ago' : ' days ago';
-      var createdAt = numberOfDays + days;
-    }
+    document.title = "Profile: " + this.props.user.id + " | Reacter News";
 
-    var karma = this.props.user && this.props.user.karma;
+    var createdAt = buildCreatedDate(this.props.user.created);
+    var id = this.props.user.id;
+    var karma = this.props.user.karma;
 
-    document.title = "Profile: " + id + " | Reacter News";
     return (
       <table>
         <tr>

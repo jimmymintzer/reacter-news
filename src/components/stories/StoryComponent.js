@@ -31,59 +31,75 @@ var buildComhead = function(url) {
     .replace(/\.info.*$/, '.info')
     .replace(/\.fr.*$/, '.fr')
     .replace(/\.nl.*$/, '.nl')
+    .replace(/\.ai.*$/, '.ai')
     .replace(/\.cl.*$/, '.cl');
   comhead = comhead ? '('+comhead+')' : '';
   return comhead;
 };
 
+var buildPoints = function(points) {
+  var pointsLabel = points + " point";
+
+  pointsLabel += (points !== 1) ? 's' : '';
+
+  return pointsLabel;
+};
+
+var buildComments = function(count) {
+  var commentsCount = count || 0;
+
+  var commentsLabel;
+
+  if( commentsCount === 0 ) {
+    commentsLabel = 'discuss';
+  }
+  else if(commentsCount === 1) {
+    commentsLabel = commentsCount + ' comment'
+  }
+  else {
+    commentsLabel = commentsCount + ' comments';
+  }
+
+  return commentsLabel;
+};
+
 var StoryComponent = React.createClass({
+  getDefaultProps: function() {
+    return {
+      story: {
+        by: '',
+        id: 0,
+        kids: [],
+        score: 0,
+        text: '',
+        time: new Date(),
+        title: '',
+        type: '',
+        url: ''
+      },
+      comments: {
+        comments: [],
+        count: 0
+      }
+    };
+  },
   render: function() {
-    var pointsLabel = this.props.story.points + " point";
-    if(this.props.story.points !== 1) {
-      pointsLabel += 's';
-    }
+
+    var pointsLabel = buildPoints(this.props.story.score);
+
+    var commentsLabel = buildComments(this.props.comments.count);
 
     var comhead = buildComhead(this.props.story.url);
 
-    var comments = 0;
+    var time = moment.unix(this.props.story.time).fromNow();
 
-    if( this.props.story.children && this.props.story.children.length > 0 ) {
-      var commentsStringify = JSON.stringify(this.props.story.children).match(/:"comment"/g);
-      if(commentsStringify) {
-        comments = commentsStringify.length;
-      }
-    }
-    else {
-      if(this.props.story.kids && this.props.story.kids ) {
-        comments = this.props.story.kids.length;
-      }
-    }
-
-    var commentsLabel;
-
-    if( comments === 0 ) {
-      commentsLabel = 'discuss';
-    }
-    else if(comments === 1) {
-      commentsLabel = comments + ' comment'
-    }
-    else {
-      commentsLabel = comments + ' comments';
-    }
-
-    var story_time = this.props.story.created_at_i || this.props.story.time;
-
-    var time = moment(story_time * 1000).fromNow();
-
-    var author = this.props.story.author || this.props.story.by;
+    var author = this.props.story.by;
 
     var UserLink = <Link to="user" className="story-link" query={{ id: author }}>{author}</Link>;
 
     var ItemLink = <Link to="item" className="story-link" query={{ id: this.props.story.id }}>{commentsLabel}</Link>;
 
     var StoryLink = <a href={ this.props.story.url }>{this.props.story.title}</a>;
-
-    var subtext = null;
 
     if(this.props.story.type !== "job") {
       subtext =  (
@@ -93,25 +109,22 @@ var StoryComponent = React.createClass({
       )
     }
     else {
-      subtext = (
-        <div className='story-subtext-padding'></div>
-      )
-    }
-
-    if(!this.props.story.title) {
-      return null;
-    }
-    else {
-      return (
-        <div className='story-wrapper'>
-          <div className='story-title'>
-          {StoryLink}
-            <span className='comhead'> {comhead} </span>
-          </div>
-        {subtext}
+      var subtext = (
+        <div className='story-subtext'>
+          {time}
         </div>
       )
     }
+
+    return (
+      <div className='story-wrapper'>
+        <div className='story-title'>
+          {StoryLink}
+          <span className='comhead'> {comhead} </span>
+        </div>
+        {subtext}
+      </div>
+    )
 
   }
 });

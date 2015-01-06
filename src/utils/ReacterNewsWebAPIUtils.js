@@ -1,153 +1,76 @@
 var Firebase = require('firebase');
 var TopStoriesActionCreators = require('../actions/TopStoriesActionCreators');
+var CommentsActionCreators = require('../actions/CommentsActionCreators');
 var UserActionCreators = require('../actions/UserActionCreators');
 var Promise = require('bluebird');
 
 var fb = new Firebase("http://hacker-news.firebaseio.com/v0/");
-var itemsRef = fb.child('item');
 
-var _fetchTopStories = function(page) {
-  var start, end;
-  if(page < 2) {
-    start = 0;
-    end = 29;
-  }
-  else if(page > 4) {
-    start = 90;
-    end = 100;
-  }
-  else {
-    start = 30 * (page-1);
-    end = (start + 30) - 1;
-  }
-
-  var promise = new Promise(function(resolve, reject) {
-    fb.child('topstories').orderByKey().startAt(start+"").endAt(end+"").on('value', function(snapshot) {
-      if(!snapshot.val()) {
-        reject("_fetchTopStories: no valid stories");
-      }
-      else if(snapshot.val().constructor === Array) {
-        resolve(snapshot.val());
-      }
-      else {
-        var returnArray = [];
-        Object.keys(snapshot.val()).forEach(function(key) {
-          returnArray.push(snapshot.val()[key]);
-        });
-        resolve(returnArray);
-      }
-
-    }, function(err) {
-      reject("_fetchTopStories",err);
+function getTopStories(cb) {
+  fb.child('topstories').limitToFirst(30).once('value', function(snapshot) {
+    snapshot.forEach(function(item) {
+      getItem(item.val(), cb);
     });
   });
+}
 
-  return promise;
-};
-
-var _fetchAllStories = function(stories) {
-  var promises = stories.map(function(story) {
-    return new Promise(function(resolve, reject) {
-      return itemsRef.child(story).on('value', function(itemData) {
-        if(itemData.val().type !== "job") {
-          return _fetchItem(itemData.val().id).then(function(result) {
-            if(result === "error") {
-              var editedResult = itemData.val();
-              editedResult.points = editedResult.score;
-              resolve(editedResult)
-            }
-            else {
-              resolve(result);
-            }
-
-          });
-        }
-        else {
-          resolve(itemData.val());
-        }
-      }, function(errorObject) {
-        reject("_fetchItem",errorObject);
-      })
-    });
-  });
-
-  return Promise.all(promises);
-};
-
-var _fetchItem = function(item) {
-  var promise = new Promise(function(resolve, reject) {
-    var url = 'https://hn.algolia.com/api/v1/items/' + item;
-
-    var request = new XMLHttpRequest();
-    request.open('GET', url, true);
-
-    request.onreadystatechange = function() {
-      if (this.readyState === 4){
-        if (this.status >= 200 && this.status < 400){
-          var responseText = JSON.parse(this.responseText);
-          resolve(responseText);
-        } else {
-          resolve("error");
-          // Error
-        }
+function getItems(items, cb) {
+  items.forEach(function(item) {
+    getItem(item, function(result) {
+      cb(result);
+      if(result.kids && result.kids.length > 0) {
+        getItems(result.kids, cb);
       }
-    };
-    request.send();
-    request = null;
-  });
-
-  return promise;
-};
-
-var _fetchUser = function(user) {
-  var promise = new Promise(function(resolve, reject) {
-    fb.child('user').child(user).on('value', function(snapshot) {
-      resolve(snapshot.val());
-    }, function(err) {
-      reject("_fetchUser",err);
     });
   });
+}
 
-  return promise;
-};
+function getItem(item, cb) {
+  fb.child('item').child(item).once('value', function(snapshot) {
+    cb(snapshot.val());
+  });
+}
 
+function getUser(userId, cb) {
+  fb.child('user').child(userId).once('value', function(snapshot) {
+    cb(snapshot.val());
+  });
+}
 
 
 ReacterNewsWebAPIUtils = {
 
-  getTopStories: function(page) {
-    _fetchTopStories(page)
-      .then(_fetchAllStories)
-      .then(function(stories) {
-
-        stories = stories.filter(function(story){
-          return story != undefined;
+  getTopStoriesAndComments: function() {
+    getTopStories(function(topStory) {
+      TopStoriesActionCreators.receiveTopStory(topStory);
+      if(topStory.kids && topStory.kids.length > 0) {
+        getItems(topStory.kids, function(result) {
+          CommentsActionCreators.receiveComment({
+            comment: result,
+            parent: topStory.id
+          });
         });
+      }
+    });
 
-        TopStoriesActionCreators.receiveAll({
-          page: page,
-          stories: stories
-        });
-      })
-      .catch(function (e) {
-        console.log("getTopStories", e);
-      });
   },
 
   getStory: function(storyId) {
-    _fetchItem(storyId)
-      .then(TopStoriesActionCreators.receiveStory)
-      .catch(function(e) {
-        console.log("getStory", e);
-      });
+    getItem(storyId, function(story) {
+      TopStoriesActionCreators.receiveStory(story);
+      if(story.kids && story.kids.length > 0) {
+        getItems(story.kids, function(result) {
+          CommentsActionCreators.receiveComment({
+            comment: result,
+            parent: story.id
+          });
+        });
+      }
+    });
   },
 
   getUser: function(userId) {
-    _fetchUser(userId)
-      .then(UserActionCreators.receiveUser)
-      .catch(function(e) {
-        console.log("getUser", e);
-      })
+    getUser(userId, UserActionCreators.receiveUser);
   }
 
 };

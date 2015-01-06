@@ -1,7 +1,7 @@
 var React = require('react');
 var Router = require('react-router');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
-var TopStoriesStore = require('../../stores/StoriesStore');
+var TopStoriesStore = require('../../stores/TopStoriesStore');
 var StoryComponent = require('../stories/StoryComponent');
 var CommentsComponent = require('../comments/CommentsComponent');
 var SpacerComponent = require('../common/SpacerComponent');
@@ -12,7 +12,7 @@ var Link = Router.Link;
 
 function getStateFromStores(id) {
   return {
-    item: TopStoriesStore.get(id)
+    item: TopStoriesStore.getStory(id)
   };
 }
 

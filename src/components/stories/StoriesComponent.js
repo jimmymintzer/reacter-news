@@ -3,94 +3,77 @@ var Router = require('react-router');
 var Link = Router.Link;
 
 var StoryComponent = require('./StoryComponent');
-var TopStoriesStore = require('../../stores/StoriesStore');
+var CommentsStore = require('../../stores/CommentsStore');
+var TopStoriesStore = require('../../stores/TopStoriesStore');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 var SpacerComponent = require('./../common/SpacerComponent');
 var FooterComponent = require('./../common/FooterComponent');
 
-function getStateFromStores(page) {
+var _  = require('../../utils/UnderscoreDebounce');
+
+
+function getStateFromStores() {
   return {
-    stories: TopStoriesStore.getStories(page)
+    stories: TopStoriesStore.getTopStories(),
+    comments: CommentsStore.getAllComments()
   };
 }
 
 var StoriesComponent = React.createClass({
+  getDefaultProps: function () {
+    return {
+      stories: [],
+      comments: []
+    }
+  },
   mixins: [Router.State],
   statics: {
     willTransitionTo: function(transition, params, query) {
-      var page = query.p || '';
-      if(page && page < 1) {
-        transition.redirect("news", {}, {});
-      }
-      else if(page > 4) {
-        transition.redirect("news", {}, { p: 4 });
-      }
-      else {
-        ReacterNewsWebAPIUtils.getTopStories(page);
-      }
-
+      ReacterNewsWebAPIUtils.getTopStoriesAndComments();
     }
   },
   getInitialState: function() {
-    var page = parseInt(this.getQuery().p) || 1;
-    return getStateFromStores(page);
+    return getStateFromStores();
   },
   componentDidMount: function() {
     TopStoriesStore.addChangeListener(this._onChange);
+    CommentsStore.addChangeListener(this._onChange);
   },
   componentWillUnmount: function() {
     TopStoriesStore.removeChangeListener(this._onChange);
+    CommentsStore.removeChangeListener(this._onChange);
   },
   handleClick: function() {
     document.body.scrollTop = document.documentElement.scrollTop = 0;
   },
   render: function() {
-    var stories = this.state.stories.map(function(story, index) {
-      if(story) {
-        return (
-          <li key={index}>
-            <StoryComponent story={story} />
-          </li>
-        );
-      }
 
-    });
     document.title = "Reacter News";
 
-    var page = parseInt(this.getQuery().p);
-    var link = null;
-    var index = 1;
+    var stories = this.state.stories.map(function(story, index) {
+      return (
+        <li key={index}>
+          <StoryComponent story={story} comments={this.state.comments[story.id]}/>
+        </li>
+      );
+    }.bind(this));
 
-    if(this.state.stories && this.state.stories.length !== 0) {
-      if(page < 2 || !page) {
-        index = 1;
-        link = <Link to="news" query={{ p: 2 }} onClick={this.handleClick}>More</Link>;
-      }
-      else if(page >= 4) {
-        index = 91;
-      }
-      else {
-        index = 30 * (page-1) + 1;
-        var nextPage = 1 + page;
-        link = <Link to="news" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
-      }
-    }
-
-    var renderedHTML = null;
-
-    if(this.state.stories && this.state.stories.length === 0 ) {
-      renderedHTML = (
+    if(this.state.stories.length === 0 ) {
+      var renderedHTML = (
         <div className="spinner-center">
           <i className="fa fa-refresh fa-spin"></i>
         </div>
       );
+    }
+    else {
+      var link = <Link to="news" query={{ p: 2 }} onClick={this.handleClick}>More</Link>;
     }
 
     return (
       <div>
         <div className="main">
         {renderedHTML}
-          <ol className="stories" start={index}>
+          <ol className="stories" start={1}>
           {stories}
           </ol>
           <div className="more-link">
@@ -102,14 +85,14 @@ var StoriesComponent = React.createClass({
       </div>
     )
   },
+  _onChange: _.debounce(function () {
+    this._setState();
+  }, 500),
 
-  /**
-   * Event handler for 'change' events coming from TopStoriesStore
-   */
-  _onChange: function() {
-    var page = parseInt(this.getQuery().p) || 1;
-    this.setState(getStateFromStores(page));
+  _setState: function() {
+    this.setState(getStateFromStores());
   }
+
 });
 
 module.exports = StoriesComponent;
