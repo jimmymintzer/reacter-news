@@ -78,7 +78,7 @@ StoriesStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
   var action = payload.action;
 
   switch(action.type) {
-    case ActionTypes.RECEIVE_RAW_MESSAGES:
+    case ActionTypes.RECEIVE_RAW_TOP_STORY:
       _addStories(action.rawMessages);
       StoriesStore.emitChange();
       break;
