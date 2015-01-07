@@ -60,8 +60,6 @@ var ItemComponent = React.createClass({
 
     if(this.state.item.type === "comment") {
       var comment = this.state.item;
-      console.log(comment);
-      console.log(this.state.comment);
       var time = moment.unix(comment.time).fromNow();
       var ItemLink = <Link to="item" className="story-link" query={{ id: comment.id }}>Link</Link>;
       var UserLink = <Link to="user" className="story-link" query={{ id: comment.by }}>{comment.by}</Link>;

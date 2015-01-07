@@ -7,7 +7,7 @@ var Promise = require('bluebird');
 var fb = new Firebase("http://hacker-news.firebaseio.com/v0/");
 
 function getTopStories(cb) {
-  fb.child('topstories').limitToFirst(30).once('value', function(snapshot) {
+  fb.child('topstories').orderByKey().startAt('0').endAt('29').on('value', function(snapshot) {
     snapshot.forEach(function(item) {
       getItem(item.val(), cb);
     });
@@ -26,13 +26,13 @@ function getItems(items, cb) {
 }
 
 function getItem(item, cb) {
-  fb.child('item').child(item).once('value', function(snapshot) {
+  fb.child('item').child(item).on('value', function(snapshot) {
     cb(snapshot.val());
   });
 }
 
 function getUser(userId, cb) {
-  fb.child('user').child(userId).once('value', function(snapshot) {
+  fb.child('user').child(userId).on('value', function(snapshot) {
     cb(snapshot.val());
   });
 }
