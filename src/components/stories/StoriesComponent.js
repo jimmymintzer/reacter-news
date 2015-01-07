@@ -53,7 +53,7 @@ var StoriesComponent = React.createClass({
     var stories = this.state.stories.map(function(story, index) {
       return (
         <li key={index}>
-          <StoryComponent story={story} comments={this.state.comments[story.id]}/>
+          <StoryComponent story={story} comments={this.state.comments.get(story.id)}/>
         </li>
       );
     }.bind(this));
@@ -87,10 +87,12 @@ var StoriesComponent = React.createClass({
   },
   _onChange: _.debounce(function () {
     this._setState();
-  }, 500),
+  }, 100, true),
 
   _setState: function() {
-    this.setState(getStateFromStores());
+    if(this.isMounted()) {
+      this.setState(getStateFromStores());
+    }
   }
 
 });

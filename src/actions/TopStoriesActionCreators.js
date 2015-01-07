@@ -12,10 +12,10 @@ module.exports = {
     });
   },
 
-  receiveStory: function(rawMessages) {
+  receiveStory: function(rawStoryMessage) {
     ReacterNewsDispatcher.handleServerAction({
-      type: ActionTypes.RECEIVE_STORY_MESSAGE,
-      rawMessages: rawMessages
+      type: ActionTypes.RECEIVE_RAW_STORY_MESSAGE,
+      rawStoryMessage: rawStoryMessage
     });
   }
 

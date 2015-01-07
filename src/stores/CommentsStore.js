@@ -6,18 +6,24 @@ var assign = require('object-assign');
 var ActionTypes = ReacterNewsConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _comments = {};
+var _comments = new Map();
 
 function _addComment(rawComments) {
 
   if(!rawComments.comment.deleted) {
-    _comments[rawComments.parent] = _comments[rawComments.parent] || {};
-    var parent = _comments[rawComments.parent];
-    _comments[rawComments.parent].comments = parent.comments || [];
-    _comments[rawComments.parent].count = parent.count || 0;
 
-    _comments[rawComments.parent].count++;
-    parent.comments.push(rawComments.comment);
+    var count = _comments.get(rawComments.parent) && _comments.get(rawComments.parent).count || 0;
+    var comments = _comments.get(rawComments.parent) && _comments.get(rawComments.parent).comments || new Map();
+
+    if(!comments.get(rawComments.comment.id)){
+      count += 1;
+      comments.set(rawComments.comment.id, rawComments.comment);
+
+      _comments.set(rawComments.parent, {
+        count: count,
+        comments: comments
+      });
+    }
   }
 }
 
@@ -36,7 +42,7 @@ var CommentsStore = assign({}, EventEmitter.prototype, {
   },
 
   getCommentById: function(parent) {
-    return _comments[parent] || [];
+    return _comments.get(parseInt(parent)) || new Map();
   },
 
   getAllComments: function() {
