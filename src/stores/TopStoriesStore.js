@@ -9,7 +9,6 @@ var CHANGE_EVENT = 'change';
 var _topStories = new Map();
 
 function _addTopStories(rawTopStory) {
-  console.log("rawTopStory",rawTopStory);
   var page = rawTopStory.page || 1;
   var stories = rawTopStory.stories;
 

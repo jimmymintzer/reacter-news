@@ -115,7 +115,7 @@ var StoriesComponent = React.createClass({
   },
   _onChange: _.debounce(function () {
     this._setState();
-  }, 100, true),
+  }, 75),
 
   _setState: function() {
     if(this.isMounted()) {
