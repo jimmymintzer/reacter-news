@@ -6,10 +6,37 @@ var Promise = require('bluebird');
 
 var fb = new Firebase("http://hacker-news.firebaseio.com/v0/");
 
-function getTopStories(cb) {
-  fb.child('topstories').orderByKey().startAt('0').endAt('29').on('value', function(snapshot) {
-    snapshot.forEach(function(item) {
-      getItem(item.val(), cb);
+function getTopStoriesKeys(page) {
+  var start, end;
+  if(page < 2) {
+    start = 0;
+    end = 29;
+  }
+  else if(page > 4) {
+    start = 90;
+    end = 100;
+  }
+  else {
+    start = 30 * (page-1);
+    end = (start + 30) - 1;
+  }
+  return new Promise(function(resolve, reject) {
+    fb.child('topstories').orderByKey().startAt(start+"").endAt(end+"").on('value', function(snapshot) {
+      if(!snapshot.val()) {
+        reject("_fetchTopStories: no valid stories");
+      }
+      else if(snapshot.val().constructor === Array) {
+        resolve(snapshot.val());
+      }
+      else {
+        var returnArray = [];
+        Object.keys(snapshot.val()).forEach(function(key) {
+          returnArray.push(snapshot.val()[key]);
+        });
+        resolve(returnArray);
+      }
+    }, function(err) {
+      reject(err);
     });
   });
 }
@@ -37,22 +64,51 @@ function getUser(userId, cb) {
   });
 }
 
+function getTopStories(stories) {
+  var promisesArr = [];
+
+  stories.map(function(story) {
+    var p = new Promise(function(resolve, reject) {
+      fb.child('item').child(story).on('value', function(snapshot) {
+        resolve(snapshot.val());
+      }, function(err) {
+        reject(err);
+      });
+    });
+    promisesArr.push(p);
+  });
+
+  return Promise.settle(promisesArr).map(function(story) {
+    return story.value();
+  })
+}
+
 
 ReacterNewsWebAPIUtils = {
 
-  getTopStoriesAndComments: function() {
-    getTopStories(function(topStory) {
-      TopStoriesActionCreators.receiveTopStory(topStory);
-      if(topStory.kids && topStory.kids.length > 0) {
-        getItems(topStory.kids, function(result) {
-          CommentsActionCreators.receiveComment({
-            comment: result,
-            parent: topStory.id
-          });
+  getTopStoriesAndComments: function(page) {
+    page = parseInt(page) || 1;
+    getTopStoriesKeys(page)
+    .then(getTopStories)
+    .then(function(topStoriesArray) {
+        TopStoriesActionCreators.receiveTopStory({
+          stories: topStoriesArray,
+          page: page
         });
-      }
+        return topStoriesArray;
+    })
+    .then(function(topStoriesArray) {
+      topStoriesArray.forEach(function(story) {
+        if(story.kids && story.kids.length > 0) {
+          getItems(story.kids, function(result) {
+            CommentsActionCreators.receiveComment({
+              comment: result,
+              parent: story.id
+            });
+          });
+        }
+      });
     });
-
   },
 
   getStory: function(storyId) {

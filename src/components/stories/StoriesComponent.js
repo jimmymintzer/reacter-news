@@ -12,9 +12,9 @@ var FooterComponent = require('./../common/FooterComponent');
 var _  = require('../../utils/UnderscoreDebounce');
 
 
-function getStateFromStores() {
+function getStateFromStores(page) {
   return {
-    stories: TopStoriesStore.getTopStories(),
+    stories: TopStoriesStore.getTopStories(page),
     comments: CommentsStore.getAllComments()
   };
 }
@@ -29,11 +29,22 @@ var StoriesComponent = React.createClass({
   mixins: [Router.State],
   statics: {
     willTransitionTo: function(transition, params, query) {
-      ReacterNewsWebAPIUtils.getTopStoriesAndComments();
+      var page = query.p || '';
+      if(page && page < 1) {
+        transition.redirect("news", {}, {});
+      }
+      else if(page > 4) {
+        transition.redirect("news", {}, { p: 4 });
+      }
+      else {
+        ReacterNewsWebAPIUtils.getTopStoriesAndComments(page);
+      }
+
     }
   },
   getInitialState: function() {
-    return getStateFromStores();
+    var page = this.getQuery().p || '';
+    return getStateFromStores(page);
   },
   componentDidMount: function() {
     TopStoriesStore.addChangeListener(this._onChange);
@@ -66,14 +77,31 @@ var StoriesComponent = React.createClass({
       );
     }
     else {
-      var link = <Link to="news" query={{ p: 2 }} onClick={this.handleClick}>More</Link>;
+      if(this.state.stories && this.state.stories.length !== 0) {
+        var page = parseInt(this.getQuery().p);
+        var link = null;
+        var index = 1;
+
+        if(page < 2 || !page) {
+          index = 1;
+          link = <Link to="news" query={{ p: 2 }} onClick={this.handleClick}>More</Link>;
+        }
+        else if(page >= 4) {
+          index = 91;
+        }
+        else {
+          index = 30 * (page-1) + 1;
+          var nextPage = 1 + page;
+          link = <Link to="news" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
+        }
+      }
     }
 
     return (
       <div>
         <div className="main">
         {renderedHTML}
-          <ol className="stories" start={1}>
+          <ol className="stories" start={index}>
           {stories}
           </ol>
           <div className="more-link">
@@ -91,7 +119,8 @@ var StoriesComponent = React.createClass({
 
   _setState: function() {
     if(this.isMounted()) {
-      this.setState(getStateFromStores());
+      var page = this.getQuery().p || '';
+      this.setState(getStateFromStores(page));
     }
   }
 

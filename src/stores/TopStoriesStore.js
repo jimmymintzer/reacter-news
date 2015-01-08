@@ -6,26 +6,43 @@ var assign = require('object-assign');
 var ActionTypes = ReacterNewsConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _topStories = [];
+var _topStories = new Map();
 
 function _addTopStories(rawTopStory) {
-  var found = false;
-  var foundIndex = -1;
+  console.log("rawTopStory",rawTopStory);
+  var page = rawTopStory.page || 1;
+  var stories = rawTopStory.stories;
 
-  _topStories.forEach(function(story, index) {
-    if(story.id == rawTopStory.id) {
-      found = true;
-      foundIndex = index;
-      return;
-    }
+  _topStories.set(page, stories);
+
+}
+
+function _addStory(rawMessages) {
+  var found = false;
+  var foundStoryIndex = -1;
+  var foundPageIndex = -1;
+
+  _topStories.forEach(function(page, pageIndex) {
+    page.forEach(function( story, storyIndex ) {
+      if ( story.id === rawMessages.id ) {
+        found = true;
+        foundStoryIndex = storyIndex;
+        foundPageIndex = pageIndex;
+      }
+    });
   });
 
-  if(found) {
-    _topStories[foundIndex] = rawTopStory;
+  if(!found) {
+    var genericStories = _topStories.get(0) || [];
+    genericStories.push(rawMessages);
+    _topStories.set(0, genericStories);
   }
   else {
-    _topStories.push(rawTopStory);
+    var currentStories = _topStories.get(foundPageIndex);
+    currentStories[foundStoryIndex] = rawMessages;
+    _topStories.set(foundPageIndex, currentStories);
   }
+
 }
 
 var StoriesStore = assign({}, EventEmitter.prototype, {
@@ -43,24 +60,24 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
   },
 
   getStory: function(id) {
-    var found = false;
-    var foundIndex = -1;
+    var found = {};
 
-    _topStories.forEach(function(story, index) {
-      if(story.id == id) {
-        found = true;
-        foundIndex = index;
-        return;
-      }
+    _topStories.forEach(function(page) {
+      page.forEach(function(story) {
+        if(story.id == id) {
+          found = story;
+        }
+      })
     });
 
-    return (found) ? _topStories[foundIndex] : [];
+    return found;
+
   },
 
-  getTopStories: function() {
-    return _topStories.filter(function(story) {
-      return story.type !== "comment";
-    })
+
+  getTopStories: function(page) {
+    page = parseInt(page) || 1;
+    return _topStories.get(page) || [];
   }
 });
 
@@ -73,7 +90,7 @@ StoriesStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
       StoriesStore.emitChange();
       break;
     case ActionTypes.RECEIVE_RAW_STORY_MESSAGE:
-      _addTopStories(action.rawStoryMessage);
+      _addStory(action.rawStoryMessage);
       StoriesStore.emitChange();
       break;
     default:

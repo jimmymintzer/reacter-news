@@ -41,7 +41,7 @@ var ItemComponent = React.createClass({
   },
   render: function() {
 
-    if(this.state.item.length === 0 ) {
+    if(Object.keys(this.state.item).length === 0 ) {
       var renderedHTML = (
         <div className="spinner-center">
           <i className="fa fa-refresh fa-spin"></i>
