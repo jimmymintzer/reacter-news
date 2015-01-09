@@ -29,6 +29,9 @@ function getTopStoriesKeys(page) {
         resolve(snapshot.val());
       }
       else {
+        /*
+        If/when firebase returns an object and not and array.
+         */
         var returnArray = [];
         Object.keys(snapshot.val()).forEach(function(key) {
           returnArray.push(snapshot.val()[key]);
@@ -58,9 +61,13 @@ function getItem(item, cb) {
   });
 }
 
-function getUser(userId, cb) {
-  fb.child('user').child(userId).on('value', function(snapshot) {
-    cb(snapshot.val());
+function getUser(userId) {
+  return new Promise(function(resolve, reject) {
+    fb.child('user').child(userId).on('value', function(snapshot) {
+      resolve(snapshot.val());
+    }, function(err) {
+      reject(err);
+    });
   });
 }
 
@@ -126,7 +133,11 @@ ReacterNewsWebAPIUtils = {
   },
 
   getUser: function(userId) {
-    getUser(userId, UserActionCreators.receiveUser);
+    getUser(userId)
+    .then(UserActionCreators.receiveUser)
+    .catch(function(err) {
+      console.log("getUser:", err);
+    })
   }
 
 };

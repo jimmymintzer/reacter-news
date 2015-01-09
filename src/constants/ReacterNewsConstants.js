@@ -3,9 +3,9 @@ var keyMirror = require('keymirror');
 module.exports = {
 
   ActionTypes: keyMirror({
-    RECEIVE_RAW_TOP_STORY: null,
-    RECEIVE_RAW_STORY_MESSAGE: null,
-    RECEIVE_RAW_COMMENTS: null,
+    RECEIVE_RAW_TOP_STORIES: null,
+    RECEIVE_RAW_STORY: null,
+    RECEIVE_RAW_COMMENT: null,
     RECEIVE_USER: null
   }),
 

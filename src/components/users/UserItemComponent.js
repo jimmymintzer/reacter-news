@@ -33,6 +33,7 @@ var UserItemComponent = React.createClass({
     var createdAt = buildCreatedDate(this.props.user.created);
     var id = this.props.user.id;
     var karma = this.props.user.karma;
+    var about = this.props.user.about;
 
     return (
       <table>
@@ -47,6 +48,18 @@ var UserItemComponent = React.createClass({
         <tr>
           <td>karma:</td>
           <td>{karma}</td>
+        </tr>
+        <tr>
+          <td>about:</td>
+          <td>{about}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><a href="#" className="underline">submissions</a></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><a href="#" className="underline">comments</a></td>
         </tr>
       </table>
     );

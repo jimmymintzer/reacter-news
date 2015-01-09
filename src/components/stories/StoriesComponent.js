@@ -11,7 +11,6 @@ var FooterComponent = require('./../common/FooterComponent');
 
 var _  = require('../../utils/UnderscoreDebounce');
 
-
 function getStateFromStores(page) {
   return {
     stories: TopStoriesStore.getTopStories(page),
@@ -22,8 +21,8 @@ function getStateFromStores(page) {
 var StoriesComponent = React.createClass({
   getDefaultProps: function () {
     return {
-      stories: [],
-      comments: []
+      stories: new Map(),
+      comments: new Map()
     }
   },
   mixins: [Router.State],
@@ -58,18 +57,21 @@ var StoriesComponent = React.createClass({
     document.body.scrollTop = document.documentElement.scrollTop = 0;
   },
   render: function() {
-
     document.title = "Reacter News";
+    var stories = [];
 
-    var stories = this.state.stories.map(function(story, index) {
-      return (
-        <li key={index}>
-          <StoryComponent story={story} comments={this.state.comments.get(story.id)}/>
+    this.state.stories.forEach(function(story) {
+      var commentByStoryId = this.state.comments.get(story.id) || new Map();
+      var storyComponent = (
+        <li key={story.id}>
+          <StoryComponent story={story} numberOfComments={commentByStoryId.size}/>
         </li>
       );
-    }.bind(this));
+      stories.push(storyComponent);
 
-    if(this.state.stories.length === 0 ) {
+    }, this);
+
+    if(this.state.stories.size < 1 ) {
       var renderedHTML = (
         <div className="spinner-center">
           <i className="fa fa-refresh fa-spin"></i>
@@ -77,23 +79,21 @@ var StoriesComponent = React.createClass({
       );
     }
     else {
-      if(this.state.stories && this.state.stories.length !== 0) {
-        var page = parseInt(this.getQuery().p);
-        var link = null;
-        var index = 1;
+      var page = parseInt(this.getQuery().p);
+      var link = null;
+      var index = 1;
 
-        if(page < 2 || !page) {
-          index = 1;
-          link = <Link to="news" query={{ p: 2 }} onClick={this.handleClick}>More</Link>;
-        }
-        else if(page >= 4) {
-          index = 91;
-        }
-        else {
-          index = 30 * (page-1) + 1;
-          var nextPage = 1 + page;
-          link = <Link to="news" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
-        }
+      if(page < 2 || !page) {
+        index = 1;
+        link = <Link to="news" query={{ p: 2 }} onClick={this.handleClick}>More</Link>;
+      }
+      else if(page >= 4) {
+        index = 91;
+      }
+      else {
+        index = 30 * (page-1) + 1;
+        var nextPage = 1 + page;
+        link = <Link to="news" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
       }
     }
 
@@ -118,6 +118,9 @@ var StoriesComponent = React.createClass({
   }, 75),
 
   _setState: function() {
+    /*
+    The comments are loaded recursively, which freeze the browser because the updates come in too fast.
+     */
     if(this.isMounted()) {
       var page = this.getQuery().p || '';
       this.setState(getStateFromStores(page));

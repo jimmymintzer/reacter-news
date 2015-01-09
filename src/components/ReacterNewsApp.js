@@ -11,6 +11,9 @@ var ReactCSSTransitionGroup = require('react/lib/ReactCSSTransitionGroup');
 var ReacterNewsApp = React.createClass({
   mixins: [ Router.State ],
   render: function() {
+    /*
+    Change name to dynamic name to force css transition
+     */
     var name = this.getRoutes().reverse()[0].name + (this.getQuery().p || "");
     return (
       <div>

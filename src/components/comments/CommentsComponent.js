@@ -33,7 +33,7 @@ var CommentsComponent = React.createClass({
     if(comments && comments.length > 0) {
       commentsArr = comments.map(function(comment) {
         var commentStr = parseInt(comment);
-        var fullComment = commentsValue.comments && commentsValue.comments.get(commentStr) || comment;
+        var fullComment = commentsValue.get(commentStr) || comment;
         return <CommentComponent key={comment} comment={fullComment} commentsValue={this.props.commentsValue}/>
       }.bind(this));
     }

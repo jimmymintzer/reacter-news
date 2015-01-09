@@ -32,6 +32,9 @@ function _addStory(rawMessages) {
   });
 
   if(!found) {
+    /*
+    Push item to 0 index because we don't know which page it is
+     */
     var genericStories = _topStories.get(0) || [];
     genericStories.push(rawMessages);
     _topStories.set(0, genericStories);
@@ -58,25 +61,23 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
     this.removeListener(CHANGE_EVENT, callback);
   },
 
-  getStory: function(id) {
-    var found = {};
+  getStory: function(itemid) {
+    var foundStory = {};
 
     _topStories.forEach(function(page) {
       page.forEach(function(story) {
-        if(story.id == id) {
-          found = story;
+        if(story.id == itemid) {
+          foundStory = story;
         }
       })
     });
 
-    return found;
-
+    return foundStory;
   },
-
 
   getTopStories: function(page) {
     page = parseInt(page) || 1;
-    return _topStories.get(page) || [];
+    return _topStories.get(page) || new Map();
   }
 });
 
@@ -84,11 +85,11 @@ StoriesStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
   var action = payload.action;
 
   switch(action.type) {
-    case ActionTypes.RECEIVE_RAW_TOP_STORY:
+    case ActionTypes.RECEIVE_RAW_TOP_STORIES:
       _addTopStories(action.rawTopStory);
       StoriesStore.emitChange();
       break;
-    case ActionTypes.RECEIVE_RAW_STORY_MESSAGE:
+    case ActionTypes.RECEIVE_RAW_STORY:
       _addStory(action.rawStoryMessage);
       StoriesStore.emitChange();
       break;

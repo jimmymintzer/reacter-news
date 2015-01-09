@@ -41,6 +41,8 @@ var ItemComponent = React.createClass({
   },
   render: function() {
 
+    var commentByStoryId = this.state.comment || new Map();
+
     if(Object.keys(this.state.item).length === 0 ) {
       var renderedHTML = (
         <div className="spinner-center">
@@ -49,28 +51,31 @@ var ItemComponent = React.createClass({
       );
     }
     else {
+
       var renderedHTML = (
         <div>
-          <StoryComponent story={this.state.item} comments={this.state.comment}/>
-          <CommentsComponent comments={this.state.item.kids} commentsValue={this.state.comment}/>
+          <StoryComponent story={this.state.item} numberOfComments={commentByStoryId.size}/>
+          <CommentsComponent comments={this.state.item.kids} commentsValue={commentByStoryId}/>
         </div>
       )
     }
 
 
     if(this.state.item.type === "comment") {
+
       var comment = this.state.item;
       var time = moment.unix(comment.time).fromNow();
       var ItemLink = <Link to="item" className="story-link" query={{ id: comment.id }}>Link</Link>;
       var UserLink = <Link to="user" className="story-link" query={{ id: comment.by }}>{comment.by}</Link>;
 
       document.title = comment.text.replace(/<[^>]*>/g, '').replace(/&#x27;/g, "'") + " | Reacter News";
+
       return (
         <div className="item-wrapper">
           <div className="comment-wrapper">
             <div className="username-row no-padding">{UserLink} {time} | {ItemLink}</div>
             <div dangerouslySetInnerHTML={{__html: comment.text}} />
-            <CommentsComponent comments={this.state.item.kids} commentsValue={this.state.comment} />
+            <CommentsComponent comments={this.state.item.kids} commentsValue={commentByStoryId} />
           </div>
           <div className="spacer-padding"></div>
           <SpacerComponent />
@@ -80,7 +85,10 @@ var ItemComponent = React.createClass({
     }
     else {
       var stateTitle = this.state.item.title ? this.state.item.title + " | ": "";
+
       document.title = stateTitle +  "Reacter News";
+
+
       return (
         <div className="item-wrapper">
         {renderedHTML}
@@ -95,15 +103,9 @@ var ItemComponent = React.createClass({
   /**
    * Event handler for 'change' events coming from TopStoriesStore
    */
-  //_onChange: function() {
-  //  var id = this.getQuery().id;
-  //  if(this.isMounted()) {
-  //    this.setState(getStateFromStores(id));
-  //  }
-  //},
   _onChange: _.debounce(function () {
     this._setState();
-  }, 100),
+  }, 75),
 
   _setState: function() {
     if(this.isMounted()) {

@@ -7,7 +7,7 @@ module.exports = {
 
   receiveComment: function(rawComments) {
     ReacterNewsDispatcher.handleServerAction({
-      type: ActionTypes.RECEIVE_RAW_COMMENTS,
+      type: ActionTypes.RECEIVE_RAW_COMMENT,
       rawComments: rawComments
     });
   }

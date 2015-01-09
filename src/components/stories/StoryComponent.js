@@ -8,9 +8,7 @@ var buildComhead = function(url) {
     return "";
   }
   var comhead = url
-    // TODO: Add http reg ex
-    .replace('http://','')
-    .replace('https://','')
+    .replace(/^(http|https):\/\//,'')
     .replace(/www\./,'')
     .replace(/\.com.*$/, '.com')
     .replace(/\.me.*$/, '.me')
@@ -77,17 +75,14 @@ var StoryComponent = React.createClass({
         type: '',
         url: ''
       },
-      comments: {
-        comments: [],
-        count: 0
-      }
+      numberOfComments: 0
     };
   },
   render: function() {
 
     var pointsLabel = buildPoints(this.props.story.score);
 
-    var commentsLabel = buildComments(this.props.comments.count);
+    var commentsLabel = buildComments(this.props.numberOfComments);
 
     var comhead = buildComhead(this.props.story.url);
 

@@ -6,10 +6,10 @@ var assign = require('object-assign');
 var ActionTypes = ReacterNewsConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _users = [];
+var _users = new Map();
 
 function _addUser(rawMessages) {
-  _users[rawMessages.id] = rawMessages;
+  _users.set(rawMessages.id, rawMessages);
 }
 
 var UsersStore = assign({}, EventEmitter.prototype, {
@@ -27,7 +27,7 @@ var UsersStore = assign({}, EventEmitter.prototype, {
   },
 
   get: function(id) {
-    return _users[id];
+    return _users.get(id);
   }
 
 });

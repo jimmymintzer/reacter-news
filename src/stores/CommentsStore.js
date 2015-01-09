@@ -9,21 +9,15 @@ var CHANGE_EVENT = 'change';
 var _comments = new Map();
 
 function _addComment(rawComments) {
-
+  /*
+   Ignore deleted comments
+   */
   if(!rawComments.comment.deleted) {
 
-    var count = _comments.get(rawComments.parent) && _comments.get(rawComments.parent).count || 0;
-    var comments = _comments.get(rawComments.parent) && _comments.get(rawComments.parent).comments || new Map();
+    var comments = _comments.get(rawComments.parent) || new Map();
 
-    if(!comments.get(rawComments.comment.id)){
-      count += 1;
-      comments.set(rawComments.comment.id, rawComments.comment);
-
-      _comments.set(rawComments.parent, {
-        count: count,
-        comments: comments
-      });
-    }
+    comments.set(rawComments.comment.id, rawComments.comment);
+    _comments.set(rawComments.parent, comments);
   }
 }
 
@@ -54,7 +48,7 @@ CommentsStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
   var action = payload.action;
 
   switch(action.type) {
-    case ActionTypes.RECEIVE_RAW_COMMENTS:
+    case ActionTypes.RECEIVE_RAW_COMMENT:
       _addComment(action.rawComments);
       CommentsStore.emitChange();
       break;
