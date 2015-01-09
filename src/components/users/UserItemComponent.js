@@ -51,7 +51,7 @@ var UserItemComponent = React.createClass({
         </tr>
         <tr>
           <td>about:</td>
-          <td>{about}</td>
+          <td dangerouslySetInnerHTML={{__html: about}}></td>
         </tr>
         <tr>
           <td></td>

@@ -252,6 +252,9 @@ footer {
 }
 
 .user-component {
+  td {
+    vertical-align: top;
+  }
   .underline {
     text-decoration: underline;
   }
