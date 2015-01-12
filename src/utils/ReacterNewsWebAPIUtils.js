@@ -2,6 +2,7 @@ var Firebase = require('firebase');
 var TopStoriesActionCreators = require('../actions/TopStoriesActionCreators');
 var CommentsActionCreators = require('../actions/CommentsActionCreators');
 var UserActionCreators = require('../actions/UserActionCreators');
+var PollActionCreators = require('../actions/PollActionCreators');
 var Promise = require('bluebird');
 
 var fb = new Firebase("http://hacker-news.firebaseio.com/v0/");
@@ -121,6 +122,11 @@ ReacterNewsWebAPIUtils = {
   getStory: function(storyId) {
     getItem(storyId, function(story) {
       TopStoriesActionCreators.receiveStory(story);
+      if(story.parts && story.parts.length > 0) {
+        getItems(story.parts, function(poll) {
+          PollActionCreators.receivePoll(poll);
+        });
+      }
       if(story.kids && story.kids.length > 0) {
         getItems(story.kids, function(result) {
           CommentsActionCreators.receiveComment({

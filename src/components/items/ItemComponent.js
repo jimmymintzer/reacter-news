@@ -3,6 +3,7 @@ var Router = require('react-router');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 var CommentsStore = require('../../stores/CommentsStore');
 var TopStoriesStore = require('../../stores/TopStoriesStore');
+var PollStore = require('../../stores/PollStore');
 var StoryComponent = require('../stories/StoryComponent');
 var CommentsComponent = require('../comments/CommentsComponent');
 var SpacerComponent = require('../common/SpacerComponent');
@@ -15,7 +16,8 @@ var Link = Router.Link;
 function getStateFromStores(id) {
   return {
     item: TopStoriesStore.getStory(id),
-    comment: CommentsStore.getCommentById(id)
+    comment: CommentsStore.getCommentById(id),
+    polls: PollStore.getAllPolls()
   };
 }
 
@@ -34,10 +36,12 @@ var ItemComponent = React.createClass({
   componentDidMount: function() {
     TopStoriesStore.addChangeListener(this._onChange);
     CommentsStore.addChangeListener(this._onChange);
+    PollStore.addChangeListener(this._onChange);
   },
   componentWillUnmount: function() {
     TopStoriesStore.removeChangeListener(this._onChange);
-    CommentsStore.addChangeListener(this._onChange);
+    CommentsStore.removeChangeListener(this._onChange);
+    PollStore.removeChangeListener(this._onChange);
   },
   render: function() {
 
@@ -51,13 +55,39 @@ var ItemComponent = React.createClass({
       );
     }
     else {
+      if(this.state.item.type === "poll") {
+        var pollsValue = this.state.item.parts.map(function(part, index) {
+          var poll = this.state.polls.get(part) || {};
+          var pollText = poll.text || "";
+          var pollScore = poll.score || 0;
+
+          var pollLabel = pollScore + " ";
+
+          pollLabel += (poll.score === 1) ? "point" : "points";
+
+          return (
+            <tr key={index}>
+              <tr><td>{pollText}</td></tr>
+              <tr><td className="comhead">{pollLabel}</td></tr>
+            </tr>
+          );
+        }, this);
+
+        var polls = (
+          <table className="poll-wrapper">
+          {pollsValue}
+          </table>
+        )
+      }
 
       var renderedHTML = (
         <div>
           <StoryComponent story={this.state.item} numberOfComments={commentByStoryId.size}/>
+          {polls}
           <CommentsComponent comments={this.state.item.kids} commentsValue={commentByStoryId}/>
         </div>
-      )
+      );
+
     }
 
 
