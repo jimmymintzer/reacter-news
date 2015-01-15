@@ -7,6 +7,8 @@ var StoriesComponent = require('./components/stories/StoriesComponent');
 var UserComponent = require('./components/users/UserComponent');
 var ItemComponent = require('./components/items/ItemComponent');
 var JobsComponent = require('./components/jobs/JobsComponent');
+var NewestStoriesComponent = require('./components/stories/NewestStoriesComponent');
+var AskHNStoriesComponent = require('./components/stories/AskHNStoriesComponent');
 require('../scss/styles.scss');
 require('../node_modules/font-awesome/scss/font-awesome.scss');
 
@@ -20,10 +22,10 @@ var HistoryLocation = Router.HistoryLocation;
 var routes = (
   <Route name="app" path="/" handler={ReacterNewsApp}>
     <Route name="news" handler={StoriesComponent} />
-    <Route name="newest" handler={StoriesComponent} />
+    <Route name="newest" handler={NewestStoriesComponent} />
     <Route name="newcomments" handler={StoriesComponent} />
     <Route name="show" handler={StoriesComponent} />
-    <Route name="ask" handler={StoriesComponent} />
+    <Route name="ask" handler={AskHNStoriesComponent} />
     <Route name="user" handler={UserComponent} />
     <Route name="item" handler={ItemComponent} />
     <Route name="jobs" handler={JobsComponent} />

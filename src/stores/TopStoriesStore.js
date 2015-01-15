@@ -43,6 +43,42 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
     var end = (start + 30);
 
     return _topStories.slice(start, end);
+  },
+
+  getTopStoriesByTime: function(page) {
+    var start = 30 * (page-1);
+    var end = (start + 30);
+
+    var sortedTopStories =_topStories.sort(function (a, b) {
+      if (a.time < b.time) {
+        return 1;
+      }
+      if (a.time > b.time) {
+        return -1;
+      }
+      return 0;
+    });
+
+    return sortedTopStories.slice(start, end);
+  },
+
+  getAskHNStories: function(page) {
+    var start = 30 * (page-1);
+    var end = (start + 30);
+
+    var askHNStories = _topStories.filter(function(story) {
+      return story.url === "";
+    });
+
+    return askHNStories.slice(start, end);
+  },
+
+  getAskHNStoriesLength: function() {
+    var askHNStories = _topStories.filter(function(story) {
+      return story.url === "";
+    });
+
+    return askHNStories.length;
   }
 });
 
