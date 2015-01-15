@@ -104,17 +104,6 @@ ReacterNewsWebAPIUtils = {
     })
   },
 
-  getAllJobs: function() {
-    getAllTopStoriesKeys()
-    .then(getTopStories)
-    .then(function(topStoriesArray) {
-      return topStoriesArray.filter(function(story) {
-        return story.type === "job";
-      });
-    })
-    .then(JobsActionCreators.receiveJobs);
-  },
-
   getStory: function(storyId) {
     getItem(storyId, function(story) {
       TopStoriesActionCreators.receiveStory(story);

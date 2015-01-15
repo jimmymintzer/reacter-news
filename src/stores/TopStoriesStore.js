@@ -80,6 +80,12 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
     });
 
     return askHNStories.length;
+  },
+
+  getJobsStories: function() {
+    return _topStories.filter(function(story) {
+      return story.type === "job";
+    });
   }
 });
 

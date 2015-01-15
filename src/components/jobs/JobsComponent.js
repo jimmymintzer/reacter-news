@@ -3,7 +3,7 @@ var Router = require('react-router');
 var Link = Router.Link;
 
 var StoryComponent = require('../stories/StoryComponent');
-var JobsStore = require('../../stores/JobsStore');
+var TopStoriesStore = require('../../stores/TopStoriesStore');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 var SpacerComponent = require('./../common/SpacerComponent');
 var FooterComponent = require('./../common/FooterComponent');
@@ -11,7 +11,7 @@ var FooterComponent = require('./../common/FooterComponent');
 
 function getStateFromStores() {
   return {
-    jobs: JobsStore.getAllJobs()
+    jobs: TopStoriesStore.getJobsStories()
   };
 }
 
@@ -24,17 +24,17 @@ var StoriesComponent = React.createClass({
   mixins: [Router.State],
   statics: {
     willTransitionTo: function(transition, params, query) {
-      ReacterNewsWebAPIUtils.getAllJobs();
+      ReacterNewsWebAPIUtils.getTopStoriesAndComments();
     }
   },
   getInitialState: function() {
     return getStateFromStores("all");
   },
   componentDidMount: function() {
-    JobsStore.addChangeListener(this._onChange);
+    TopStoriesStore.addChangeListener(this._onChange);
   },
   componentWillUnmount: function() {
-    JobsStore.removeChangeListener(this._onChange);
+    TopStoriesStore.removeChangeListener(this._onChange);
   },
   handleClick: function() {
     document.body.scrollTop = document.documentElement.scrollTop = 0;
