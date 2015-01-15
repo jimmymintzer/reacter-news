@@ -48,8 +48,9 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
   getTopStoriesByTime: function(page) {
     var start = 30 * (page-1);
     var end = (start + 30);
+    var sortedTopStories = _topStories.slice();
 
-    var sortedTopStories =_topStories.sort(function (a, b) {
+    sortedTopStories.sort(function (a, b) {
       if (a.time < b.time) {
         return 1;
       }

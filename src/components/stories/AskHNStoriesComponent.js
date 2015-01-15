@@ -49,7 +49,7 @@ var StoriesComponent = React.createClass({
     document.body.scrollTop = document.documentElement.scrollTop = 0;
   },
   render: function() {
-    document.title = "Reacter News";
+    document.title = "Ask | Reacter News";
     var stories = [];
 
     this.state.stories.forEach(function(story) {
@@ -74,7 +74,6 @@ var StoriesComponent = React.createClass({
       var page = parseInt(this.getQuery().p) || 1;
       var link = null;
       var index = 1;
-      console.log(page < 2 && this.state.storiesLength > (page*30));
       if(page < 2 && this.state.storiesLength > (page*30)) {
         link = <Link to="ask" query={{ p: 2 }} onClick={this.handleClick}>More</Link>;
       }
