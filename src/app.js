@@ -6,7 +6,7 @@ var ReacterNewsApp = require('./components/ReacterNewsApp');
 var StoriesComponent = require('./components/stories/StoriesComponent');
 var UserComponent = require('./components/users/UserComponent');
 var ItemComponent = require('./components/items/ItemComponent');
-var JobsComponent = require('./components/jobs/JobsComponent');
+var JobsComponent = require('./components/stories/JobsComponent');
 var NewestStoriesComponent = require('./components/stories/NewestStoriesComponent');
 var AskHNStoriesComponent = require('./components/stories/AskHNStoriesComponent');
 require('../scss/styles.scss');
