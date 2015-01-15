@@ -82,6 +82,54 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
     return askHNStories.length;
   },
 
+  getShowHNStories: function(page) {
+    var start = 30 * (page-1);
+    var end = (start + 30);
+
+    var askHNStories = _topStories.filter(function(story) {
+      return story.title.contains("Show HN:");
+    });
+
+    return askHNStories.slice(start, end);
+  },
+
+  getShowHNStoriesLength: function() {
+    var askHNStories = _topStories.filter(function(story) {
+      return story.title.contains("Show HN:");
+    });
+
+    return askHNStories.length;
+  },
+
+  getNewestShowHNStories: function(page) {
+    var start = 30 * (page-1);
+    var end = (start + 30);
+
+    var askHNStories = _topStories.filter(function(story) {
+      return story.title.contains("Show HN:");
+    });
+
+    askHNStories.sort(function (a, b) {
+      if (a.time < b.time) {
+        return 1;
+      }
+      if (a.time > b.time) {
+        return -1;
+      }
+      return 0;
+    });
+
+    return askHNStories.slice(start, end);
+  },
+
+  getNewestShowHNStoriesLength: function() {
+    var askHNStories = _topStories.filter(function(story) {
+      return story.title.contains("Show HN:");
+    });
+
+    return askHNStories.length;
+  },
+
   getJobsStories: function() {
     return _topStories.filter(function(story) {
       return story.type === "job";

@@ -14,12 +14,13 @@ var ReacterNewsApp = React.createClass({
     /*
     Change name to dynamic name to force css transition
      */
-    var name = this.getRoutes().reverse()[0].name + (this.getQuery().p || "");
+    var routeName = this.getRoutes().reverse()[0].name;
+    var keyName = this.getRoutes().reverse()[0].name + (this.getQuery().p || "");
     return (
       <div>
-        <HeaderComponent />
+        <HeaderComponent name={routeName}/>
         <ReactCSSTransitionGroup transitionName="animate">
-          <RouteHandler key={name}/>
+          <RouteHandler key={keyName}/>
         </ReactCSSTransitionGroup>
       </div>
 

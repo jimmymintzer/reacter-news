@@ -4,6 +4,16 @@ var Link = Router.Link;
 
 var HeaderComponent = React.createClass({
   render: function() {
+    if(this.props.name === "shownew") {
+      var liStyle = {
+        display: "inline-block"
+      };
+    }
+    else {
+      var liStyle = {
+        display: "none"
+      }
+    }
     return (
       <header>
         <ul>
@@ -28,6 +38,8 @@ var HeaderComponent = React.createClass({
               <li><Link to="ask">ask</Link></li>
               <li>|</li>
               <li><Link to="jobs">jobs</Link></li>
+              <li style={liStyle}>|</li>
+              <li style={liStyle}><Link to="shownew">shownew</Link></li>
             </ul>
           </li>
         </ul>

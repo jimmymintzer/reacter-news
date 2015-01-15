@@ -9,6 +9,8 @@ var ItemComponent = require('./components/items/ItemComponent');
 var JobsComponent = require('./components/stories/JobsComponent');
 var NewestStoriesComponent = require('./components/stories/NewestStoriesComponent');
 var AskHNStoriesComponent = require('./components/stories/AskHNStoriesComponent');
+var ShowHNStoriesComponent = require('./components/stories/ShowHNStoriesComponent');
+var NewestShowHNStoriesComponent = require('./components/stories/NewestShowHNStoriesComponent');
 require('../scss/styles.scss');
 require('../node_modules/font-awesome/scss/font-awesome.scss');
 
@@ -24,7 +26,8 @@ var routes = (
     <Route name="news" handler={StoriesComponent} />
     <Route name="newest" handler={NewestStoriesComponent} />
     <Route name="newcomments" handler={StoriesComponent} />
-    <Route name="show" handler={StoriesComponent} />
+    <Route name="show" handler={ShowHNStoriesComponent} />
+    <Route name="shownew" handler={NewestShowHNStoriesComponent} />
     <Route name="ask" handler={AskHNStoriesComponent} />
     <Route name="user" handler={UserComponent} />
     <Route name="item" handler={ItemComponent} />
