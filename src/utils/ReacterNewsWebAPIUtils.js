@@ -8,44 +8,6 @@ var Promise = require('bluebird');
 
 var fb = new Firebase("http://hacker-news.firebaseio.com/v0/");
 
-function getTopStoriesKeys(page) {
-  var start, end;
-  if(page < 2) {
-    start = 0;
-    end = 29;
-  }
-  else if(page > 4) {
-    start = 90;
-    end = 100;
-  }
-  else {
-    start = 30 * (page-1);
-    end = (start + 30) - 1;
-  }
-  return new Promise(function(resolve, reject) {
-    fb.child('topstories').orderByKey().startAt(start+"").endAt(end+"").on('value', function(snapshot) {
-      if(!snapshot.val()) {
-        reject("_fetchTopStories: no valid stories");
-      }
-      else if(snapshot.val().constructor === Array) {
-        resolve(snapshot.val());
-      }
-      else {
-        /*
-        If/when firebase returns an object and not and array.
-         */
-        var returnArray = [];
-        Object.keys(snapshot.val()).forEach(function(key) {
-          returnArray.push(snapshot.val()[key]);
-        });
-        resolve(returnArray);
-      }
-    }, function(err) {
-      reject(err);
-    });
-  });
-}
-
 function getAllTopStoriesKeys() {
   return new Promise(function(resolve, reject) {
     fb.child('topstories').on('value', function(snapshot) {
@@ -122,17 +84,14 @@ ReacterNewsWebAPIUtils = {
 
   getTopStoriesAndComments: function(page) {
     page = parseInt(page) || 1;
-    getTopStoriesKeys(page)
+    getAllTopStoriesKeys(page)
     .then(getTopStories)
     .then(function(topStoriesArray) {
-        TopStoriesActionCreators.receiveTopStory({
-          stories: topStoriesArray,
-          page: page
-        });
+        TopStoriesActionCreators.receiveTopStory(topStoriesArray);
         return topStoriesArray;
     })
     .then(function(topStoriesArray) {
-      topStoriesArray.forEach(function(story) {
+      topStoriesArray.forEach(function(story, index) {
         if(story.kids && story.kids.length > 0) {
           getItems(story.kids, function(result) {
             CommentsActionCreators.receiveComment({
@@ -142,7 +101,7 @@ ReacterNewsWebAPIUtils = {
           });
         }
       });
-    });
+    })
   },
 
   getAllJobs: function() {

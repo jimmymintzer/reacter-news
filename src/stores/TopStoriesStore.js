@@ -6,45 +6,14 @@ var assign = require('object-assign');
 var ActionTypes = ReacterNewsConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _topStories = new Map();
+var _topStories = [];
 
 function _addTopStories(rawTopStory) {
-  var page = rawTopStory.page || 1;
-  var stories = rawTopStory.stories;
-
-  _topStories.set(page, stories);
-
+  _topStories = rawTopStory;
 }
 
-function _addStory(rawMessages) {
-  var found = false;
-  var foundStoryIndex = -1;
-  var foundPageIndex = -1;
-
-  _topStories.forEach(function(page, pageIndex) {
-    page.forEach(function( story, storyIndex ) {
-      if ( story.id === rawMessages.id ) {
-        found = true;
-        foundStoryIndex = storyIndex;
-        foundPageIndex = pageIndex;
-      }
-    });
-  });
-
-  if(!found) {
-    /*
-    Push item to 0 index because we don't know which page it is
-     */
-    var genericStories = _topStories.get(0) || [];
-    genericStories.push(rawMessages);
-    _topStories.set(0, genericStories);
-  }
-  else {
-    var currentStories = _topStories.get(foundPageIndex);
-    currentStories[foundStoryIndex] = rawMessages;
-    _topStories.set(foundPageIndex, currentStories);
-  }
-
+function _addStory(rawTopStory) {
+  _topStories.push(rawTopStory);
 }
 
 var StoriesStore = assign({}, EventEmitter.prototype, {
@@ -62,22 +31,18 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
   },
 
   getStory: function(itemid) {
-    var foundStory = {};
-
-    _topStories.forEach(function(page) {
-      page.forEach(function(story) {
-        if(story.id == itemid) {
-          foundStory = story;
-        }
-      })
+    var story = _topStories.filter(function(story) {
+      return story.id == itemid;
     });
 
-    return foundStory;
+    return story[0] || {};
   },
 
   getTopStories: function(page) {
-    page = parseInt(page) || 1;
-    return _topStories.get(page) || new Map();
+    var start = 30 * (page-1);
+    var end = (start + 30);
+
+    return _topStories.slice(start, end);
   }
 });
 

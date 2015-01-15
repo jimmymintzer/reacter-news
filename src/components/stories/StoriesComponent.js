@@ -21,28 +21,18 @@ function getStateFromStores(page) {
 var StoriesComponent = React.createClass({
   getDefaultProps: function () {
     return {
-      stories: new Map(),
+      stories: [],
       comments: new Map()
     }
   },
   mixins: [Router.State],
   statics: {
     willTransitionTo: function(transition, params, query) {
-      var page = query.p || '';
-      if(page && page < 1) {
-        transition.redirect("news", {}, {});
-      }
-      else if(page > 4) {
-        transition.redirect("news", {}, { p: 4 });
-      }
-      else {
-        ReacterNewsWebAPIUtils.getTopStoriesAndComments(page);
-      }
-
+      ReacterNewsWebAPIUtils.getTopStoriesAndComments();
     }
   },
   getInitialState: function() {
-    var page = this.getQuery().p || '';
+    var page = this.getQuery().p || 1;
     return getStateFromStores(page);
   },
   componentDidMount: function() {
@@ -71,7 +61,7 @@ var StoriesComponent = React.createClass({
 
     }, this);
 
-    if(this.state.stories.size < 1 ) {
+    if(this.state.stories.length < 1 ) {
       var renderedHTML = (
         <div className="spinner-center">
           <i className="fa fa-refresh fa-spin"></i>
@@ -122,7 +112,7 @@ var StoriesComponent = React.createClass({
     The comments are loaded recursively, which freeze the browser because the updates come in too fast.
      */
     if(this.isMounted()) {
-      var page = this.getQuery().p || '';
+      var page = this.getQuery().p || 1;
       this.setState(getStateFromStores(page));
     }
   }
