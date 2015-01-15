@@ -141,7 +141,15 @@ footer {
 .comhead {
   font-family: Verdana, Geneva, sans-serif;
   font-size: 8pt;
-  color: #828282;
+  color: $a-link-color;
+}
+
+.job-header {
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 10pt;
+  color: $a-link-color;
+  padding: 0 41px;
+  font-weight: normal;
 }
 
 .stories {

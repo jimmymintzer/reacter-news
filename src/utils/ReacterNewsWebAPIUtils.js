@@ -3,6 +3,7 @@ var TopStoriesActionCreators = require('../actions/TopStoriesActionCreators');
 var CommentsActionCreators = require('../actions/CommentsActionCreators');
 var UserActionCreators = require('../actions/UserActionCreators');
 var PollActionCreators = require('../actions/PollActionCreators');
+var JobsActionCreators = require('../actions/JobsActionCreators');
 var Promise = require('bluebird');
 
 var fb = new Firebase("http://hacker-news.firebaseio.com/v0/");
@@ -32,6 +33,31 @@ function getTopStoriesKeys(page) {
       else {
         /*
         If/when firebase returns an object and not and array.
+         */
+        var returnArray = [];
+        Object.keys(snapshot.val()).forEach(function(key) {
+          returnArray.push(snapshot.val()[key]);
+        });
+        resolve(returnArray);
+      }
+    }, function(err) {
+      reject(err);
+    });
+  });
+}
+
+function getAllTopStoriesKeys() {
+  return new Promise(function(resolve, reject) {
+    fb.child('topstories').on('value', function(snapshot) {
+      if(!snapshot.val()) {
+        reject("_fetchTopStories: no valid stories");
+      }
+      else if(snapshot.val().constructor === Array) {
+        resolve(snapshot.val());
+      }
+      else {
+        /*
+         If/when firebase returns an object and not and array.
          */
         var returnArray = [];
         Object.keys(snapshot.val()).forEach(function(key) {
@@ -117,6 +143,17 @@ ReacterNewsWebAPIUtils = {
         }
       });
     });
+  },
+
+  getAllJobs: function() {
+    getAllTopStoriesKeys()
+    .then(getTopStories)
+    .then(function(topStoriesArray) {
+      return topStoriesArray.filter(function(story) {
+        return story.type === "job";
+      });
+    })
+    .then(JobsActionCreators.receiveJobs);
   },
 
   getStory: function(storyId) {
