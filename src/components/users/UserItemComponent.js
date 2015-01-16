@@ -1,5 +1,7 @@
 var React = require('react');
 var moment = require('moment');
+var Router = require('react-router');
+var Link = Router.Link;
 
 var buildCreatedDate = function(created) {
   if(created === 0) {
@@ -34,6 +36,7 @@ var UserItemComponent = React.createClass({
     var id = this.props.user.id;
     var karma = this.props.user.karma;
     var about = this.props.user.about;
+    var author = this.props.user.id;
 
     return (
       <table>
@@ -55,7 +58,7 @@ var UserItemComponent = React.createClass({
         </tr>
         <tr>
           <td></td>
-          <td><a href="#" className="underline">submissions</a></td>
+          <td><Link to="submitted" className="underline" query={{ id: author }}>submissions</Link></td>
         </tr>
         <tr>
           <td></td>

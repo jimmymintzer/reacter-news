@@ -12,6 +12,7 @@ var AskHNStoriesComponent = require('./components/stories/AskHNStoriesComponent'
 var ShowHNStoriesComponent = require('./components/stories/ShowHNStoriesComponent');
 var NewestShowHNStoriesComponent = require('./components/stories/NewestShowHNStoriesComponent');
 var CommentsStoriesComponent = require('./components/stories/CommentsStoriesComponent');
+var SubmittedComponent = require('./components/stories/SubmittedComponent');
 require('../scss/styles.scss');
 require('../node_modules/font-awesome/scss/font-awesome.scss');
 
@@ -33,6 +34,7 @@ var routes = (
     <Route name="user" handler={UserComponent} />
     <Route name="item" handler={ItemComponent} />
     <Route name="jobs" handler={JobsComponent} />
+    <Route name="submitted" handler={SubmittedComponent} />
     <DefaultRoute handler={StoriesComponent} />
   </Route>
 );

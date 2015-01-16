@@ -91,7 +91,6 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
     var end = (start + 30);
 
     var askHNStories = _topStories.filter(function(story) {
-      console.log(story);
       return story.title.indexOf("Show HN:") !== -1;
     });
 
@@ -139,6 +138,12 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
     return _topStories.filter(function(story) {
       return story.type === "job";
     });
+  },
+
+  getSubmittedStories: function(user) {
+   return _topStories.filter(function(story) {
+     return story.by === user;
+   });
   }
 });
 

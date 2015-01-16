@@ -5,14 +5,26 @@ var Link = Router.Link;
 var HeaderComponent = React.createClass({
   render: function() {
     if(this.props.name === "shownew") {
-      var liStyle = {
+      var showNewStyle = {
         display: "inline-block"
       };
     }
     else {
-      var liStyle = {
+      var showNewStyle = {
         display: "none"
       }
+    }
+    if(this.props.name === "submitted") {
+      var query = this.props.queryString.id;
+      var queryTitle = query + "'s submissions";
+      var submittedNewStyle = {
+        display: "inline-block"
+      };
+    }
+    else {
+      var submittedNewStyle = {
+        display: "none"
+      };
     }
     return (
       <header>
@@ -38,8 +50,10 @@ var HeaderComponent = React.createClass({
               <li><Link to="ask">ask</Link></li>
               <li>|</li>
               <li><Link to="jobs">jobs</Link></li>
-              <li style={liStyle}>|</li>
-              <li style={liStyle}><Link to="shownew">shownew</Link></li>
+              <li style={showNewStyle}>|</li>
+              <li style={showNewStyle}><Link to="shownew">shownew</Link></li>
+              <li style={submittedNewStyle}>|</li>
+              <li style={submittedNewStyle}><Link to="submitted" query={{ id: query }}>{queryTitle}</Link></li>
             </ul>
           </li>
         </ul>
