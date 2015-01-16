@@ -7,6 +7,7 @@ var ActionTypes = ReacterNewsConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
 var _comments = new Map();
+var _allComments = [];
 
 function _addComment(rawComments) {
   /*
@@ -18,6 +19,7 @@ function _addComment(rawComments) {
 
     comments.set(rawComments.comment.id, rawComments.comment);
     _comments.set(rawComments.parent, comments);
+    _allComments.push(rawComments);
   }
 }
 
@@ -41,6 +43,28 @@ var CommentsStore = assign({}, EventEmitter.prototype, {
 
   getAllComments: function() {
     return _comments;
+  },
+
+  getCommentsByDate: function(page) {
+    var start = 30 * (page-1);
+    var end = (start + 30);
+
+    var duplicates = {};
+    var cloneAllComments = _allComments.slice();
+    var filteredAllComments = cloneAllComments.filter(function(comment) {
+      return duplicates.hasOwnProperty(comment.comment.id) ? false : (duplicates[comment.comment.id] = true);
+    });
+
+    filteredAllComments.sort(function (a, b) {
+      if (a.comment.time < b.comment.time) {
+        return 1;
+      }
+      if (a.comment.time > b.comment.time) {
+        return -1;
+      }
+      return 0;
+    });
+    return filteredAllComments.slice(0, 30)
   }
 });
 

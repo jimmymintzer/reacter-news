@@ -11,6 +11,7 @@ var NewestStoriesComponent = require('./components/stories/NewestStoriesComponen
 var AskHNStoriesComponent = require('./components/stories/AskHNStoriesComponent');
 var ShowHNStoriesComponent = require('./components/stories/ShowHNStoriesComponent');
 var NewestShowHNStoriesComponent = require('./components/stories/NewestShowHNStoriesComponent');
+var CommentsStoriesComponent = require('./components/stories/CommentsStoriesComponent');
 require('../scss/styles.scss');
 require('../node_modules/font-awesome/scss/font-awesome.scss');
 
@@ -25,7 +26,7 @@ var routes = (
   <Route name="app" path="/" handler={ReacterNewsApp}>
     <Route name="news" handler={StoriesComponent} />
     <Route name="newest" handler={NewestStoriesComponent} />
-    <Route name="newcomments" handler={StoriesComponent} />
+    <Route name="newcomments" handler={CommentsStoriesComponent} />
     <Route name="show" handler={ShowHNStoriesComponent} />
     <Route name="shownew" handler={NewestShowHNStoriesComponent} />
     <Route name="ask" handler={AskHNStoriesComponent} />

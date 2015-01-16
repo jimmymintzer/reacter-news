@@ -62,8 +62,7 @@ var StoriesComponent = React.createClass({
       stories.push(storyComponent);
 
     }, this);
-
-    if(this.state.stories.length < 1 ) {
+    if(this.state.stories.length < 1 && this.state.storiesLength !== -1) {
       var renderedHTML = (
         <div className="spinner-center">
           <i className="fa fa-refresh fa-spin"></i>

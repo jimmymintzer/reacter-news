@@ -38,6 +38,10 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
     return story[0] || {};
   },
 
+  getAllTopStories: function() {
+    return _topStories;
+  },
+
   getTopStories: function(page) {
     var start = 30 * (page-1);
     var end = (start + 30);
@@ -68,18 +72,18 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
     var end = (start + 30);
 
     var askHNStories = _topStories.filter(function(story) {
-      return story.url === "";
+      return story.url === "" && story.type !== "job";
     });
 
-    return askHNStories.slice(start, end);
+    return askHNStories.slice(start, end) || -1;
   },
 
   getAskHNStoriesLength: function() {
     var askHNStories = _topStories.filter(function(story) {
-      return story.url === "";
+      return story.url === "" && story.type !== "job";
     });
 
-    return askHNStories.length;
+    return (askHNStories.length === 0) ? -1 : askHNStories.length;
   },
 
   getShowHNStories: function(page) {
@@ -87,7 +91,8 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
     var end = (start + 30);
 
     var askHNStories = _topStories.filter(function(story) {
-      return story.title.contains("Show HN:");
+      console.log(story);
+      return story.title.indexOf("Show HN:") !== -1;
     });
 
     return askHNStories.slice(start, end);
@@ -95,7 +100,7 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
 
   getShowHNStoriesLength: function() {
     var askHNStories = _topStories.filter(function(story) {
-      return story.title.contains("Show HN:");
+      return story.title.indexOf("Show HN:") !== -1;
     });
 
     return askHNStories.length;
@@ -106,7 +111,7 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
     var end = (start + 30);
 
     var askHNStories = _topStories.filter(function(story) {
-      return story.title.contains("Show HN:");
+      return story.title.indexOf("Show HN:") !== -1;
     });
 
     askHNStories.sort(function (a, b) {
@@ -124,7 +129,7 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
 
   getNewestShowHNStoriesLength: function() {
     var askHNStories = _topStories.filter(function(story) {
-      return story.title.contains("Show HN:");
+      return story.title.indexOf("Show HN:") !== -1;
     });
 
     return askHNStories.length;
