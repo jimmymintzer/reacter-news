@@ -28,8 +28,7 @@ var CommentItemComponent = React.createClass({
 
     var author = this.props.comment.by;
 
-    var ellipsisTitle = (this.props.parent.title.length >= 50) ? this.props.parent.title.substring(0, 50) : this.props.parent.title;
-    ellipsisTitle += " ...";
+    var ellipsisTitle = (this.props.parent.title.length >= 50) ? this.props.parent.title.substring(0, 50) + " ..." : this.props.parent.title;
 
     var UserLink = <Link to="user" className="story-link" query={{ id: author }}>{author}</Link>;
 

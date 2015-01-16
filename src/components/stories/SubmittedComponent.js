@@ -73,6 +73,7 @@ var StoriesComponent = React.createClass({
       var link = null;
       var index = 1;
 
+      // TODO: update more link
       //if(page < 2 || !page) {
       //  index = 1;
       //  link = <Link to="news" query={{ p: 2 }} onClick={this.handleClick}>More</Link>;

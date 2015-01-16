@@ -40,8 +40,6 @@ var ItemComponent = React.createClass({
   },
   render: function() {
 
-    var commentByStoryId = this.state.comments;
-
     var comments = this.state.comments.map(function(comment) {
       var parentStory = this.state.stories.filter(function(story) {
         return story.id === comment.parent;
