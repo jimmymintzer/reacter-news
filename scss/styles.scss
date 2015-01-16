@@ -142,6 +142,9 @@ footer {
   font-family: Verdana, Geneva, sans-serif;
   font-size: 8pt;
   color: $a-link-color;
+  a {
+    color: $a-link-color;
+  }
 }
 
 .job-header {
@@ -192,9 +195,26 @@ footer {
   font-size: 9pt;
 }
 
+.thread-text {
+  padding: 10px 5px -20px 0;
+  color: $main-button-color;
+  font-size: 9pt;
+}
+
 .comment-wrapper {
   .comment-subtext {
     color: $a-link-color;
+    font-size: 9px;
+    a {
+      color: $a-link-color;
+    }
+  }
+}
+
+.thread-wrapper {
+  padding: 10px 0;
+  .comment-subtext {
+    color: $main-button-color;
     font-size: 9px;
     a {
       color: $a-link-color;

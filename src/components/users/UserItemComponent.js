@@ -62,7 +62,7 @@ var UserItemComponent = React.createClass({
         </tr>
         <tr>
           <td></td>
-          <td><a href="#" className="underline">comments</a></td>
+          <td><Link to="threads" className="underline" query={{ id: author }}>comments</Link></td>
         </tr>
       </table>
     );

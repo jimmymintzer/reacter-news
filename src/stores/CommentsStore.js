@@ -65,6 +65,22 @@ var CommentsStore = assign({}, EventEmitter.prototype, {
       return 0;
     });
     return filteredAllComments.slice(0, 30)
+  },
+
+  getCommentsByUser: function(user) {
+    var duplicates = {};
+    var userFilteredDuplicates = {};
+    return _allComments
+      .slice()
+      .filter(function(comment) {
+        return duplicates.hasOwnProperty(comment.comment.id) ? false : (duplicates[comment.comment.id] = true);
+      })
+      .filter(function(comment) {
+        return comment.comment.by === user;
+      })
+      .filter(function(comment) {
+        return userFilteredDuplicates.hasOwnProperty(comment.parent) ? false : (userFilteredDuplicates[comment.parent] = true);
+      });
   }
 });
 
