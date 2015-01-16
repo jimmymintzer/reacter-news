@@ -26,6 +26,18 @@ var HeaderComponent = React.createClass({
         display: "none"
       };
     }
+    if(this.props.name === "threads") {
+      var query = this.props.queryString.id;
+      var queryTitle = query + "'s comments";
+      var threadsNewStyle = {
+        display: "inline-block"
+      };
+    }
+    else {
+      var threadsNewStyle = {
+        display: "none"
+      };
+    }
     return (
       <header>
         <ul>
@@ -54,6 +66,8 @@ var HeaderComponent = React.createClass({
               <li style={showNewStyle}><Link to="shownew">shownew</Link></li>
               <li style={submittedNewStyle}>|</li>
               <li style={submittedNewStyle}><Link to="submitted" query={{ id: query }}>{queryTitle}</Link></li>
+              <li style={threadsNewStyle}>|</li>
+              <li style={threadsNewStyle}><Link to="threads" query={{ id: query }}>{queryTitle}</Link></li>
             </ul>
           </li>
         </ul>
