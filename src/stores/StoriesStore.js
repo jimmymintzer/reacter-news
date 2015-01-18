@@ -6,14 +6,24 @@ var assign = require('object-assign');
 var ActionTypes = ReacterNewsConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _topStories = [];
+var _stories = [];
 
-function _addTopStories(rawTopStory) {
-  _topStories = rawTopStory;
+function _addStories(rawStories) {
+  _stories = rawStories;
 }
 
-function _addStory(rawTopStory) {
-  _topStories.push(rawTopStory);
+function _addStory(rawStory) {
+  _stories.push(rawStory);
+}
+
+function sortTime(a, b) {
+  if (a.time < b.time) {
+    return 1;
+  }
+  if (a.time > b.time) {
+    return -1;
+  }
+  return 0;
 }
 
 var StoriesStore = assign({}, EventEmitter.prototype, {
@@ -31,117 +41,76 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
   },
 
   getStory: function(itemid) {
-    var story = _topStories.filter(function(story) {
-      return story.id == itemid;
-    });
-
-    return story[0] || {};
+    return _stories
+      .filter(function(story) {
+        return story.id == itemid;
+      })
+      [0] || {};
   },
 
-  getAllTopStories: function() {
-    return _topStories;
+  getAllStories: function() {
+    return _stories;
   },
 
-  getTopStories: function(page) {
+  getStoriesByPage: function(page) {
     var start = 30 * (page-1);
     var end = (start + 30);
 
-    return _topStories.slice(start, end);
+    return _stories.slice(start, end);
   },
 
-  getTopStoriesByTime: function(page) {
+  getStoriesByPageAndSortedTime: function(page) {
     var start = 30 * (page-1);
     var end = (start + 30);
-    var sortedTopStories = _topStories.slice();
 
-    sortedTopStories.sort(function (a, b) {
-      if (a.time < b.time) {
-        return 1;
-      }
-      if (a.time > b.time) {
-        return -1;
-      }
-      return 0;
-    });
-
-    return sortedTopStories.slice(start, end);
+    return _stories
+      .slice()
+      .sort(sortTime)
+      .slice(start, end);
   },
 
   getAskHNStories: function(page) {
     var start = 30 * (page-1);
     var end = (start + 30);
 
-    var askHNStories = _topStories.filter(function(story) {
-      return story.url === "" && story.type !== "job";
-    });
-
-    return askHNStories.slice(start, end) || -1;
-  },
-
-  getAskHNStoriesLength: function() {
-    var askHNStories = _topStories.filter(function(story) {
-      return story.url === "" && story.type !== "job";
-    });
-
-    return (askHNStories.length === 0) ? -1 : askHNStories.length;
+    return _stories
+      .filter(function(story) {
+        return story.url === "" && story.type !== "job";
+      })
+      .slice(start, end);
   },
 
   getShowHNStories: function(page) {
     var start = 30 * (page-1);
     var end = (start + 30);
 
-    var askHNStories = _topStories.filter(function(story) {
-      return story.title.indexOf("Show HN:") !== -1;
-    });
-
-    return askHNStories.slice(start, end);
-  },
-
-  getShowHNStoriesLength: function() {
-    var askHNStories = _topStories.filter(function(story) {
-      return story.title.indexOf("Show HN:") !== -1;
-    });
-
-    return askHNStories.length;
+    return _stories
+      .filter(function(story) {
+        return story.title.indexOf("Show HN:") !== -1;
+      })
+      .slice(start, end);
   },
 
   getNewestShowHNStories: function(page) {
     var start = 30 * (page-1);
     var end = (start + 30);
 
-    var askHNStories = _topStories.filter(function(story) {
-      return story.title.indexOf("Show HN:") !== -1;
-    });
-
-    askHNStories.sort(function (a, b) {
-      if (a.time < b.time) {
-        return 1;
-      }
-      if (a.time > b.time) {
-        return -1;
-      }
-      return 0;
-    });
-
-    return askHNStories.slice(start, end);
-  },
-
-  getNewestShowHNStoriesLength: function() {
-    var askHNStories = _topStories.filter(function(story) {
-      return story.title.indexOf("Show HN:") !== -1;
-    });
-
-    return askHNStories.length;
+    return _stories
+      .filter(function(story) {
+        return story.title.indexOf("Show HN:") !== -1;
+      })
+      .sort(sortTime)
+      .slice(start, end);
   },
 
   getJobsStories: function() {
-    return _topStories.filter(function(story) {
+    return _stories.filter(function(story) {
       return story.type === "job";
     });
   },
 
   getSubmittedStories: function(user) {
-   return _topStories.filter(function(story) {
+   return _stories.filter(function(story) {
      return story.by === user;
    });
   }
@@ -151,12 +120,12 @@ StoriesStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
   var action = payload.action;
 
   switch(action.type) {
-    case ActionTypes.RECEIVE_RAW_TOP_STORIES:
-      _addTopStories(action.rawTopStory);
+    case ActionTypes.RECEIVE_RAW_STORIES:
+      _addStories(action.rawStories);
       StoriesStore.emitChange();
       break;
     case ActionTypes.RECEIVE_RAW_STORY:
-      _addStory(action.rawStoryMessage);
+      _addStory(action.rawStory);
       StoriesStore.emitChange();
       break;
     default:

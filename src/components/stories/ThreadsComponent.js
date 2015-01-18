@@ -15,7 +15,7 @@ var Link = Router.Link;
 
 function getStateFromStores(user) {
   return {
-    stories: StoriesStore.getAllTopStories(),
+    stories: StoriesStore.getAllStories(),
     comments: CommentsStore.getCommentsByUser(user),
     commentValues: CommentsStore.getAllComments()
   };

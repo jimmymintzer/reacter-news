@@ -36,7 +36,7 @@ var UserComponent = React.createClass({
     );
   },
   /**
-   * Event handler for 'change' events coming from TopStoriesStore
+   * Event handler for 'change' events coming from StoriesStore
    */
   _onChange: function() {
     var id = this.getQuery().id;

@@ -5,17 +5,17 @@ var ActionTypes = ReacterNewsConstants.ActionTypes;
 
 module.exports = {
 
-  receiveTopStory: function(rawTopStory) {
+  receiveStories: function(rawStories) {
     ReacterNewsDispatcher.handleServerAction({
-      type: ActionTypes.RECEIVE_RAW_TOP_STORIES,
-      rawTopStory: rawTopStory
+      type: ActionTypes.RECEIVE_RAW_STORIES,
+      rawStories: rawStories
     });
   },
 
-  receiveStory: function(rawStoryMessage) {
+  receiveStory: function(rawStory) {
     ReacterNewsDispatcher.handleServerAction({
       type: ActionTypes.RECEIVE_RAW_STORY,
-      rawStoryMessage: rawStoryMessage
+      rawStory: rawStory
     });
   }
 

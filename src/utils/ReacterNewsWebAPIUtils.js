@@ -1,5 +1,5 @@
 var Firebase = require('firebase');
-var TopStoriesActionCreators = require('../actions/TopStoriesActionCreators');
+var StoriesActionCreators = require('../actions/StoriesActionCreators');
 var CommentsActionCreators = require('../actions/CommentsActionCreators');
 var UserActionCreators = require('../actions/UserActionCreators');
 var PollActionCreators = require('../actions/PollActionCreators');
@@ -10,22 +10,7 @@ var fb = new Firebase("http://hacker-news.firebaseio.com/v0/");
 function getAllTopStoriesKeys() {
   return new Promise(function(resolve, reject) {
     fb.child('topstories').on('value', function(snapshot) {
-      if(!snapshot.val()) {
-        reject("_fetchTopStories: no valid stories");
-      }
-      else if(snapshot.val().constructor === Array) {
-        resolve(snapshot.val());
-      }
-      else {
-        /*
-         If/when firebase returns an object and not and array.
-         */
-        var returnArray = [];
-        Object.keys(snapshot.val()).forEach(function(key) {
-          returnArray.push(snapshot.val()[key]);
-        });
-        resolve(returnArray);
-      }
+      resolve(snapshot.val());
     }, function(err) {
       reject(err);
     });
@@ -81,12 +66,11 @@ function getTopStories(stories) {
 
 ReacterNewsWebAPIUtils = {
 
-  getTopStoriesAndComments: function(page) {
-    page = parseInt(page) || 1;
-    getAllTopStoriesKeys(page)
+  getTopStoriesAndComments: function() {
+    getAllTopStoriesKeys()
     .then(getTopStories)
     .then(function(topStoriesArray) {
-        TopStoriesActionCreators.receiveTopStory(topStoriesArray);
+        StoriesActionCreators.receiveStories(topStoriesArray);
         return topStoriesArray;
     })
     .then(function(topStoriesArray) {
@@ -105,7 +89,7 @@ ReacterNewsWebAPIUtils = {
 
   getStory: function(storyId) {
     getItem(storyId, function(story) {
-      TopStoriesActionCreators.receiveStory(story);
+      StoriesActionCreators.receiveStory(story);
       if(story.parts && story.parts.length > 0) {
         getItems(story.parts, function(poll) {
           PollActionCreators.receivePoll(poll);

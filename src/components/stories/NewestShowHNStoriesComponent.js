@@ -14,8 +14,7 @@ var _  = require('../../utils/UnderscoreDebounce');
 function getStateFromStores(page) {
   return {
     stories: StoriesStore.getNewestShowHNStories(page),
-    comments: CommentsStore.getAllComments(),
-    storiesLength: StoriesStore.getNewestShowHNStoriesLength()
+    comments: CommentsStore.getAllComments()
   };
 }
 
@@ -23,8 +22,7 @@ var StoriesComponent = React.createClass({
   getDefaultProps: function () {
     return {
       stories: [],
-      comments: new Map(),
-      storiesLength: 0
+      comments: new Map()
     }
   },
   mixins: [Router.State],
@@ -74,13 +72,13 @@ var StoriesComponent = React.createClass({
       var page = parseInt(this.getQuery().p) || 1;
       var link = null;
       var index = 1;
-      if(page < 2 && this.state.storiesLength > (page*30)) {
+      if(page < 2 ) {
         link = <Link to="ask" query={{ p: 2 }} onClick={this.handleClick}>More</Link>;
       }
       else if(page >= 4) {
         index = 91;
       }
-      else if( this.state.storiesLength > (page*30)) {
+      else {
         index = 30 * (page-1) + 1;
         var nextPage = 1 + page;
         link = <Link to="ask" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;

@@ -13,7 +13,7 @@ var _  = require('../../utils/UnderscoreDebounce');
 
 function getStateFromStores(page) {
   return {
-    stories: StoriesStore.getTopStories(page),
+    stories: StoriesStore.getStoriesByPage(page),
     comments: CommentsStore.getAllComments()
   };
 }
