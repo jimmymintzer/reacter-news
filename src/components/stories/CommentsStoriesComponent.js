@@ -2,7 +2,7 @@ var React = require('react');
 var Router = require('react-router');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 var CommentsStore = require('../../stores/CommentsStore');
-var TopStoriesStore = require('../../stores/TopStoriesStore');
+var StoriesStore = require('../../stores/StoriesStore');
 var PollStore = require('../../stores/PollStore');
 var CommentItemComponent = require('../stories/CommentItemComponent');
 var CommentsComponent = require('../comments/CommentsComponent');
@@ -15,7 +15,7 @@ var Link = Router.Link;
 
 function getStateFromStores() {
   return {
-    stories: TopStoriesStore.getAllTopStories(),
+    stories: StoriesStore.getAllTopStories(),
     comments: CommentsStore.getCommentsByDate()
   };
 }
@@ -31,11 +31,11 @@ var ItemComponent = React.createClass({
     return getStateFromStores();
   },
   componentDidMount: function() {
-    TopStoriesStore.addChangeListener(this._onChange);
+    StoriesStore.addChangeListener(this._onChange);
     CommentsStore.addChangeListener(this._onChange);
   },
   componentWillUnmount: function() {
-    TopStoriesStore.removeChangeListener(this._onChange);
+    StoriesStore.removeChangeListener(this._onChange);
     CommentsStore.removeChangeListener(this._onChange);
   },
   render: function() {
@@ -65,7 +65,7 @@ var ItemComponent = React.createClass({
 
   },
   /**
-   * Event handler for 'change' events coming from TopStoriesStore
+   * Event handler for 'change' events coming from StoriesStore
    */
   _onChange: _.debounce(function () {
     this._setState();

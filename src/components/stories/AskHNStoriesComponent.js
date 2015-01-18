@@ -4,7 +4,7 @@ var Link = Router.Link;
 
 var StoryComponent = require('./StoryComponent');
 var CommentsStore = require('../../stores/CommentsStore');
-var TopStoriesStore = require('../../stores/TopStoriesStore');
+var StoriesStore = require('../../stores/StoriesStore');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 var SpacerComponent = require('./../common/SpacerComponent');
 var FooterComponent = require('./../common/FooterComponent');
@@ -13,9 +13,9 @@ var _  = require('../../utils/UnderscoreDebounce');
 
 function getStateFromStores(page) {
   return {
-    stories: TopStoriesStore.getAskHNStories(page),
+    stories: StoriesStore.getAskHNStories(page),
     comments: CommentsStore.getAllComments(),
-    storiesLength: TopStoriesStore.getAskHNStoriesLength()
+    storiesLength: StoriesStore.getAskHNStoriesLength()
   };
 }
 
@@ -38,11 +38,11 @@ var StoriesComponent = React.createClass({
     return getStateFromStores(page);
   },
   componentDidMount: function() {
-    TopStoriesStore.addChangeListener(this._onChange);
+    StoriesStore.addChangeListener(this._onChange);
     CommentsStore.addChangeListener(this._onChange);
   },
   componentWillUnmount: function() {
-    TopStoriesStore.removeChangeListener(this._onChange);
+    StoriesStore.removeChangeListener(this._onChange);
     CommentsStore.removeChangeListener(this._onChange);
   },
   handleClick: function() {

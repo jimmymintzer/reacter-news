@@ -3,7 +3,6 @@ var TopStoriesActionCreators = require('../actions/TopStoriesActionCreators');
 var CommentsActionCreators = require('../actions/CommentsActionCreators');
 var UserActionCreators = require('../actions/UserActionCreators');
 var PollActionCreators = require('../actions/PollActionCreators');
-var JobsActionCreators = require('../actions/JobsActionCreators');
 var Promise = require('bluebird');
 
 var fb = new Firebase("http://hacker-news.firebaseio.com/v0/");
