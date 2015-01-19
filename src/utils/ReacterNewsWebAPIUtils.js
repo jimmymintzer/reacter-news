@@ -21,7 +21,7 @@ function getItems(items, cb) {
   items.forEach(function(item) {
     getItem(item, function(result) {
       cb(result);
-      if(result.kids && result.kids.length > 0) {
+      if(result && result.kids && result.kids.length > 0) {
         getItems(result.kids, cb);
       }
     });
@@ -148,7 +148,45 @@ ReacterNewsWebAPIUtils = {
         });
       })
       .then(StoriesActionCreators.stopSubmittedLoading);
+  },
 
+  getUserComments: function(userId, page) {
+    var start = 10 * (page-1);
+    var end = (start + 10);
+
+    UserActionCreators.setLoading();
+    CommentsActionCreators.setLoading();
+    getUser(userId)
+      .then(function(userDetails) {
+        UserActionCreators.receiveUser(userDetails);
+        UserActionCreators.stopLoading();
+        return userDetails.submitted;
+      })
+      .then(getTopStories)
+      .then(function(submittedItems) {
+        return submittedItems
+          .filter(function(item) {
+            return item && (item.type === "comment" && !item.deleted)
+          })
+          .slice(start, end);
+      })
+      .then(function(comments) {
+        comments.forEach(function(comment) {
+          CommentsActionCreators.receiveComment({
+            comment: comment,
+            parent: comment.parent
+          });
+          if(comment.kids && comment.kids.length > 0) {
+            getItems(comment.kids, function(result) {
+              CommentsActionCreators.receiveComment({
+                comment: result,
+                parent: comment.parent
+              });
+            });
+          }
+        });
+      })
+      .then(CommentsActionCreators.stopLoading);
   }
 
 };

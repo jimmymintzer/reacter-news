@@ -1,56 +1,84 @@
 var React = require('react');
 var Router = require('react-router');
-var StoriesCommentsMixin = require('../../mixins/StoriesCommentsMixin');
-var GetTopStoriesAndCommentsMixin = require('../../mixins/GetTopStoriesAndCommentsMixin');
+var GetUserCommentsMixin = require('../../mixins/GetUserCommentsMixin');
+var CommentsMixin = require('../../mixins/CommentsMixin');
 var CommentsStore = require('../../stores/CommentsStore');
-var StoriesStore = require('../../stores/StoriesStore');
 var ThreadItemComponent = require('./ThreadItemComponent');
 var SpacerComponent = require('../common/SpacerComponent');
 var FooterComponent = require('../common/FooterComponent');
-
+var LoaderComponent = require('../common/LoaderComponent');
 var _ = require('../../utils/UnderscoreDebounce');
 var Link = Router.Link;
 
-function getStateFromStores(user) {
+function getStateFromStores(userId, page) {
   return {
-    stories: StoriesStore.getAllStories(),
-    comments: CommentsStore.getCommentsByUser(user),
-    commentValues: CommentsStore.getAllComments()
+    comments: CommentsStore.getCommentsByUser(userId, page),
+    commentValues: CommentsStore.getAllComments(),
+    loading: CommentsStore.getLoadingStatus()
   };
 }
 
 var ThreadsComponent = React.createClass({
-  mixins: [Router.State, StoriesCommentsMixin, GetTopStoriesAndCommentsMixin],
+  mixins: [Router.State, CommentsMixin, GetUserCommentsMixin],
   _setState: function() {
     if(this.isMounted()) {
-      var id = this.getQuery().id;
+      var userId = this.getQuery().id || "";
+      var page = this.getQuery().p || 1;
       if(this.isMounted()) {
-        this.setState(getStateFromStores(id));
+        this.setState(getStateFromStores(userId, page));
       }
     }
   },
   getInitialState: function() {
-    return getStateFromStores();
+    var userId = this.getQuery().id || "";
+    var page = this.getQuery().p || 1;
+    return getStateFromStores(userId, page);
+  },
+  handleClick: function() {
+    document.body.scrollTop = document.documentElement.scrollTop = 0;
   },
   render: function() {
-
     var comments = this.state.comments.map(function(comment) {
-      var parentStory = this.state.stories.filter(function(story) {
-        return story.id === comment.parent;
-      });
+      //var parentStory = this.state.stories.filter(function(story) {
+      //  return story.id === comment.parent;
+      //});
       return (
         <div key={comment.comment.id}>
-          <ThreadItemComponent comment={comment.comment} parent={parentStory[0]} commentValues={this.state.commentValues} />
+          <ThreadItemComponent comment={comment.comment} parent={""} commentValues={this.state.commentValues} />
         </div>
       );
 
     }, this);
 
+    if(this.state.loading) {
+      var renderedHTML = (
+        <LoaderComponent />
+      );
+    }
+    else {
+
+      var page = parseInt(this.getQuery().p) || 1;
+      var userId = this.getQuery().id || "";
+      var nextPage = page + 1;
+      if ( this.state.comments.length === 10 ) {
+        var link = <Link to="threads" query={{id: userId, p: nextPage}} onClick={this.handleClick}>More</Link>;
+      }
+
+      var renderedHTML = (
+        <div>
+          <div className="comment-wrapper">
+          {comments}
+          </div>
+          <div className="more-link">
+          {link}
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="item-wrapper">
-        <div className="comment-wrapper">
-        {comments}
-        </div>
+        {renderedHTML}
         <div className="spacer-padding"></div>
         <SpacerComponent />
         <FooterComponent />

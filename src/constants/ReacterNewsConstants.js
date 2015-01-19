@@ -16,7 +16,9 @@ module.exports = {
     CLEAR_SUBMITTED_STORIES: null,
     RECEIVE_USER: null,
     USER_LOADING: null,
-    USER_FINISHED_LOADING: null
+    USER_FINISHED_LOADING: null,
+    COMMENTS_LOADING: null,
+    COMMENTS_FINISHED_LOADING: null
   }),
 
   PayloadSource: keyMirror({

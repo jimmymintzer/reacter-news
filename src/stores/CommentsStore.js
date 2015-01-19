@@ -8,12 +8,13 @@ var CHANGE_EVENT = 'change';
 
 var _comments = new Map();
 var _allComments = [];
+var _loading = false;
 
 function _addComment(rawComments) {
   /*
    Ignore deleted comments
    */
-  if(!rawComments.comment.deleted) {
+  if(rawComments.comment && (!rawComments.comment.deleted)) {
 
     var comments = _comments.get(rawComments.parent) || new Map();
 
@@ -21,6 +22,16 @@ function _addComment(rawComments) {
     _comments.set(rawComments.parent, comments);
     _allComments.push(rawComments);
   }
+}
+
+function sortTime(a, b) {
+  if (a.comment.time < b.comment.time) {
+    return 1;
+  }
+  if (a.comment.time > b.comment.time) {
+    return -1;
+  }
+  return 0;
 }
 
 var CommentsStore = assign({}, EventEmitter.prototype, {
@@ -45,7 +56,12 @@ var CommentsStore = assign({}, EventEmitter.prototype, {
     return _comments;
   },
 
+  getLoadingStatus: function() {
+    return _loading;
+  },
+
   getCommentsByDate: function(page) {
+    page = page || 1;
     var start = 30 * (page-1);
     var end = (start + 30);
 
@@ -64,23 +80,30 @@ var CommentsStore = assign({}, EventEmitter.prototype, {
       }
       return 0;
     });
-    return filteredAllComments.slice(0, 30)
+    return filteredAllComments.slice(start, end)
   },
 
-  getCommentsByUser: function(user) {
+  getCommentsByUser: function(user, page) {
     var duplicates = {};
     var userFilteredDuplicates = {};
+
+    var page = page || 1;
+    var start = 10 * (page-1);
+    var end = start + 10;
+
     return _allComments
-      .slice()
+
       .filter(function(comment) {
         return duplicates.hasOwnProperty(comment.comment.id) ? false : (duplicates[comment.comment.id] = true);
       })
       .filter(function(comment) {
         return comment.comment.by === user;
       })
+      .sort(sortTime)
       .filter(function(comment) {
         return userFilteredDuplicates.hasOwnProperty(comment.parent) ? false : (userFilteredDuplicates[comment.parent] = true);
-      });
+      })
+      .slice(start, end);
   }
 });
 
@@ -90,6 +113,14 @@ CommentsStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
   switch(action.type) {
     case ActionTypes.RECEIVE_RAW_COMMENT:
       _addComment(action.rawComments);
+      CommentsStore.emitChange();
+      break;
+    case ActionTypes.COMMENTS_LOADING:
+      _loading = true;
+      CommentsStore.emitChange();
+      break;
+    case ActionTypes.COMMENTS_FINISHED_LOADING:
+      _loading = false;
       CommentsStore.emitChange();
       break;
     default:
