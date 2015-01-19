@@ -2,10 +2,11 @@ var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 
-var StoryComponent = require('./StoryComponent');
+var StoryComponent = require('./../common/StoryComponent');
 var CommentsStore = require('../../stores/CommentsStore');
 var StoriesStore = require('../../stores/StoriesStore');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
+var LoaderComponent = require('../common/LoaderComponent');
 var SpacerComponent = require('./../common/SpacerComponent');
 var FooterComponent = require('./../common/FooterComponent');
 
@@ -14,6 +15,8 @@ var _  = require('../../utils/UnderscoreDebounce');
 function getStateFromStores(page) {
   return {
     stories: StoriesStore.getStoriesByPage(page),
+    loading: StoriesStore.getLoadingStatus(),
+    initialized: StoriesStore.getInitalizedState(),
     comments: CommentsStore.getAllComments()
   };
 }
@@ -61,11 +64,9 @@ var StoriesComponent = React.createClass({
 
     }, this);
 
-    if(this.state.stories.length < 1 ) {
+    if(this.state.loading && !this.state.initialized) {
       var renderedHTML = (
-        <div className="spinner-center">
-          <i className="fa fa-refresh fa-spin"></i>
-        </div>
+        <LoaderComponent />
       );
     }
     else {
@@ -85,18 +86,24 @@ var StoriesComponent = React.createClass({
         var nextPage = 1 + page;
         link = <Link to="news" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
       }
-    }
 
-    return (
-      <div>
-        <div className="main">
-        {renderedHTML}
+      var renderedHTML = (
+        <div>
           <ol className="stories" start={index}>
           {stories}
           </ol>
           <div className="more-link">
           {link}
           </div>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <div className="main">
+        {renderedHTML}
+
         </div>
         <SpacerComponent />
         <FooterComponent />

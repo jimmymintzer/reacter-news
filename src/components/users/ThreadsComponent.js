@@ -3,24 +3,22 @@ var Router = require('react-router');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 var CommentsStore = require('../../stores/CommentsStore');
 var StoriesStore = require('../../stores/StoriesStore');
-var PollStore = require('../../stores/PollStore');
-var CommentItemComponent = require('../stories/CommentItemComponent');
-var CommentsComponent = require('../comments/CommentsComponent');
+var ThreadItemComponent = require('./ThreadItemComponent');
 var SpacerComponent = require('../common/SpacerComponent');
 var FooterComponent = require('../common/FooterComponent');
 
 var _ = require('../../utils/UnderscoreDebounce');
-var moment = require('moment');
 var Link = Router.Link;
 
-function getStateFromStores() {
+function getStateFromStores(user) {
   return {
     stories: StoriesStore.getAllStories(),
-    comments: CommentsStore.getCommentsByDate()
+    comments: CommentsStore.getCommentsByUser(user),
+    commentValues: CommentsStore.getAllComments()
   };
 }
 
-var ItemComponent = React.createClass({
+var ThreadsComponent = React.createClass({
   mixins: [Router.State],
   statics :{
     willTransitionTo: function(transition, params, query) {
@@ -46,7 +44,7 @@ var ItemComponent = React.createClass({
       });
       return (
         <div key={comment.comment.id}>
-          <CommentItemComponent comment={comment.comment} parent={parentStory[0]} />
+          <ThreadItemComponent comment={comment.comment} parent={parentStory[0]} commentValues={this.state.commentValues} />
         </div>
       );
 
@@ -81,4 +79,4 @@ var ItemComponent = React.createClass({
   }
 });
 
-module.exports = ItemComponent;
+module.exports = ThreadsComponent;

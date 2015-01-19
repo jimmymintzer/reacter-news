@@ -2,10 +2,11 @@ var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 
-var StoryComponent = require('./StoryComponent');
+var StoryComponent = require('./../common/StoryComponent');
 var CommentsStore = require('../../stores/CommentsStore');
 var StoriesStore = require('../../stores/StoriesStore');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
+var LoaderComponent = require('../common/LoaderComponent');
 var SpacerComponent = require('./../common/SpacerComponent');
 var FooterComponent = require('./../common/FooterComponent');
 
@@ -14,11 +15,13 @@ var _  = require('../../utils/UnderscoreDebounce');
 function getStateFromStores(page) {
   return {
     stories: StoriesStore.getStoriesByPageAndSortedTime(page),
+    loading: StoriesStore.getLoadingStatus(),
+    initialized: StoriesStore.getInitalizedState(),
     comments: CommentsStore.getAllComments()
   };
 }
 
-var StoriesComponent = React.createClass({
+var NewestStoriesComponent = React.createClass({
   getDefaultProps: function () {
     return {
       stories: [],
@@ -61,11 +64,9 @@ var StoriesComponent = React.createClass({
 
     }, this);
 
-    if(this.state.stories.length < 1 ) {
+    if(this.state.loading && !this.state.initialized) {
       var renderedHTML = (
-        <div className="spinner-center">
-          <i className="fa fa-refresh fa-spin"></i>
-        </div>
+        <LoaderComponent />
       );
     }
     else {
@@ -119,4 +120,4 @@ var StoriesComponent = React.createClass({
 
 });
 
-module.exports = StoriesComponent;
+module.exports = NewestStoriesComponent;

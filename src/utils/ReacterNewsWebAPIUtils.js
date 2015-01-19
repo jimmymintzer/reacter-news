@@ -67,6 +67,7 @@ function getTopStories(stories) {
 ReacterNewsWebAPIUtils = {
 
   getTopStoriesAndComments: function() {
+    StoriesActionCreators.setLoading();
     getAllTopStoriesKeys()
     .then(getTopStories)
     .then(function(topStoriesArray) {
@@ -74,7 +75,7 @@ ReacterNewsWebAPIUtils = {
         return topStoriesArray;
     })
     .then(function(topStoriesArray) {
-      topStoriesArray.forEach(function(story, index) {
+      topStoriesArray.forEach(function(story) {
         if(story.kids && story.kids.length > 0) {
           getItems(story.kids, function(result) {
             CommentsActionCreators.receiveComment({
@@ -85,6 +86,7 @@ ReacterNewsWebAPIUtils = {
         }
       });
     })
+    .then(StoriesActionCreators.stopLoading)
   },
 
   getStory: function(storyId) {
@@ -103,15 +105,14 @@ ReacterNewsWebAPIUtils = {
           });
         });
       }
-    });
+    })
   },
 
   getUser: function(userId) {
+    UserActionCreators.setLoading();
     getUser(userId)
     .then(UserActionCreators.receiveUser)
-    .catch(function(err) {
-      console.log("getUser:", err);
-    })
+    .then(UserActionCreators.stopLoading);
   }
 
 };

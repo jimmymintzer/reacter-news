@@ -3,25 +3,24 @@ var Router = require('react-router');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 var CommentsStore = require('../../stores/CommentsStore');
 var StoriesStore = require('../../stores/StoriesStore');
-var PollStore = require('../../stores/PollStore');
-var ThreadItemComponent = require('../stories/ThreadItemComponent');
-var CommentsComponent = require('../comments/CommentsComponent');
+var CommentItemComponent = require('./CommentItemComponent');
+var LoaderComponent = require('../common/LoaderComponent');
 var SpacerComponent = require('../common/SpacerComponent');
 var FooterComponent = require('../common/FooterComponent');
 
 var _ = require('../../utils/UnderscoreDebounce');
-var moment = require('moment');
 var Link = Router.Link;
 
-function getStateFromStores(user) {
+function getStateFromStores() {
   return {
     stories: StoriesStore.getAllStories(),
-    comments: CommentsStore.getCommentsByUser(user),
-    commentValues: CommentsStore.getAllComments()
+    loading: StoriesStore.getLoadingStatus(),
+    initialized: StoriesStore.getInitalizedState(),
+    comments: CommentsStore.getCommentsByDate()
   };
 }
 
-var ItemComponent = React.createClass({
+var CommentsStoriesComponent = React.createClass({
   mixins: [Router.State],
   statics :{
     willTransitionTo: function(transition, params, query) {
@@ -41,26 +40,40 @@ var ItemComponent = React.createClass({
   },
   render: function() {
 
-    var comments = this.state.comments.map(function(comment) {
-      var parentStory = this.state.stories.filter(function(story) {
-        return story.id === comment.parent;
-      });
-      return (
-        <div key={comment.comment.id}>
-          <ThreadItemComponent comment={comment.comment} parent={parentStory[0]} commentValues={this.state.commentValues} />
+    if(this.state.loading && !this.state.initialized) {
+      var renderedHTML = (
+        <LoaderComponent />
+      );
+    }
+    else {
+
+      var comments = this.state.comments.map(function( comment ) {
+        var parentStory = this.state.stories.filter(function( story ) {
+          return story.id === comment.parent;
+        });
+        return (
+          <div key={comment.comment.id}>
+            <CommentItemComponent comment={comment.comment} parent={parentStory[0]} />
+          </div>
+        );
+
+      }, this);
+
+      var renderedHTML = (
+        <div className="item-wrapper">
+          <div className="comment-wrapper">
+        {comments}
+          </div>
+          <div className="spacer-padding"></div>
+          <SpacerComponent />
+          <FooterComponent />
         </div>
       );
-
-    }, this);
+    }
 
     return (
-      <div className="item-wrapper">
-        <div className="comment-wrapper">
-        {comments}
-        </div>
-        <div className="spacer-padding"></div>
-        <SpacerComponent />
-        <FooterComponent />
+      <div>
+        {renderedHTML}
       </div>
     );
 
@@ -82,4 +95,4 @@ var ItemComponent = React.createClass({
   }
 });
 
-module.exports = ItemComponent;
+module.exports = CommentsStoriesComponent;

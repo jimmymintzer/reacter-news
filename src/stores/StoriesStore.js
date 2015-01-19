@@ -7,6 +7,8 @@ var ActionTypes = ReacterNewsConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
 var _stories = [];
+var _loading = false;
+var _initialized = false;
 
 function _addStories(rawStories) {
   _stories = rawStories;
@@ -38,6 +40,14 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
 
   removeChangeListener: function(callback) {
     this.removeListener(CHANGE_EVENT, callback);
+  },
+
+  getLoadingStatus: function() {
+    return _loading;
+  },
+
+  getInitalizedState: function() {
+    return _initialized;
   },
 
   getStory: function(itemid) {
@@ -80,27 +90,21 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
       .slice(start, end);
   },
 
-  getShowHNStories: function(page) {
+  getShowHNStories: function(page, sort) {
     var start = 30 * (page-1);
     var end = (start + 30);
 
-    return _stories
+    var showHNStories = _stories
       .filter(function(story) {
         return story.title.indexOf("Show HN:") !== -1;
       })
       .slice(start, end);
-  },
-
-  getNewestShowHNStories: function(page) {
-    var start = 30 * (page-1);
-    var end = (start + 30);
-
-    return _stories
-      .filter(function(story) {
-        return story.title.indexOf("Show HN:") !== -1;
-      })
-      .sort(sortTime)
-      .slice(start, end);
+    if(sort) {
+      return showHNStories.sort(sortTime);
+    }
+    else {
+      return showHNStories;
+    }
   },
 
   getJobsStories: function() {
@@ -126,6 +130,15 @@ StoriesStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
       break;
     case ActionTypes.RECEIVE_RAW_STORY:
       _addStory(action.rawStory);
+      StoriesStore.emitChange();
+      break;
+    case ActionTypes.STORIES_LOADING:
+      _loading = true;
+      StoriesStore.emitChange();
+      break;
+    case ActionTypes.STORIES_FINISHED_LOADING:
+      _loading = false;
+      _initialized = true;
       StoriesStore.emitChange();
       break;
     default:

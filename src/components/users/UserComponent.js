@@ -3,10 +3,14 @@ var Router = require('react-router');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 var UsersStore = require('../../stores/UsersStore');
 var UserItemComponent = require('./UserItemComponent');
+var LoaderComponent = require('../common/LoaderComponent');
 
-function getStateFromStores(id) {
+var _id;
+
+function getStateFromStores() {
   return {
-    user: UsersStore.get(id)
+    user: UsersStore.get(_id),
+    loading: UsersStore.getLoadingStatus()
   };
 }
 
@@ -14,13 +18,12 @@ var UserComponent = React.createClass({
   mixins: [Router.State],
   statics :{
     willTransitionTo: function(transition, params, query) {
-      var id = query.id || '';
-      ReacterNewsWebAPIUtils.getUser(id);
+      _id = query.id || '';
+      ReacterNewsWebAPIUtils.getUser(_id);
     }
   },
   getInitialState: function() {
-    var id = this.getQuery().id;
-    return getStateFromStores(id);
+    return getStateFromStores();
   },
   componentDidMount: function() {
     UsersStore.addChangeListener(this._onChange);
@@ -29,18 +32,29 @@ var UserComponent = React.createClass({
     UsersStore.removeChangeListener(this._onChange);
   },
   render: function() {
+    var user = this.state.user;
+
+    if(this.state.loading) {
+      var renderedHTML = (
+        <LoaderComponent />
+      );
+    }
+    else {
+      var renderedHTML = (
+        <div className="user-component">
+          <UserItemComponent user={user} />
+        </div>
+      );
+    }
     return (
-      <div className="user-component">
-        <UserItemComponent user={this.state.user} />
-      </div>
+      <div>{renderedHTML}</div>
     );
   },
   /**
    * Event handler for 'change' events coming from StoriesStore
    */
   _onChange: function() {
-    var id = this.getQuery().id;
-    this.setState(getStateFromStores(id));
+    this.setState(getStateFromStores());
   }
 });
 

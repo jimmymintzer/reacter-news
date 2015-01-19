@@ -4,7 +4,7 @@ var moment = require('moment');
 var Router = require('react-router');
 var Link = Router.Link;
 
-var CommentItemComponent = React.createClass({
+var ThreadItemComponent = React.createClass({
   getDefaultProps: function() {
     return {
       comment: {
@@ -53,4 +53,4 @@ var CommentItemComponent = React.createClass({
   }
 });
 
-module.exports = CommentItemComponent;
+module.exports = ThreadItemComponent;

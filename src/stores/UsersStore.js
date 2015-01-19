@@ -7,6 +7,7 @@ var ActionTypes = ReacterNewsConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
 var _users = new Map();
+var _loading = false;
 
 function _addUser(rawMessages) {
   _users.set(rawMessages.id, rawMessages);
@@ -28,6 +29,10 @@ var UsersStore = assign({}, EventEmitter.prototype, {
 
   get: function(id) {
     return _users.get(id);
+  },
+
+  getLoadingStatus: function() {
+    return _loading;
   }
 
 });
@@ -38,6 +43,14 @@ UsersStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
   switch(action.type) {
     case ActionTypes.RECEIVE_USER:
       _addUser(action.rawMessages);
+      UsersStore.emitChange();
+      break;
+    case ActionTypes.USER_LOADING:
+      _loading = true;
+      UsersStore.emitChange();
+      break;
+    case ActionTypes.USER_FINISHED_LOADING:
+      _loading = false;
       UsersStore.emitChange();
       break;
     default:

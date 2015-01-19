@@ -105,7 +105,7 @@ footer {
 
 .main {
   background: $main-background;
-  min-height: 796px;
+//  min-height: 796px;
   padding: 7px 0;
 
   .more-link {
@@ -283,8 +283,8 @@ footer {
 }
 
 .animate-enter {
-  opacity: 0.01;
-  transition: opacity .5s ease-in;
+  opacity: 0.1;
+  transition: opacity .5s ease;
   &.animate-enter-active {
     opacity: 1;
   }
@@ -292,14 +292,15 @@ footer {
 
 .animate-leave {
   opacity: 1;
-  transition: opacity .5s ease-in;
+  transition: opacity .5s ease;
   &.animate-leave-active {
-    opacity: 0.01;
+    opacity: 0.1;
   }
 }
 
 .spinner-center {
   text-align: center;
+  background: $main-background;
 
   .fa.fa-refresh {
     font-size: 100px;

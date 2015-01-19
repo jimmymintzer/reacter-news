@@ -2,20 +2,23 @@ var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 
-var StoryComponent = require('./StoryComponent');
+var StoryComponent = require('./../common/StoryComponent');
 var StoriesStore = require('../../stores/StoriesStore');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
+var LoaderComponent = require('../common/LoaderComponent');
 var SpacerComponent = require('./../common/SpacerComponent');
 var FooterComponent = require('./../common/FooterComponent');
 
 
 function getStateFromStores() {
   return {
-    jobs: StoriesStore.getJobsStories()
+    jobs: StoriesStore.getJobsStories(),
+    loading: StoriesStore.getLoadingStatus(),
+    initialized: StoriesStore.getInitalizedState()
   };
 }
 
-var StoriesComponent = React.createClass({
+var JobsComponent = React.createClass({
   getDefaultProps: function () {
     return {
       jobs: []
@@ -53,11 +56,9 @@ var StoriesComponent = React.createClass({
 
     }, this);
 
-    if(this.state.jobs.length < 1 ) {
+    if(this.state.loading && !this.state.initialized) {
       var renderedHTML = (
-        <div className="spinner-center">
-          <i className="fa fa-refresh fa-spin"></i>
-        </div>
+        <LoaderComponent />
       );
     }
     else {
@@ -85,4 +86,4 @@ var StoriesComponent = React.createClass({
 
 });
 
-module.exports = StoriesComponent;
+module.exports = JobsComponent;
