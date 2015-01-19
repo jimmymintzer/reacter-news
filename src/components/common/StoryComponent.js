@@ -30,6 +30,7 @@ var buildComhead = function(url) {
     .replace(/\.fr.*$/, '.fr')
     .replace(/\.nl.*$/, '.nl')
     .replace(/\.ai.*$/, '.ai')
+    .replace(/\.nu.*$/, '.nu')
     .replace(/\.cl.*$/, '.cl');
   comhead = comhead ? '('+comhead+')' : '';
   return comhead;

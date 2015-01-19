@@ -7,6 +7,8 @@ var ActionTypes = ReacterNewsConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
 var _stories = [];
+var _submitted_stories = [];
+var _submittedLoading = false;
 var _loading = false;
 var _initialized = false;
 
@@ -16,6 +18,10 @@ function _addStories(rawStories) {
 
 function _addStory(rawStory) {
   _stories.push(rawStory);
+}
+
+function _addSubmittedStories(rawStories) {
+  _submitted_stories = rawStories;
 }
 
 function sortTime(a, b) {
@@ -46,6 +52,10 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
     return _loading;
   },
 
+  getSubmittedLoadingStatus: function() {
+    return _submittedLoading;
+  },
+
   getInitializedState: function() {
     return _initialized;
   },
@@ -60,6 +70,10 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
 
   getAllStories: function() {
     return _stories;
+  },
+
+  getAllSubmittedStories: function() {
+    return _submitted_stories;
   },
 
   getStoriesByPage: function(page) {
@@ -111,13 +125,8 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
     return _stories.filter(function(story) {
       return story.type === "job";
     });
-  },
-
-  getSubmittedStories: function(user) {
-   return _stories.filter(function(story) {
-     return story.by === user;
-   });
   }
+
 });
 
 StoriesStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
@@ -126,6 +135,10 @@ StoriesStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
   switch(action.type) {
     case ActionTypes.RECEIVE_RAW_STORIES:
       _addStories(action.rawStories);
+      StoriesStore.emitChange();
+      break;
+    case ActionTypes.RECEIVE_RAW_SUBMITTED_STORIES:
+      _addSubmittedStories(action.rawStories);
       StoriesStore.emitChange();
       break;
     case ActionTypes.RECEIVE_RAW_STORY:
@@ -139,6 +152,18 @@ StoriesStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
     case ActionTypes.STORIES_FINISHED_LOADING:
       _loading = false;
       _initialized = true;
+      StoriesStore.emitChange();
+      break;
+    case ActionTypes.SUBMITTED_STORIES_LOADING:
+      _submittedLoading = true;
+      StoriesStore.emitChange();
+      break;
+    case ActionTypes.SUBMITTED_STORIES_FINISHED_LOADING:
+      _submittedLoading = false;
+      StoriesStore.emitChange();
+      break;
+    case ActionTypes.CLEAR_SUBMITTED_STORIES:
+      _submitted_stories = [];
       StoriesStore.emitChange();
       break;
     default:

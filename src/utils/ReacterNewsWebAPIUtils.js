@@ -60,7 +60,7 @@ function getTopStories(stories) {
 
   return Promise.settle(promisesArr).map(function(story) {
     return story.value();
-  })
+  });
 }
 
 ReacterNewsWebAPIUtils = {
@@ -68,24 +68,24 @@ ReacterNewsWebAPIUtils = {
   getTopStoriesAndComments: function() {
     StoriesActionCreators.setLoading();
     getAllTopStoriesKeys()
-    .then(getTopStories)
-    .then(function(topStoriesArray) {
-        StoriesActionCreators.receiveStories(topStoriesArray);
-        return topStoriesArray;
-    })
-    .then(function(topStoriesArray) {
-      topStoriesArray.forEach(function(story) {
-        if(story.kids && story.kids.length > 0) {
-          getItems(story.kids, function(result) {
-            CommentsActionCreators.receiveComment({
-              comment: result,
-              parent: story.id
+      .then(getTopStories)
+      .then(function(topStoriesArray) {
+          StoriesActionCreators.receiveStories(topStoriesArray);
+          return topStoriesArray;
+      })
+      .then(function(topStoriesArray) {
+        topStoriesArray.forEach(function(story) {
+          if(story.kids && story.kids.length > 0) {
+            getItems(story.kids, function(result) {
+              CommentsActionCreators.receiveComment({
+                comment: result,
+                parent: story.id
+              });
             });
-          });
-        }
-      });
-    })
-    .then(StoriesActionCreators.stopLoading)
+          }
+        });
+      })
+      .then(StoriesActionCreators.stopLoading)
   },
 
   getStory: function(storyId) {
@@ -110,8 +110,45 @@ ReacterNewsWebAPIUtils = {
   getUser: function(userId) {
     UserActionCreators.setLoading();
     getUser(userId)
-    .then(UserActionCreators.receiveUser)
-    .then(UserActionCreators.stopLoading);
+      .then(UserActionCreators.receiveUser)
+      .then(UserActionCreators.stopLoading);
+  },
+
+  getUserSubmissions: function(userId, page) {
+    var start = 30 * (page-1);
+    var end = (start + 30);
+    StoriesActionCreators.setSubmittedLoading();
+    StoriesActionCreators.clearSubmittedStories();
+    UserActionCreators.setLoading();
+    getUser(userId)
+      .then(function(userDetails) {
+        UserActionCreators.receiveUser(userDetails);
+        UserActionCreators.stopLoading();
+        return userDetails.submitted;
+      })
+      .then(getTopStories)
+      .then(function(submittedItems) {
+        return submittedItems
+          .filter(function(item) {
+            return item && (item.type === "story" && !item.deleted)
+          })
+          .slice(start, end);
+      })
+      .then(function(stories) {
+        StoriesActionCreators.receiveSubmittedStories(stories);
+        stories.forEach(function(story) {
+          if(story.kids && story.kids.length > 0) {
+            getItems(story.kids, function(result) {
+              CommentsActionCreators.receiveComment({
+                comment: result,
+                parent: story.id
+              });
+            });
+          }
+        });
+      })
+      .then(StoriesActionCreators.stopSubmittedLoading);
+
   }
 
 };

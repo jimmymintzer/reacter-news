@@ -3,7 +3,7 @@ var Router = require('react-router');
 var Link = Router.Link;
 
 var StoriesCommentsMixin = require('../../mixins/StoriesCommentsMixin');
-var GetTopStoriesAndCommentsMixin = require('../../mixins/GetTopStoriesAndCommentsMixin');
+var GetUserSubmissionsMixin = require('../../mixins/GetUserSubmissionsMixin');
 
 var StoryComponent = require('./../common/StoryComponent');
 var CommentsStore = require('../../stores/CommentsStore');
@@ -16,9 +16,8 @@ var _  = require('../../utils/UnderscoreDebounce');
 
 function getStateFromStores(user) {
   return {
-    stories: StoriesStore.getSubmittedStories(user),
-    loading: StoriesStore.getLoadingStatus(),
-    initialized: StoriesStore.getInitializedState(),
+    stories: StoriesStore.getAllSubmittedStories(user),
+    loading: StoriesStore.getSubmittedLoadingStatus(),
     comments: CommentsStore.getAllComments()
   };
 }
@@ -30,8 +29,7 @@ var SubmittedComponent = React.createClass({
       comments: new Map()
     }
   },
-  mixins: [Router.State, StoriesCommentsMixin, GetTopStoriesAndCommentsMixin],
-
+  mixins: [Router.State, StoriesCommentsMixin, GetUserSubmissionsMixin],
   _setState: function() {
     if(this.isMounted()) {
       var user = this.getQuery().id || 1;
@@ -41,6 +39,9 @@ var SubmittedComponent = React.createClass({
   getInitialState: function() {
     var user = this.getQuery().id || 1;
     return getStateFromStores(user);
+  },
+  handleClick: function() {
+    document.body.scrollTop = document.documentElement.scrollTop = 0;
   },
   render: function() {
     document.title = "Reacter News";
@@ -57,41 +58,38 @@ var SubmittedComponent = React.createClass({
 
     }, this);
 
-    if(this.state.loading && !this.state.initialized) {
+    if(this.state.loading) {
       var renderedHTML = (
         <LoaderComponent />
       );
     }
     else {
-      var page = parseInt(this.getQuery().p);
+      var page = parseInt(this.getQuery().p) || 1;
+      var userId = this.getQuery().id;
       var link = null;
-      var index = 1;
 
-      // TODO: update more link
-      //if(page < 2 || !page) {
-      //  index = 1;
-      //  link = <Link to="news" query={{ p: 2 }} onClick={this.handleClick}>More</Link>;
-      //}
-      //else if(page >= 4) {
-      //  index = 91;
-      //}
-      //else {
-      //  index = 30 * (page-1) + 1;
-      //  var nextPage = 1 + page;
-      //  link = <Link to="news" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
-      //}
-    }
+      var index = (30 * (page-1)) + 1;
+      var nextPage = page + 1;
+      if(this.state.stories.length === 30) {
+        var link = <Link to="submitted" query={{ id: userId, p: nextPage }} onClick={this.handleClick}>More</Link>;
+      }
 
-    return (
-      <div>
-        <div className="main">
-        {renderedHTML}
+      var renderedHTML = (
+        <div>
           <ol className="stories" start={index}>
           {stories}
           </ol>
           <div className="more-link">
           {link}
           </div>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <div className="main">
+        {renderedHTML}
         </div>
         <SpacerComponent />
         <FooterComponent />

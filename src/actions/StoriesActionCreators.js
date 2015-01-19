@@ -17,6 +17,24 @@ module.exports = {
     });
   },
 
+  setSubmittedLoading: function() {
+    ReacterNewsDispatcher.handleServerAction({
+      type: ActionTypes.SUBMITTED_STORIES_LOADING
+    });
+  },
+
+  stopSubmittedLoading: function() {
+    ReacterNewsDispatcher.handleServerAction({
+      type: ActionTypes.SUBMITTED_STORIES_FINISHED_LOADING
+    });
+  },
+
+  clearSubmittedStories: function() {
+    ReacterNewsDispatcher.handleServerAction({
+      type: ActionTypes.CLEAR_SUBMITTED_STORIES
+    });
+  },
+
   receiveStories: function(rawStories) {
     ReacterNewsDispatcher.handleServerAction({
       type: ActionTypes.RECEIVE_RAW_STORIES,
@@ -28,6 +46,13 @@ module.exports = {
     ReacterNewsDispatcher.handleServerAction({
       type: ActionTypes.RECEIVE_RAW_STORY,
       rawStory: rawStory
+    });
+  },
+
+  receiveSubmittedStories: function(rawStories) {
+    ReacterNewsDispatcher.handleServerAction({
+      type: ActionTypes.RECEIVE_RAW_SUBMITTED_STORIES,
+      rawStories: rawStories
     });
   }
 
