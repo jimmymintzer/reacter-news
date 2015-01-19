@@ -12,15 +12,8 @@ var ReacterNewsDispatcher = assign(new Dispatcher(), {
       action: action
     };
     this.dispatch(payload);
-  },
-
-  handleViewAction: function(action) {
-    var payload = {
-      source: PayloadSource.VIEW_ACTION,
-      action: action
-    };
-    this.dispatch(payload);
   }
+
 });
 
 module.exports = ReacterNewsDispatcher;

@@ -12,7 +12,7 @@ var LoaderComponent = require('../common/LoaderComponent');
 var SpacerComponent = require('./../common/SpacerComponent');
 var FooterComponent = require('./../common/FooterComponent');
 
-var _  = require('../../utils/UnderscoreDebounce');
+var _ = require('../../utils/UnderscoreDebounce');
 
 function getStateFromStores(page) {
   return {

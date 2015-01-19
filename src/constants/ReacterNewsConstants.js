@@ -10,6 +10,7 @@ module.exports = {
     RECEIVE_RAW_JOBS: null,
     STORIES_LOADING: null,
     STORIES_FINISHED_LOADING: null,
+    RECEIVE_USER: null,
     USER_LOADING: null,
     USER_FINISHED_LOADING: null
   }),

@@ -63,7 +63,6 @@ function getTopStories(stories) {
   })
 }
 
-
 ReacterNewsWebAPIUtils = {
 
   getTopStoriesAndComments: function() {
