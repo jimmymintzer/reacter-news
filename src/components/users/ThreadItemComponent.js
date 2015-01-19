@@ -1,5 +1,5 @@
 var React = require('react');
-var CommentsComponent = require('../comments/CommentsComponent');
+var CommentsComponent = require('../common/CommentsComponent');
 var moment = require('moment');
 var Router = require('react-router');
 var Link = Router.Link;

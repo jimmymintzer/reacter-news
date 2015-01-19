@@ -4,40 +4,30 @@ var Link = Router.Link;
 
 var HeaderComponent = React.createClass({
   render: function() {
-    if(this.props.name === "shownew") {
-      var showNewStyle = {
-        display: "inline-block"
-      };
-    }
-    else {
-      var showNewStyle = {
-        display: "none"
-      }
-    }
-    if(this.props.name === "submitted") {
-      var query = this.props.queryString.id;
-      var queryTitle = query + "'s submissions";
-      var submittedNewStyle = {
-        display: "inline-block"
-      };
-    }
-    else {
-      var submittedNewStyle = {
-        display: "none"
-      };
-    }
-    if(this.props.name === "threads") {
-      var query = this.props.queryString.id;
-      var queryTitle = query + "'s comments";
-      var threadsNewStyle = {
-        display: "inline-block"
-      };
-    }
-    else {
-      var threadsNewStyle = {
-        display: "none"
-      };
-    }
+    var name = this.props.name;
+
+    var showNewStyle = { display: "none"};
+    var submittedNewStyle = { display: "none" };
+    var threadsNewStyle = { display: "none" };
+
+    switch(name) {
+      case "shownew":
+        showNewStyle = { display: "inline-block" };
+        break;
+      case "submitted":
+        var query = this.props.queryString.id;
+        var queryTitle = query + "'s submissions";
+        submittedNewStyle = { display: "inline-block" };
+        break;
+      case "threads":
+        var query = this.props.queryString.id;
+        var queryTitle = query + "'s comments";
+        threadsNewStyle = { display: "inline-block"};
+        break;
+      default:
+        break;
+    };
+
     return (
       <header>
         <ul>

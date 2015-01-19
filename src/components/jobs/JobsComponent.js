@@ -2,6 +2,8 @@ var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 
+var StoriesMixin = require('../../mixins/StoriesMixin');
+
 var StoryComponent = require('./../common/StoryComponent');
 var StoriesStore = require('../../stores/StoriesStore');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
@@ -24,23 +26,17 @@ var JobsComponent = React.createClass({
       jobs: []
     }
   },
-  mixins: [Router.State],
+  mixins: [Router.State, StoriesMixin],
   statics: {
     willTransitionTo: function(transition, params, query) {
       ReacterNewsWebAPIUtils.getTopStoriesAndComments();
     }
   },
+  _setState: function() {
+    this.setState(getStateFromStores());
+  },
   getInitialState: function() {
     return getStateFromStores("all");
-  },
-  componentDidMount: function() {
-    StoriesStore.addChangeListener(this._onChange);
-  },
-  componentWillUnmount: function() {
-    StoriesStore.removeChangeListener(this._onChange);
-  },
-  handleClick: function() {
-    document.body.scrollTop = document.documentElement.scrollTop = 0;
   },
   render: function() {
     document.title = "Jobs | Reacter News";
@@ -79,9 +75,6 @@ var JobsComponent = React.createClass({
         <FooterComponent />
       </div>
     )
-  },
-  _onChange: function() {
-    this.setState(getStateFromStores());
   }
 
 });

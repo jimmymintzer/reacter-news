@@ -2,6 +2,7 @@ var React = require('react');
 var Router = require('react-router');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 var UsersStore = require('../../stores/UsersStore');
+var UsersMixin = require('../../mixins/UsersMixin');
 var UserItemComponent = require('./UserItemComponent');
 var LoaderComponent = require('../common/LoaderComponent');
 
@@ -15,21 +16,18 @@ function getStateFromStores() {
 }
 
 var UserComponent = React.createClass({
-  mixins: [Router.State],
+  mixins: [Router.State, UsersMixin],
   statics :{
     willTransitionTo: function(transition, params, query) {
       _id = query.id || '';
       ReacterNewsWebAPIUtils.getUser(_id);
     }
   },
+  _onChange: function() {
+    this.setState(getStateFromStores());
+  },
   getInitialState: function() {
     return getStateFromStores();
-  },
-  componentDidMount: function() {
-    UsersStore.addChangeListener(this._onChange);
-  },
-  componentWillUnmount: function() {
-    UsersStore.removeChangeListener(this._onChange);
   },
   render: function() {
     var user = this.state.user;
@@ -49,12 +47,6 @@ var UserComponent = React.createClass({
     return (
       <div>{renderedHTML}</div>
     );
-  },
-  /**
-   * Event handler for 'change' events coming from StoriesStore
-   */
-  _onChange: function() {
-    this.setState(getStateFromStores());
   }
 });
 

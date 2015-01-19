@@ -1,6 +1,7 @@
 var React = require('react');
 var Router = require('react-router');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
+var StoriesCommentsMixin = require('../../mixins/StoriesCommentsMixin');
 var CommentsStore = require('../../stores/CommentsStore');
 var StoriesStore = require('../../stores/StoriesStore');
 var ThreadItemComponent = require('./ThreadItemComponent');
@@ -19,22 +20,22 @@ function getStateFromStores(user) {
 }
 
 var ThreadsComponent = React.createClass({
-  mixins: [Router.State],
+  mixins: [Router.State, StoriesCommentsMixin],
   statics :{
     willTransitionTo: function(transition, params, query) {
       ReacterNewsWebAPIUtils.getTopStoriesAndComments();
     }
   },
+  _setState: function() {
+    if(this.isMounted()) {
+      var id = this.getQuery().id;
+      if(this.isMounted()) {
+        this.setState(getStateFromStores(id));
+      }
+    }
+  },
   getInitialState: function() {
     return getStateFromStores();
-  },
-  componentDidMount: function() {
-    StoriesStore.addChangeListener(this._onChange);
-    CommentsStore.addChangeListener(this._onChange);
-  },
-  componentWillUnmount: function() {
-    StoriesStore.removeChangeListener(this._onChange);
-    CommentsStore.removeChangeListener(this._onChange);
   },
   render: function() {
 
@@ -61,22 +62,9 @@ var ThreadsComponent = React.createClass({
       </div>
     );
 
-  },
-  /**
-   * Event handler for 'change' events coming from StoriesStore
-   */
-  _onChange: _.debounce(function () {
-    this._setState();
-  }, 75),
-
-  _setState: function() {
-    if(this.isMounted()) {
-      var id = this.getQuery().id;
-      if(this.isMounted()) {
-        this.setState(getStateFromStores(id));
-      }
-    }
   }
+
+
 });
 
 module.exports = ThreadsComponent;

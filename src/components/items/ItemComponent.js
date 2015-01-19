@@ -1,11 +1,12 @@
 var React = require('react');
 var Router = require('react-router');
 var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
+var StoriesPollsCommentsMixin = require('../../mixins/StoriesPollsCommentsMixin');
 var CommentsStore = require('../../stores/CommentsStore');
 var StoriesStore = require('../../stores/StoriesStore');
 var PollStore = require('../../stores/PollStore');
 var StoryComponent = require('../common/StoryComponent');
-var CommentsComponent = require('../comments/CommentsComponent');
+var CommentsComponent = require('../common/CommentsComponent');
 var SpacerComponent = require('../common/SpacerComponent');
 var FooterComponent = require('../common/FooterComponent');
 
@@ -22,26 +23,24 @@ function getStateFromStores(id) {
 }
 
 var ItemComponent = React.createClass({
-  mixins: [Router.State],
+  mixins: [Router.State, StoriesPollsCommentsMixin],
   statics :{
     willTransitionTo: function(transition, params, query) {
       var id = query.id || '';
       ReacterNewsWebAPIUtils.getStory(id);
     }
   },
+  _setState: function() {
+    if(this.isMounted()) {
+      var id = this.getQuery().id;
+      if(this.isMounted()) {
+        this.setState(getStateFromStores(id));
+      }
+    }
+  },
   getInitialState: function() {
     var id = this.getQuery().id;
     return getStateFromStores(id);
-  },
-  componentDidMount: function() {
-    StoriesStore.addChangeListener(this._onChange);
-    CommentsStore.addChangeListener(this._onChange);
-    PollStore.addChangeListener(this._onChange);
-  },
-  componentWillUnmount: function() {
-    StoriesStore.removeChangeListener(this._onChange);
-    CommentsStore.removeChangeListener(this._onChange);
-    PollStore.removeChangeListener(this._onChange);
   },
   render: function() {
 
@@ -129,22 +128,8 @@ var ItemComponent = React.createClass({
       );
     }
 
-  },
-  /**
-   * Event handler for 'change' events coming from StoriesStore
-   */
-  _onChange: _.debounce(function () {
-    this._setState();
-  }, 75),
-
-  _setState: function() {
-    if(this.isMounted()) {
-      var id = this.getQuery().id;
-      if(this.isMounted()) {
-        this.setState(getStateFromStores(id));
-      }
-    }
   }
+
 });
 
 module.exports = ItemComponent;

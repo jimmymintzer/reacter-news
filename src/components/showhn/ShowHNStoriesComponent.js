@@ -2,6 +2,8 @@ var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 
+var StoriesCommentsMixin = require('../../mixins/StoriesCommentsMixin');
+
 var StoryComponent = require('./../common/StoryComponent');
 var CommentsStore = require('../../stores/CommentsStore');
 var StoriesStore = require('../../stores/StoriesStore');
@@ -28,23 +30,21 @@ var ShowHNStoriesComponent = React.createClass({
       comments: new Map()
     }
   },
-  mixins: [Router.State],
+  mixins: [Router.State, StoriesCommentsMixin],
   statics: {
     willTransitionTo: function(transition, params, query) {
       ReacterNewsWebAPIUtils.getTopStoriesAndComments();
     }
   },
+  _setState: function() {
+    if(this.isMounted()) {
+      var page = this.getQuery().p || 1;
+      this.setState(getStateFromStores(page));
+    }
+  },
   getInitialState: function() {
     var page = this.getQuery().p || 1;
     return getStateFromStores(page);
-  },
-  componentDidMount: function() {
-    StoriesStore.addChangeListener(this._onChange);
-    CommentsStore.addChangeListener(this._onChange);
-  },
-  componentWillUnmount: function() {
-    StoriesStore.removeChangeListener(this._onChange);
-    CommentsStore.removeChangeListener(this._onChange);
   },
   render: function() {
     document.title = "Ask | Reacter News";
@@ -87,20 +87,9 @@ var ShowHNStoriesComponent = React.createClass({
         <FooterComponent />
       </div>
     )
-  },
-  _onChange: _.debounce(function () {
-    this._setState();
-  }, 75),
-
-  _setState: function() {
-    /*
-     The comments are loaded recursively, which freeze the browser because the updates come in too fast.
-     */
-    if(this.isMounted()) {
-      var page = this.getQuery().p || 1;
-      this.setState(getStateFromStores(page));
-    }
   }
+
+
 
 });
 
