@@ -3,10 +3,10 @@ var Router = require('react-router');
 var Link = Router.Link;
 
 var StoriesMixin = require('../../mixins/StoriesMixin');
+var GetTopStoriesAndCommentsMixin = require('../../mixins/GetTopStoriesAndCommentsMixin');
 
 var StoryComponent = require('./../common/StoryComponent');
 var StoriesStore = require('../../stores/StoriesStore');
-var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 var LoaderComponent = require('../common/LoaderComponent');
 var SpacerComponent = require('./../common/SpacerComponent');
 var FooterComponent = require('./../common/FooterComponent');
@@ -26,12 +26,7 @@ var JobsComponent = React.createClass({
       jobs: []
     }
   },
-  mixins: [Router.State, StoriesMixin],
-  statics: {
-    willTransitionTo: function(transition, params, query) {
-      ReacterNewsWebAPIUtils.getTopStoriesAndComments();
-    }
-  },
+  mixins: [Router.State, StoriesMixin, GetTopStoriesAndCommentsMixin],
   _setState: function() {
     this.setState(getStateFromStores());
   },

@@ -1,7 +1,7 @@
 var React = require('react');
 var Router = require('react-router');
-var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 var StoriesCommentsMixin = require('../../mixins/StoriesCommentsMixin');
+var GetTopStoriesAndCommentsMixin = require('../../mixins/GetTopStoriesAndCommentsMixin');
 var CommentsStore = require('../../stores/CommentsStore');
 var StoriesStore = require('../../stores/StoriesStore');
 var CommentItemComponent = require('./CommentItemComponent');
@@ -22,12 +22,7 @@ function getStateFromStores() {
 }
 
 var CommentsStoriesComponent = React.createClass({
-  mixins: [Router.State, StoriesCommentsMixin],
-  statics :{
-    willTransitionTo: function() {
-      ReacterNewsWebAPIUtils.getTopStoriesAndComments();
-    }
-  },
+  mixins: [Router.State, StoriesCommentsMixin, GetTopStoriesAndCommentsMixin],
   _setState: function() {
     if(this.isMounted()) {
       var id = this.getQuery().id;

@@ -1,33 +1,27 @@
 var React = require('react');
 var Router = require('react-router');
-var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
+var GetUserMixin = require('../../mixins/GetUserMixin');
 var UsersStore = require('../../stores/UsersStore');
 var UsersMixin = require('../../mixins/UsersMixin');
 var UserItemComponent = require('./UserItemComponent');
 var LoaderComponent = require('../common/LoaderComponent');
 
-var _id;
-
-function getStateFromStores() {
+function getStateFromStores(id) {
   return {
-    user: UsersStore.get(_id),
+    user: UsersStore.get(id),
     loading: UsersStore.getLoadingStatus()
   };
 }
 
 var UserComponent = React.createClass({
-  mixins: [Router.State, UsersMixin],
-  statics :{
-    willTransitionTo: function(transition, params, query) {
-      _id = query.id || '';
-      ReacterNewsWebAPIUtils.getUser(_id);
-    }
-  },
+  mixins: [Router.State, UsersMixin, GetUserMixin],
   _onChange: function() {
-    this.setState(getStateFromStores());
+    var id = this.getQuery().id || '';
+    this.setState(getStateFromStores(id));
   },
   getInitialState: function() {
-    return getStateFromStores();
+    var id = this.getQuery().id || '';
+    return getStateFromStores(id);
   },
   render: function() {
     var user = this.state.user;

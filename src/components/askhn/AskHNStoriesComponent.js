@@ -3,11 +3,11 @@ var Router = require('react-router');
 var Link = Router.Link;
 
 var StoriesCommentsMixin = require('../../mixins/StoriesCommentsMixin');
+var GetTopStoriesAndCommentsMixin = require('../../mixins/GetTopStoriesAndCommentsMixin');
 
 var StoryComponent = require('./../common/StoryComponent');
 var CommentsStore = require('../../stores/CommentsStore');
 var StoriesStore = require('../../stores/StoriesStore');
-var ReacterNewsWebAPIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 var LoaderComponent = require('../common/LoaderComponent');
 var SpacerComponent = require('./../common/SpacerComponent');
 var FooterComponent = require('./../common/FooterComponent');
@@ -30,12 +30,7 @@ var AskHNStoriesComponent = React.createClass({
       comments: new Map()
     }
   },
-  mixins: [Router.State, StoriesCommentsMixin],
-  statics: {
-    willTransitionTo: function() {
-      ReacterNewsWebAPIUtils.getTopStoriesAndComments();
-    }
-  },
+  mixins: [Router.State, StoriesCommentsMixin, GetTopStoriesAndCommentsMixin],
   _setState: function() {
     if(this.isMounted()) {
       var page = this.getQuery().p || 1;
