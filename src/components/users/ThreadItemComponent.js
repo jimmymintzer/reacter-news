@@ -25,7 +25,15 @@ var ThreadItemComponent = React.createClass({
   render: function() {
     var commentByStoryId = this.props.commentValues.get(this.props.comment.parent) || new Map();
 
-    var time = moment.unix(this.props.comment.time).fromNow();
+    var a = moment();
+    var b = moment(this.props.comment.time * 1000);
+    var time = a.diff(b, 'days');
+    var timeLabel = (time===1)? ' day' : ' days';
+    timeLabel = time + timeLabel;
+
+    if(time === 0) {
+      var timeLabel = moment.unix(this.props.comment.time).fromNow();
+    }
 
     var author = this.props.comment.by;
 
@@ -45,7 +53,7 @@ var ThreadItemComponent = React.createClass({
     return (
       <div className='thread-wrapper'>
         <div className='comhead'>
-        {UserLink} {time} | {ItemLink} | {ParentLink} | on: {StoryLink}
+        {UserLink} {timeLabel} | {ItemLink} | {ParentLink} | on: {StoryLink}
         </div>
         <div className="thread-text">
         {storyText}

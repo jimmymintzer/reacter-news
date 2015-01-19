@@ -100,9 +100,9 @@ var CommentsStore = assign({}, EventEmitter.prototype, {
         return comment.comment.by === user;
       })
       .sort(sortTime)
-      .filter(function(comment) {
-        return userFilteredDuplicates.hasOwnProperty(comment.parent) ? false : (userFilteredDuplicates[comment.parent] = true);
-      })
+      //.filter(function(comment) {
+      //  return userFilteredDuplicates.hasOwnProperty(comment.parent) ? false : (userFilteredDuplicates[comment.parent] = true);
+      //})
       .slice(start, end);
   }
 });
