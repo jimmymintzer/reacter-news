@@ -121,10 +121,15 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
     }
   },
 
-  getJobsStories: function() {
-    return _stories.filter(function(story) {
-      return story.type === "job";
-    });
+  getJobsStories: function(page) {
+    var start = 30 * (page-1);
+    var end = (start + 30);
+
+    return _stories
+      .filter(function(story) {
+        return story.type === "job";
+      })
+      .slice(start, end);
   }
 
 });

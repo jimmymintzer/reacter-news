@@ -65,18 +65,11 @@ var AskHNStoriesComponent = React.createClass({
     }
     else {
       var page = parseInt(this.getQuery().p) || 1;
-      var link = null;
-      var index = 1;
-      if(page < 2 ) {
-        link = <Link to="ask" query={{ p: 2 }} onClick={this.handleClick}>More</Link>;
-      }
-      else if(page >= 4) {
-        index = 91;
-      }
-      else {
-        index = 30 * (page-1) + 1;
-        var nextPage = 1 + page;
-        link = <Link to="ask" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
+      var index = (30 * (page-1)) + 1;
+      var nextPage = page + 1;
+
+      if(this.state.stories.length === 30) {
+        var link = <Link to="ask" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
       }
 
       var renderedHTML = (

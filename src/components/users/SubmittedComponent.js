@@ -66,7 +66,6 @@ var SubmittedComponent = React.createClass({
     else {
       var page = parseInt(this.getQuery().p) || 1;
       var userId = this.getQuery().id;
-      var link = null;
 
       var index = (30 * (page-1)) + 1;
       var nextPage = page + 1;

@@ -65,21 +65,12 @@ var StoriesComponent = React.createClass({
       );
     }
     else {
-      var page = parseInt(this.getQuery().p);
-      var link = null;
-      var index = 1;
+      var page = parseInt(this.getQuery().p) || 1;
+      var index = (30 * (page-1)) + 1;
+      var nextPage = page + 1;
 
-      if(page < 2 || !page) {
-        index = 1;
-        link = <Link to="news" query={{ p: 2 }} onClick={this.handleClick}>More</Link>;
-      }
-      else if(page >= 4) {
-        index = 91;
-      }
-      else {
-        index = 30 * (page-1) + 1;
-        var nextPage = 1 + page;
-        link = <Link to="news" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
+      if(this.state.stories.length === 30) {
+        var link = <Link to="news" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
       }
 
       var renderedHTML = (

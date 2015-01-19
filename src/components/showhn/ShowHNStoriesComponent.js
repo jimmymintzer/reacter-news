@@ -62,13 +62,24 @@ var ShowHNStoriesComponent = React.createClass({
       );
     }
     else {
+      var page = parseInt(this.getQuery().p) || 1;
+      var index = (30 * (page-1)) + 1;
+      var nextPage = page + 1;
+
+      if(this.state.stories.length === 30) {
+        var link = <Link to="show" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
+      }
+
       var renderedHTML = (
         <div>
           <h3 className="show-header">Please read the <a href="https://news.ycombinator.com/showhn.html" target="_blank">
           <u>guidelines</u></a>. The newest Show HNs are <Link to="shownew"><u>here</u></Link>.</h3>
-          <ol className="stories" start={1}>
+          <ol className="stories" start={index}>
           {stories}
           </ol>
+          <div className="more-link">
+          {link}
+          </div>
         </div>
       );
     }

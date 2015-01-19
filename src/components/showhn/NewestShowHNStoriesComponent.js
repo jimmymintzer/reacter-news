@@ -62,14 +62,21 @@ var NewestShowHNStoriesComponent = React.createClass({
       );
     }
     else {
-      var index = 1;
+      var page = parseInt(this.getQuery().p) || 1;
+      var index = (30 * (page-1)) + 1;
+      var nextPage = page + 1;
+
+      if(this.state.stories.length === 30) {
+        var link = <Link to="shownew" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
+      }
+
       var renderedHTML = (
         <div>
           <ol className="stories" start={index}>
           {stories}
           </ol>
           <div className="more-link">
-
+          {link}
           </div>
         </div>
       );
