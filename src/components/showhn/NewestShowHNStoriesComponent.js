@@ -18,7 +18,7 @@ function getStateFromStores(page) {
   return {
     stories: StoriesStore.getShowHNStories(page, true),
     loading: StoriesStore.getLoadingStatus(),
-    initialized: StoriesStore.getInitalizedState(),
+    initialized: StoriesStore.getInitializedState(),
     comments: CommentsStore.getAllComments()
   };
 }

@@ -16,7 +16,7 @@ function getStateFromStores() {
   return {
     jobs: StoriesStore.getJobsStories(),
     loading: StoriesStore.getLoadingStatus(),
-    initialized: StoriesStore.getInitalizedState()
+    initialized: StoriesStore.getInitializedState()
   };
 }
 

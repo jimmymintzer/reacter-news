@@ -18,7 +18,7 @@ function getStateFromStores(user) {
   return {
     stories: StoriesStore.getSubmittedStories(user),
     loading: StoriesStore.getLoadingStatus(),
-    initialized: StoriesStore.getInitalizedState(),
+    initialized: StoriesStore.getInitializedState(),
     comments: CommentsStore.getAllComments()
   };
 }

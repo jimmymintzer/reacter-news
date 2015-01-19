@@ -46,7 +46,7 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
     return _loading;
   },
 
-  getInitalizedState: function() {
+  getInitializedState: function() {
     return _initialized;
   },
 
