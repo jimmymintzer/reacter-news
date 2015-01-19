@@ -12,7 +12,7 @@ module.exports = {
   componentWillUnmount: function() {
     StoriesStore.removeChangeListener(this._onChange);
     CommentsStore.removeChangeListener(this._onChange);
-    PollStore.addChangeListener(this._onChange);
+    PollStore.removeChangeListener(this._onChange);
   },
   _onChange: _.debounce(function () {
     this._setState();
