@@ -63,6 +63,21 @@ function getTopStories(stories) {
   });
 }
 
+function getParent(item) {
+  return new Promise(function(resolve, reject) {
+    fb.child('item').child(item).on('value', function(snapshot) {
+      if(snapshot.val().type === "story") {
+        resolve(snapshot.val());
+      }
+      else {
+        resolve(getParent(snapshot.val().parent));
+      }
+    }, function(err) {
+      reject(err);
+    });
+  });
+}
+
 ReacterNewsWebAPIUtils = {
 
   getTopStoriesAndComments: function() {
@@ -172,10 +187,15 @@ ReacterNewsWebAPIUtils = {
       })
       .then(function(comments) {
         comments.forEach(function(comment) {
-          CommentsActionCreators.receiveComment({
-            comment: comment,
-            parent: comment.parent
+          getParent(comment.parent)
+          .then(function(parentResult) {
+              CommentsActionCreators.receiveComment({
+                comment: comment,
+                parent: comment.parent,
+                parentStoryDetails: parentResult
+              });
           });
+
           if(comment.kids && comment.kids.length > 0) {
             getItems(comment.kids, function(result) {
               CommentsActionCreators.receiveComment({

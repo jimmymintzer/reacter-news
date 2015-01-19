@@ -37,7 +37,7 @@ var ThreadItemComponent = React.createClass({
 
     var StoryLink = <Link to="item" className="story-link" query={{ id: this.props.parent.id }}>{ellipsisTitle}</Link>;
 
-    var ParentLink = <Link to="item" className="story-link" query={{ id: this.props.comment.parent }}>parent</Link>;
+    var ParentLink = <Link to="item" className="story-link" query={{ id: this.props.parent.id }}>parent</Link>;
 
     var storyText = <div dangerouslySetInnerHTML={{__html: this.props.comment.text}} />;
 

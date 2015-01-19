@@ -39,12 +39,9 @@ var ThreadsComponent = React.createClass({
   },
   render: function() {
     var comments = this.state.comments.map(function(comment) {
-      //var parentStory = this.state.stories.filter(function(story) {
-      //  return story.id === comment.parent;
-      //});
       return (
         <div key={comment.comment.id}>
-          <ThreadItemComponent comment={comment.comment} parent={""} commentValues={this.state.commentValues} />
+          <ThreadItemComponent comment={comment.comment} parent={comment.parentStoryDetails} commentValues={this.state.commentValues} />
         </div>
       );
 
