@@ -110,7 +110,10 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
 
     var showHNStories = _stories
       .filter(function(story) {
-        return story.title.indexOf("Show HN:") !== -1;
+        return !story.deleted;
+      })
+      .filter(function(story) {
+        return story && story.title.indexOf("Show HN:") !== -1;
       })
       .slice(start, end);
     if(sort) {
