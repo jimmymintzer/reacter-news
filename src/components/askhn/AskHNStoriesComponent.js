@@ -48,11 +48,16 @@ var AskHNStoriesComponent = React.createClass({
     document.title = "Ask | Reacter News";
     var stories = [];
 
-    this.state.stories.forEach(function(story) {
-      var commentByStoryId = this.state.comments.get(story.id) || new Map();
+    this.state.stories.forEach(function(story, index) {
+      var commentByStoryId = [];
+      this.state.comments.forEach(function(comment) {
+        if(comment.parentId === story.id) {
+          commentByStoryId.push(comment);
+        }
+      });
       var storyComponent = (
-        <li key={story.id}>
-          <StoryComponent story={story} numberOfComments={commentByStoryId.size}/>
+        <li key={index}>
+          <StoryComponent story={story} numberOfComments={commentByStoryId.length}/>
         </li>
       );
       stories.push(storyComponent);

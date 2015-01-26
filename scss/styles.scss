@@ -199,6 +199,10 @@ footer {
   padding: 10px 5px -20px 0;
   color: $main-button-color;
   font-size: 9pt;
+
+  a {
+    text-decoration: underline;
+  }
 }
 
 .comment-wrapper {

@@ -23,7 +23,7 @@ var ThreadItemComponent = React.createClass({
     };
   },
   render: function() {
-    var commentByStoryId = this.props.commentValues.get(this.props.comment.parent) || new Map();
+    var commentByStoryId = this.props.commentValues;
 
     var a = moment();
     var b = moment(this.props.comment.time * 1000);

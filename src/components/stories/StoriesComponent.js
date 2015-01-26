@@ -49,10 +49,15 @@ var StoriesComponent = React.createClass({
     var stories = [];
 
     this.state.stories.forEach(function(story) {
-      var commentByStoryId = this.state.comments.get(story.id) || new Map();
+      var commentByStoryId = [];
+      this.state.comments.forEach(function(comment) {
+        if(comment.parentId === story.id) {
+          commentByStoryId.push(comment);
+        }
+      });
       var storyComponent = (
         <li key={story.id}>
-          <StoryComponent story={story} numberOfComments={commentByStoryId.size}/>
+          <StoryComponent story={story} numberOfComments={commentByStoryId.length}/>
         </li>
       );
       stories.push(storyComponent);

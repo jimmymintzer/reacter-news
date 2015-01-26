@@ -92,10 +92,8 @@ ReacterNewsWebAPIUtils = {
         topStoriesArray.forEach(function(story) {
           if(story.kids && story.kids.length > 0) {
             getItems(story.kids, function(result) {
-              CommentsActionCreators.receiveComment({
-                comment: result,
-                parent: story.id
-              });
+              result.parentId = story.id;
+              CommentsActionCreators.receiveComment(result);
             });
           }
         });
@@ -113,10 +111,8 @@ ReacterNewsWebAPIUtils = {
       }
       if(story.kids && story.kids.length > 0) {
         getItems(story.kids, function(result) {
-          CommentsActionCreators.receiveComment({
-            comment: result,
-            parent: story.id
-          });
+          result.parentId = story.id;
+          CommentsActionCreators.receiveComment(result);
         });
       }
     })
@@ -154,10 +150,8 @@ ReacterNewsWebAPIUtils = {
         stories.forEach(function(story) {
           if(story.kids && story.kids.length > 0) {
             getItems(story.kids, function(result) {
-              CommentsActionCreators.receiveComment({
-                comment: result,
-                parent: story.id
-              });
+              result.parentId = story.id;
+              CommentsActionCreators.receiveComment(result);
             });
           }
         });
@@ -189,19 +183,15 @@ ReacterNewsWebAPIUtils = {
         comments.forEach(function(comment) {
           getParent(comment.parent)
           .then(function(parentResult) {
-              CommentsActionCreators.receiveComment({
-                comment: comment,
-                parent: comment.parent,
-                parentStoryDetails: parentResult
-              });
+              comment.parentId = comment.parent;
+              comment.parentStoryDetails = parentResult;
+              CommentsActionCreators.receiveComment(comment);
           });
 
           if(comment.kids && comment.kids.length > 0) {
             getItems(comment.kids, function(result) {
-              CommentsActionCreators.receiveComment({
-                comment: result,
-                parent: comment.parent
-              });
+              result.parentId = comment.parent;
+              CommentsActionCreators.receiveComment(result);
             });
           }
         });
