@@ -48,7 +48,7 @@ var StoriesComponent = React.createClass({
     document.title = "Reacter News";
     var stories = [];
 
-    this.state.stories.forEach(function(story) {
+    this.state.stories.forEach(function(story, index) {
       var commentByStoryId = [];
       this.state.comments.forEach(function(comment) {
         if(comment.parentId === story.id) {
@@ -56,7 +56,7 @@ var StoriesComponent = React.createClass({
         }
       });
       var storyComponent = (
-        <li key={story.id}>
+        <li key={index}>
           <StoryComponent story={story} numberOfComments={commentByStoryId.length}/>
         </li>
       );
