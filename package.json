@@ -22,6 +22,7 @@
     "flux": "^2.0.1",
     "font-awesome": "^4.2.0",
     "httpster": "^1.0.0",
+    "immutable": "^3.6.2",
     "jsx-loader": "^0.12.2",
     "keymirror": "^0.1.0",
     "moment": "^2.8.4",

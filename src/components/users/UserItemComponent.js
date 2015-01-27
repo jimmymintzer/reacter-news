@@ -16,18 +16,6 @@ var buildCreatedDate = function(created) {
 };
 
 var UserItemComponent = React.createClass({
-  getDefaultProps: function() {
-    return {
-      user: {
-        about: "",
-        created: 0,
-        delay: 0,
-        id: "",
-        karma: 0,
-        submitted: []
-      }
-    };
-  },
   render: function() {
 
     document.title = "Profile: " + this.props.user.id + " | Reacter News";

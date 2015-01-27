@@ -2,29 +2,30 @@ var ReacterNewsDispatcher = require('../dispatcher/ReacterNewsDispatcher');
 var ReacterNewsConstants = require('../constants/ReacterNewsConstants');
 var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
+var Immutable = require('immutable');
 
 var ActionTypes = ReacterNewsConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _stories = [];
-var _submitted_stories = [];
+var _stories = Immutable.List();
+var _submitted_stories = Immutable.List();
 var _submittedLoading = false;
 var _loading = false;
 var _initialized = false;
 
 function _addStories(rawStories) {
-  _stories = rawStories;
+  _stories = Immutable.List(rawStories);
 }
 
 function _addStory(rawStory) {
-  _stories.push(rawStory);
+  _stories = _stories.push(rawStory);
 }
 
 function _addSubmittedStories(rawStories) {
-  _submitted_stories = rawStories;
+  _submitted_stories = Immutable.List(rawStories);
 }
 
-function sortTime(a, b) {
+var sortTime = (a, b) => {
   if (a.time < b.time) {
     return 1;
   }
@@ -65,7 +66,7 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
       .filter(function(story) {
         return story.id == itemid;
       })
-      [0] || {};
+      .get(0) || {};
   },
 
   getAllStories: function() {

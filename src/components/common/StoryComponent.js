@@ -63,22 +63,6 @@ var buildComments = function(count) {
 };
 
 var StoryComponent = React.createClass({
-  getDefaultProps: function() {
-    return {
-      story: {
-        by: '',
-        id: 0,
-        kids: [],
-        score: 0,
-        text: '',
-        time: new Date(),
-        title: '',
-        type: '',
-        url: ''
-      },
-      numberOfComments: 0
-    };
-  },
   render: function() {
 
     var pointsLabel = buildPoints(this.props.story.score);

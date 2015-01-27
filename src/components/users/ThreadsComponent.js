@@ -38,7 +38,7 @@ var ThreadsComponent = React.createClass({
     document.body.scrollTop = document.documentElement.scrollTop = 0;
   },
   render: function() {
-    var comments = this.state.comments.map(function(comment) {
+    var comments = this.state.comments.toArray().map(function(comment) {
       return (
         <div key={comment.id}>
           <ThreadItemComponent comment={comment} parent={comment.parentStoryDetails} commentValues={this.state.commentValues} />
@@ -57,7 +57,7 @@ var ThreadsComponent = React.createClass({
       var page = parseInt(this.getQuery().p) || 1;
       var userId = this.getQuery().id || "";
       var nextPage = page + 1;
-      if ( this.state.comments.length === 10 ) {
+      if ( this.state.comments.size === 10 ) {
         var link = <Link to="threads" query={{id: userId, p: nextPage}} onClick={this.handleClick}>More</Link>;
       }
 

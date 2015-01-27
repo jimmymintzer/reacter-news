@@ -21,11 +21,6 @@ function getStateFromStores(page) {
 }
 
 var JobsComponent = React.createClass({
-  getDefaultProps: function () {
-    return {
-      jobs: []
-    }
-  },
   mixins: [Router.State, StoriesMixin, GetTopStoriesAndCommentsMixin],
   _setState: function() {
     var page = this.getQuery().p || 1;
@@ -62,7 +57,7 @@ var JobsComponent = React.createClass({
       var index = (30 * (page-1)) + 1;
       var nextPage = page + 1;
 
-      if(this.state.jobs.length === 30) {
+      if(this.state.jobs.size === 30) {
         var link = <Link to="jobs" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
       }
 

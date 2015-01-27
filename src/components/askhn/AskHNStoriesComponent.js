@@ -24,12 +24,6 @@ function getStateFromStores(page) {
 }
 
 var AskHNStoriesComponent = React.createClass({
-  getDefaultProps: function () {
-    return {
-      stories: [],
-      comments: new Map()
-    }
-  },
   mixins: [Router.State, StoriesCommentsMixin, GetTopStoriesAndCommentsMixin],
   _setState: function() {
     if(this.isMounted()) {
@@ -49,15 +43,14 @@ var AskHNStoriesComponent = React.createClass({
     var stories = [];
 
     this.state.stories.forEach(function(story, index) {
-      var commentByStoryId = [];
-      this.state.comments.forEach(function(comment) {
+      var commentByStoryId = this.state.comments.filter(function(comment) {
         if(comment.parentId === story.id) {
-          commentByStoryId.push(comment);
+          return comment;
         }
       });
       var storyComponent = (
         <li key={index}>
-          <StoryComponent story={story} numberOfComments={commentByStoryId.length}/>
+          <StoryComponent story={story} numberOfComments={commentByStoryId.size}/>
         </li>
       );
       stories.push(storyComponent);
@@ -73,7 +66,7 @@ var AskHNStoriesComponent = React.createClass({
       var index = (30 * (page-1)) + 1;
       var nextPage = page + 1;
 
-      if(this.state.stories.length === 30) {
+      if(this.state.stories.size === 30) {
         var link = <Link to="ask" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
       }
 

@@ -2,14 +2,15 @@ var ReacterNewsDispatcher = require('../dispatcher/ReacterNewsDispatcher');
 var ReacterNewsConstants = require('../constants/ReacterNewsConstants');
 var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
+var Immutable = require('immutable');
 
 var ActionTypes = ReacterNewsConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _polls = new Map();
+var _polls = Immutable.Map();
 
 function _addPoll(rawPoll) {
-  _polls.set(rawPoll.id, rawPoll);
+  _polls = _polls.set(rawPoll.id, rawPoll);
 }
 
 var PollStore = assign({}, EventEmitter.prototype, {

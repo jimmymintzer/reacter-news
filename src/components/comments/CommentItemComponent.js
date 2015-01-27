@@ -9,19 +9,6 @@ moment.fn.minutesFromNow = function() {
 };
 
 var CommentItemComponent = React.createClass({
-  getDefaultProps: function() {
-    return {
-      comment: {
-        by: '',
-        id: 0,
-        kids: [],
-        parent: '',
-        text: '',
-        time: new Date(),
-        type: ''
-      }
-    };
-  },
   render: function() {
 
     var time = moment.unix(this.props.comment.time).minutesFromNow();

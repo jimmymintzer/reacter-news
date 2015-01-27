@@ -2,15 +2,16 @@ var ReacterNewsDispatcher = require('../dispatcher/ReacterNewsDispatcher');
 var ReacterNewsConstants = require('../constants/ReacterNewsConstants');
 var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
+var Immutable = require('immutable');
 
 var ActionTypes = ReacterNewsConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
-var _users = new Map();
+var _users = Immutable.Map();
 var _loading = false;
 
 function _addUser(rawMessages) {
-  _users.set(rawMessages.id, rawMessages);
+  _users = _users.set(rawMessages.id, rawMessages);
 }
 
 var UsersStore = assign({}, EventEmitter.prototype, {

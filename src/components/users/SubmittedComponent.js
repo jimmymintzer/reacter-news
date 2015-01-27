@@ -23,12 +23,6 @@ function getStateFromStores(user) {
 }
 
 var SubmittedComponent = React.createClass({
-  getDefaultProps: function () {
-    return {
-      stories: [],
-      comments: new Map()
-    }
-  },
   mixins: [Router.State, StoriesCommentsMixin, GetUserSubmissionsMixin],
   _setState: function() {
     if(this.isMounted()) {
@@ -48,7 +42,11 @@ var SubmittedComponent = React.createClass({
     var stories = [];
 
     this.state.stories.forEach(function(story) {
-      var commentByStoryId = this.state.comments.get(story.id) || new Map();
+      var commentByStoryId = this.state.comments.filter(function(comment) {
+        if(comment.parentId === story.id) {
+          return comment;
+        }
+      });
       var storyComponent = (
         <li key={story.id}>
           <StoryComponent story={story} numberOfComments={commentByStoryId.size}/>
@@ -69,7 +67,7 @@ var SubmittedComponent = React.createClass({
 
       var index = (30 * (page-1)) + 1;
       var nextPage = page + 1;
-      if(this.state.stories.length === 30) {
+      if(this.state.stories.size === 30) {
         var link = <Link to="submitted" query={{ id: userId, p: nextPage }} onClick={this.handleClick}>More</Link>;
       }
 

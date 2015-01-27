@@ -42,14 +42,13 @@ var CommentsStoriesComponent = React.createClass({
       );
     }
     else {
-
-      var comments = this.state.comments.map(function( comment, index ) {
+      var comments = this.state.comments.toArray().map(function( comment, index ) {
         var parentStory = this.state.stories.filter(function( story ) {
           return story.id === comment.parentId;
         });
         return (
           <div key={index}>
-            <CommentItemComponent comment={comment} parent={parentStory[0]} />
+            <CommentItemComponent comment={comment} parent={parentStory.get(0)} />
           </div>
         );
 

@@ -24,12 +24,6 @@ function getStateFromStores(page) {
 }
 
 var NewestStoriesComponent = React.createClass({
-  getDefaultProps: function () {
-    return {
-      stories: [],
-      comments: new Map()
-    }
-  },
   mixins: [Router.State, StoriesCommentsMixin, GetTopStoriesAndCommentsMixin],
   _setState: function() {
     if(this.isMounted()) {
@@ -49,15 +43,14 @@ var NewestStoriesComponent = React.createClass({
     var stories = [];
 
     this.state.stories.forEach(function(story, index) {
-      var commentByStoryId = [];
-      this.state.comments.forEach(function(comment) {
+      var commentByStoryId = this.state.comments.filter(function(comment) {
         if(comment.parentId === story.id) {
-          commentByStoryId.push(comment);
+          return comment;
         }
       });
       var storyComponent = (
         <li key={index}>
-          <StoryComponent story={story} numberOfComments={commentByStoryId.length}/>
+          <StoryComponent story={story} numberOfComments={commentByStoryId.size}/>
         </li>
       );
       stories.push(storyComponent);
@@ -70,22 +63,24 @@ var NewestStoriesComponent = React.createClass({
       );
     }
     else {
-      var page = parseInt(this.getQuery().p);
-      var link = null;
-      var index = 1;
+      var page = parseInt(this.getQuery().p) || 1;
+      var index = (30 * (page-1)) + 1;
+      var nextPage = page + 1;
 
-      if(page < 2 || !page) {
-        index = 1;
-        link = <Link to="newest" query={{ p: 2 }} onClick={this.handleClick}>More</Link>;
+      if(this.state.stories.size === 30) {
+        var link = <Link to="news" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
       }
-      else if(page >= 4) {
-        index = 91;
-      }
-      else {
-        index = 30 * (page-1) + 1;
-        var nextPage = 1 + page;
-        link = <Link to="newest" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
-      }
+
+      var renderedHTML = (
+        <div>
+          <ol className="stories" start={index}>
+          {stories}
+          </ol>
+          <div className="more-link">
+          {link}
+          </div>
+        </div>
+      );
     }
 
     return (

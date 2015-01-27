@@ -5,23 +5,6 @@ var Router = require('react-router');
 var Link = Router.Link;
 
 var ThreadItemComponent = React.createClass({
-  getDefaultProps: function() {
-    return {
-      parent: {
-        title: "",
-        id: 0
-      },
-      comment: {
-        by: '',
-        id: 0,
-        kids: [],
-        parent: '',
-        text: '',
-        time: new Date(),
-        type: ''
-      }
-    };
-  },
   render: function() {
     var commentByStoryId = this.props.commentValues;
 
