@@ -1,6 +1,7 @@
 var React = require('react');
 var Router = require('react-router');
 var StoriesPollsCommentsMixin = require('../../mixins/StoriesPollsCommentsMixin');
+var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var GetStoryMixin = require('../../mixins/GetStoryMixin');
 var CommentsStore = require('../../stores/CommentsStore');
 var StoriesStore = require('../../stores/StoriesStore');
@@ -26,7 +27,7 @@ function getStateFromStores(id) {
 }
 
 var ItemComponent = React.createClass({
-  mixins: [Router.State, StoriesPollsCommentsMixin, GetStoryMixin],
+  mixins: [Router.State, StoriesPollsCommentsMixin, GetStoryMixin, PureRenderMixin],
   _setState: function() {
     if(this.isMounted()) {
       var id = this.getQuery().id;

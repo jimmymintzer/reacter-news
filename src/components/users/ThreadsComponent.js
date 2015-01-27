@@ -1,6 +1,7 @@
 var React = require('react');
 var Router = require('react-router');
 var GetUserCommentsMixin = require('../../mixins/GetUserCommentsMixin');
+var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var CommentsMixin = require('../../mixins/CommentsMixin');
 var CommentsStore = require('../../stores/CommentsStore');
 var ThreadItemComponent = require('./ThreadItemComponent');
@@ -19,7 +20,7 @@ function getStateFromStores(userId, page) {
 }
 
 var ThreadsComponent = React.createClass({
-  mixins: [Router.State, CommentsMixin, GetUserCommentsMixin],
+  mixins: [Router.State, CommentsMixin, GetUserCommentsMixin, PureRenderMixin],
   _setState: function() {
     if(this.isMounted()) {
       var userId = this.getQuery().id || "";

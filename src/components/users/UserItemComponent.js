@@ -2,6 +2,7 @@ var React = require('react');
 var moment = require('moment');
 var Router = require('react-router');
 var Link = Router.Link;
+var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 
 var buildCreatedDate = function(created) {
   if(created === 0) {
@@ -16,6 +17,7 @@ var buildCreatedDate = function(created) {
 };
 
 var UserItemComponent = React.createClass({
+  mixins: [PureRenderMixin],
   render: function() {
 
     document.title = "Profile: " + this.props.user.id + " | Reacter News";

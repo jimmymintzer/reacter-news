@@ -4,6 +4,7 @@ var Link = Router.Link;
 
 var StoriesCommentsMixin = require('../../mixins/StoriesCommentsMixin');
 var GetUserSubmissionsMixin = require('../../mixins/GetUserSubmissionsMixin');
+var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 
 var StoryComponent = require('./../common/StoryComponent');
 var CommentsStore = require('../../stores/CommentsStore');
@@ -23,7 +24,7 @@ function getStateFromStores(user) {
 }
 
 var SubmittedComponent = React.createClass({
-  mixins: [Router.State, StoriesCommentsMixin, GetUserSubmissionsMixin],
+  mixins: [Router.State, StoriesCommentsMixin, GetUserSubmissionsMixin, PureRenderMixin],
   _setState: function() {
     if(this.isMounted()) {
       var user = this.getQuery().id || 1;

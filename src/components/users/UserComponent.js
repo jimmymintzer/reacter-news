@@ -1,6 +1,7 @@
 var React = require('react');
 var Router = require('react-router');
 var GetUserMixin = require('../../mixins/GetUserMixin');
+var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 var UsersStore = require('../../stores/UsersStore');
 var UsersMixin = require('../../mixins/UsersMixin');
 var UserItemComponent = require('./UserItemComponent');
@@ -14,7 +15,7 @@ function getStateFromStores(id) {
 }
 
 var UserComponent = React.createClass({
-  mixins: [Router.State, UsersMixin, GetUserMixin],
+  mixins: [Router.State, UsersMixin, GetUserMixin, PureRenderMixin],
   _onChange: function() {
     var id = this.getQuery().id || '';
     this.setState(getStateFromStores(id));

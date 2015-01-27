@@ -4,6 +4,7 @@ var Link = Router.Link;
 
 var StoriesMixin = require('../../mixins/StoriesMixin');
 var GetTopStoriesAndCommentsMixin = require('../../mixins/GetTopStoriesAndCommentsMixin');
+var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 
 var StoryComponent = require('./../common/StoryComponent');
 var StoriesStore = require('../../stores/StoriesStore');
@@ -21,7 +22,7 @@ function getStateFromStores(page) {
 }
 
 var JobsComponent = React.createClass({
-  mixins: [Router.State, StoriesMixin, GetTopStoriesAndCommentsMixin],
+  mixins: [Router.State, StoriesMixin, GetTopStoriesAndCommentsMixin, PureRenderMixin],
   _setState: function() {
     var page = this.getQuery().p || 1;
     this.setState(getStateFromStores(page));

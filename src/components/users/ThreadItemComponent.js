@@ -3,8 +3,10 @@ var CommentsComponent = require('../common/CommentsComponent');
 var moment = require('moment');
 var Router = require('react-router');
 var Link = Router.Link;
+var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 
 var ThreadItemComponent = React.createClass({
+  mixins: [PureRenderMixin],
   render: function() {
     var a = moment();
     var b = moment(this.props.comment.time * 1000);

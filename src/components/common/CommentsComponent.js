@@ -2,10 +2,10 @@ var React = require('react');
 var moment = require('moment');
 var Router = require('react-router');
 var Link = Router.Link;
-var Immutable = require('immutable');
-
+var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 
 var CommentComponent = React.createClass({
+  mixins: [PureRenderMixin],
   render: function(){
     var comment = this.props.comment;
     var time = moment.unix(comment.time).fromNow();
@@ -32,6 +32,7 @@ var CommentsComponent = React.createClass({
       commentsValue: []
     }
   },
+  mixins: [PureRenderMixin],
   render: function(){
     var commentsArr = this.props.comments.map((comment, index) => {
       var fullComment = this.props.commentsValue.get(comment) || comment;

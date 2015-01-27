@@ -4,6 +4,7 @@ var Link = Router.Link;
 
 var StoriesCommentsMixin = require('../../mixins/StoriesCommentsMixin');
 var GetTopStoriesAndCommentsMixin = require('../../mixins/GetTopStoriesAndCommentsMixin');
+var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 
 var StoryComponent = require('./../common/StoryComponent');
 var CommentsStore = require('../../stores/CommentsStore');
@@ -24,7 +25,7 @@ function getStateFromStores(page) {
 }
 
 var NewestShowHNStoriesComponent = React.createClass({
-  mixins: [Router.State, StoriesCommentsMixin, GetTopStoriesAndCommentsMixin],
+  mixins: [Router.State, StoriesCommentsMixin, GetTopStoriesAndCommentsMixin, PureRenderMixin],
   _setState: function() {
     if(this.isMounted()) {
       var page = this.getQuery().p || 1;
