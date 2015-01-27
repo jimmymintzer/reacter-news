@@ -6,8 +6,6 @@ var Link = Router.Link;
 
 var ThreadItemComponent = React.createClass({
   render: function() {
-    var commentByStoryId = this.props.commentValues;
-
     var a = moment();
     var b = moment(this.props.comment.time * 1000);
     var time = a.diff(b, 'days');
@@ -41,7 +39,7 @@ var ThreadItemComponent = React.createClass({
         <div className="thread-text">
         {storyText}
         </div>
-        <CommentsComponent comments={this.props.comment.kids} commentsValue={commentByStoryId}/>
+        <CommentsComponent comments={this.props.comment.kids} commentsValue={this.props.commentValues}/>
       </div>
     )
 

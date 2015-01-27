@@ -6,6 +6,7 @@ var CommentsStore = require('../../stores/CommentsStore');
 var StoriesStore = require('../../stores/StoriesStore');
 var PollStore = require('../../stores/PollStore');
 var StoryComponent = require('../common/StoryComponent');
+var LoaderComponent = require('../common/LoaderComponent');
 var CommentsComponent = require('../common/CommentsComponent');
 var SpacerComponent = require('../common/SpacerComponent');
 var FooterComponent = require('../common/FooterComponent');
@@ -18,7 +19,9 @@ function getStateFromStores(id) {
   return {
     item: StoriesStore.getStory(id),
     comment: CommentsStore.getCommentById(id),
-    polls: PollStore.getAllPolls()
+    polls: PollStore.getAllPolls(),
+    loading: StoriesStore.getLoadingStatus(),
+    initialized: StoriesStore.getInitializedState()
   };
 }
 
@@ -37,19 +40,12 @@ var ItemComponent = React.createClass({
     return getStateFromStores(id);
   },
   render: function() {
-
-    var commentByStoryId = this.state.comment || new Map();
-
-    if(Object.keys(this.state.item).length === 0 ) {
-      var renderedHTML = (
-        <div className="spinner-center">
-          <i className="fa fa-refresh fa-spin"></i>
-        </div>
-      );
+    if(this.state.loading && !this.state.initialized) {
+      var renderedHTML = <LoaderComponent />;
     }
     else {
       if(this.state.item.type === "poll") {
-        var pollsValue = this.state.item.parts.map(function(part, index) {
+        var pollsValue = this.state.item.parts.map((part, index) => {
           var poll = this.state.polls.get(part) || {};
           var pollText = poll.text || "";
           var pollScore = poll.score || 0;
@@ -64,7 +60,7 @@ var ItemComponent = React.createClass({
               <tr><td className="comhead">{pollLabel}</td></tr>
             </tr>
           );
-        }, this);
+        });
 
         var polls = (
           <table className="poll-wrapper">
@@ -75,9 +71,9 @@ var ItemComponent = React.createClass({
 
       var renderedHTML = (
         <div>
-          <StoryComponent story={this.state.item} numberOfComments={commentByStoryId.size}/>
+          <StoryComponent story={this.state.item} numberOfComments={this.state.comment.size}/>
           {polls}
-          <CommentsComponent comments={this.state.item.kids} commentsValue={commentByStoryId}/>
+          <CommentsComponent comments={this.state.item.kids} commentsValue={this.state.comment}/>
         </div>
       );
 
@@ -98,7 +94,7 @@ var ItemComponent = React.createClass({
           <div className="comment-wrapper">
             <div className="username-row no-padding">{UserLink} {time} | {ItemLink}</div>
             <div dangerouslySetInnerHTML={{__html: comment.text}} />
-            <CommentsComponent comments={this.state.item.kids} commentsValue={commentByStoryId} />
+            <CommentsComponent comments={this.state.item.kids} commentsValue={this.state.comment} />
           </div>
           <div className="spacer-padding"></div>
           <SpacerComponent />

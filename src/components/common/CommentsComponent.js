@@ -2,6 +2,7 @@ var React = require('react');
 var moment = require('moment');
 var Router = require('react-router');
 var Link = Router.Link;
+var Immutable = require('immutable');
 
 
 var CommentComponent = React.createClass({
@@ -25,18 +26,18 @@ var CommentComponent = React.createClass({
 });
 
 var CommentsComponent = React.createClass({
-  render: function(){
-    var commentsArr = [];
-    var comments = this.props.comments;
-    var commentsValue = this.props.commentsValue;
-
-    if(comments && comments.length > 0) {
-      commentsArr = comments.map(function(comment) {
-        var commentStr = parseInt(comment);
-        var fullComment = commentsValue.get(commentStr) || comment;
-        return <CommentComponent key={comment} comment={fullComment} commentsValue={this.props.commentsValue}/>
-      }.bind(this));
+  getDefaultProps: function() {
+    return {
+      comments: [],
+      commentsValue: []
     }
+  },
+  render: function(){
+    var commentsArr = this.props.comments.map((comment, index) => {
+      var fullComment = this.props.commentsValue.get(comment) || comment;
+      return <CommentComponent key={index} comment={fullComment} commentsValue={this.props.commentsValue}/>
+    });
+
     return (
       <div className="comment-wrapper">
       {commentsArr}

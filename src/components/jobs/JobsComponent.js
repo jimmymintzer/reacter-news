@@ -35,37 +35,32 @@ var JobsComponent = React.createClass({
   },
   render: function() {
     document.title = "Jobs | Reacter News";
-    var jobs = [];
-
-    this.state.jobs.forEach(function(job) {
-      var jobComponent = (
+    var jobs = this.state.jobs.map(job => {
+      return (
         <li key={job.id}>
           <StoryComponent story={job} />
         </li>
       );
-      jobs.push(jobComponent);
-
-    }, this);
+    });
 
     if(this.state.loading && !this.state.initialized) {
-      var renderedHTML = (
-        <LoaderComponent />
-      );
+      var renderedHTML = <LoaderComponent />;
     }
     else {
       var page = parseInt(this.getQuery().p) || 1;
       var index = (30 * (page-1)) + 1;
       var nextPage = page + 1;
 
-      if(this.state.jobs.size === 30) {
-        var link = <Link to="jobs" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
-      }
+      var link = (this.state.jobs.size === 30) ?
+        <Link to="jobs" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>
+        : null;
 
       var renderedHTML = (
         <div>
-          <h3 className="job-header">All the jobs listed here are at startups that were at some point funded by Y Combinator. Some are now established companies. Others may be only a few weeks old.</h3>
+          <h3 className="job-header">All the jobs listed here are at startups that were at some point funded by
+            Y Combinator. Some are now established companies. Others may be only a few weeks old.</h3>
           <ol className="stories" start={index}>
-          {jobs}
+          {jobs.toArray()}
           </ol>
           <div className="more-link">
           {link}

@@ -163,6 +163,11 @@ StoriesStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
       _initialized = true;
       StoriesStore.emitChange();
       break;
+    case ActionTypes.CLEAR_STORIES:
+      _loading = false;
+      _initialized = false;
+      StoriesStore.emitChange();
+      break;
     case ActionTypes.SUBMITTED_STORIES_LOADING:
       _submittedLoading = true;
       StoriesStore.emitChange();

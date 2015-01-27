@@ -14,6 +14,7 @@ module.exports = {
     SUBMITTED_STORIES_LOADING: null,
     SUBMITTED_STORIES_FINISHED_LOADING: null,
     CLEAR_SUBMITTED_STORIES: null,
+    CLEAR_STORIES: null,
     RECEIVE_USER: null,
     USER_LOADING: null,
     USER_FINISHED_LOADING: null,

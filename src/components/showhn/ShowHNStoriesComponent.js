@@ -37,43 +37,37 @@ var ShowHNStoriesComponent = React.createClass({
   },
   render: function() {
     document.title = "Ask | Reacter News";
-    var stories = [];
-
-    this.state.stories.forEach(function(story, index) {
-      var commentByStoryId = this.state.comments.filter(function(comment) {
+    var stories = this.state.stories.map((story, index) => {
+      var commentByStoryId = this.state.comments.filter(comment => {
         if(comment.parentId === story.id) {
           return comment;
         }
       });
-      var storyComponent = (
+      return (
         <li key={index}>
           <StoryComponent story={story} numberOfComments={commentByStoryId.size}/>
         </li>
       );
-      stories.push(storyComponent);
-
-    }, this);
+    });
 
     if(this.state.loading && !this.state.initialized) {
-      var renderedHTML = (
-        <LoaderComponent />
-      );
+      var renderedHTML = <LoaderComponent />;
     }
     else {
       var page = parseInt(this.getQuery().p) || 1;
       var index = (30 * (page-1)) + 1;
       var nextPage = page + 1;
 
-      if(this.state.stories.size === 30) {
-        var link = <Link to="show" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>;
-      }
+      var link = (this.state.stories.size === 30) ?
+        <Link to="show" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>
+        : null;
 
       var renderedHTML = (
         <div>
           <h3 className="show-header">Please read the <a href="https://news.ycombinator.com/showhn.html" target="_blank">
           <u>guidelines</u></a>. The newest Show HNs are <Link to="shownew"><u>here</u></Link>.</h3>
           <ol className="stories" start={index}>
-          {stories}
+          {stories.toArray()}
           </ol>
           <div className="more-link">
           {link}

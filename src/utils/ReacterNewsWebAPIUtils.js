@@ -81,6 +81,7 @@ function getParent(item) {
 ReacterNewsWebAPIUtils = {
 
   getTopStoriesAndComments: function() {
+    StoriesActionCreators.clearStories();
     StoriesActionCreators.setLoading();
     getAllTopStoriesKeys()
       .then(getTopStories)
@@ -102,6 +103,7 @@ ReacterNewsWebAPIUtils = {
   },
 
   getStory: function(storyId) {
+    StoriesActionCreators.setLoading();
     getItem(storyId, function(story) {
       StoriesActionCreators.receiveStory(story);
       if(story.parts && story.parts.length > 0) {
@@ -115,6 +117,7 @@ ReacterNewsWebAPIUtils = {
           CommentsActionCreators.receiveComment(result);
         });
       }
+      StoriesActionCreators.stopLoading();
     })
   },
 

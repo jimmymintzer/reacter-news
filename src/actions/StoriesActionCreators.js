@@ -17,6 +17,12 @@ module.exports = {
     });
   },
 
+  clearStories: function() {
+    ReacterNewsDispatcher.handleServerAction({
+      type: ActionTypes.CLEAR_STORIES
+    });
+  },
+
   setSubmittedLoading: function() {
     ReacterNewsDispatcher.handleServerAction({
       type: ActionTypes.SUBMITTED_STORIES_LOADING
