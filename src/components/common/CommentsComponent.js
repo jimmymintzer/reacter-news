@@ -12,8 +12,13 @@ var CommentComponent = React.createClass({
       var a = moment();
       var b = moment(this.props.comment.time * 1000);
       var time = a.diff(b, 'days');
-      var timeLabel = (time===1)? ' day' : ' days';
-      time = time + timeLabel;
+      if(time === 0) {
+        var time = moment.unix(comment.time).fromNow();
+      }
+      else {
+        var timeLabel = (time===1)? ' day' : ' days';
+        var time = time + timeLabel + ' ago';
+      }
     }
     else {
       var time = moment.unix(comment.time).fromNow();

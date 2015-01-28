@@ -12,7 +12,7 @@ var ThreadItemComponent = React.createClass({
     var b = moment(this.props.comment.time * 1000);
     var time = a.diff(b, 'days');
     var timeLabel = (time===1)? ' day' : ' days';
-    timeLabel = time + timeLabel;
+    timeLabel = time + timeLabel + ' ago';
 
     if(time === 0) {
       var timeLabel = moment.unix(this.props.comment.time).fromNow();
