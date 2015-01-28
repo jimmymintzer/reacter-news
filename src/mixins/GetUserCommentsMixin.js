@@ -4,8 +4,7 @@ module.exports = {
   statics: {
     willTransitionTo: function(transition, params, query) {
       var userId = query.id || "";
-      var page = query.p || 1;
-      APIUtils.getUserComments(userId, page);
+      APIUtils.getUserComments(userId);
     }
   }
 };

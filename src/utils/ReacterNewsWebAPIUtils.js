@@ -162,10 +162,7 @@ ReacterNewsWebAPIUtils = {
       .then(StoriesActionCreators.stopSubmittedLoading);
   },
 
-  getUserComments: function(userId, page) {
-    var start = 10 * (page-1);
-    var end = (start + 10);
-
+  getUserComments: function(userId) {
     UserActionCreators.setLoading();
     CommentsActionCreators.setLoading();
     getUser(userId)
@@ -179,8 +176,7 @@ ReacterNewsWebAPIUtils = {
         return submittedItems
           .filter(function(item) {
             return item && (item.type === "comment" && !item.deleted)
-          })
-          .slice(start, end);
+          });
       })
       .then(function(comments) {
         comments.forEach(function(comment) {
@@ -189,14 +185,15 @@ ReacterNewsWebAPIUtils = {
               comment.parentId = comment.parent;
               comment.parentStoryDetails = parentResult;
               CommentsActionCreators.receiveComment(comment);
-          });
 
-          if(comment.kids && comment.kids.length > 0) {
-            getItems(comment.kids, function(result) {
-              result.parentId = comment.parent;
-              CommentsActionCreators.receiveComment(result);
+
+              if(comment.kids && comment.kids.length > 0) {
+                getItems(comment.kids, function(result) {
+                  result.parentId = comment.parent;
+                  CommentsActionCreators.receiveComment(result);
+                });
+              }
             });
-          }
         });
       })
       .then(CommentsActionCreators.stopLoading);
