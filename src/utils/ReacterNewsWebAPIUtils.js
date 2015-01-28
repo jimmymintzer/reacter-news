@@ -7,20 +7,19 @@ var Promise = require('bluebird');
 
 var fb = new Firebase("http://hacker-news.firebaseio.com/v0/");
 
-function getAllTopStoriesKeys() {
-  return new Promise(function(resolve, reject) {
-    fb.child('topstories').on('value', function(snapshot) {
-      resolve(snapshot.val());
-    }, function(err) {
-      reject(err);
-    });
+var getAllTopStoriesKeys = () => {
+  return new Promise((resolve, reject) => {
+    fb.child('topstories').on('value',
+      snapshot => resolve(snapshot.val()),
+      err => reject(err)
+    );
   });
-}
+};
 
-function getItems(items, storyId) {
-  items.forEach(function(item) {
+var getItems = (items, storyId) => {
+  items.forEach(item => {
     getItem(item)
-      .then(function(itemDetails) {
+      .then(itemDetails => {
         if(itemDetails.type === "pollopt") {
           PollActionCreators.receivePoll(itemDetails);
         }
@@ -33,78 +32,74 @@ function getItems(items, storyId) {
         }
       });
   });
-}
+};
 
-function getItem(item) {
-  return new Promise(function(resolve, reject) {
-    fb.child('item').child(item).on('value', function(snapshot) {
-      resolve(snapshot.val());
-    }, function(err) {
-      reject(err);
-    });
+var getItem = (item) => {
+  return new Promise((resolve, reject) => {
+    fb.child('item').child(item).on('value',
+      snapshot => resolve(snapshot.val()),
+      err => reject(err)
+    );
   });
-}
+};
 
-function getUser(userId) {
-  return new Promise(function(resolve, reject) {
-    fb.child('user').child(userId).on('value', function(snapshot) {
-      resolve(snapshot.val());
-    }, function(err) {
-      reject(err);
-    });
+var getUser = (userId) => {
+  return new Promise((resolve, reject) => {
+    fb.child('user').child(userId).on('value',
+      snapshot => resolve(snapshot.val()),
+      err => reject(err));
   });
-}
+};
 
-function getTopStories(stories) {
+var getTopStories = (stories) => {
   var promisesArr = [];
 
-  stories.map(function(story) {
-    var p = new Promise(function(resolve, reject) {
-      fb.child('item').child(story).on('value', function(snapshot) {
-        resolve(snapshot.val());
-      }, function(err) {
-        reject(err);
-      });
+  stories.map(story => {
+    var p = new Promise((resolve, reject) => {
+      fb.child('item').child(story).on('value',
+        snapshot => resolve(snapshot.val()),
+        err => reject(err)
+      );
     });
     promisesArr.push(p);
   });
 
-  return Promise.settle(promisesArr).map(function(story) {
-    return story.value();
-  });
-}
+  return Promise
+    .settle(promisesArr)
+    .map(story => story.value());
+};
 
-function getParent(item) {
-  return new Promise(function(resolve, reject) {
-    fb.child('item').child(item).on('value', function(snapshot) {
-      if(snapshot.val().type === "story") {
-        resolve(snapshot.val());
-      }
-      else if(snapshot.val().type === "poll") {
-        resolve(snapshot.val());
-      }
-      else {
-        resolve(getParent(snapshot.val().parent));
-      }
-    }, function(err) {
-      reject(err);
-    });
+var getParent = (item) => {
+  return new Promise((resolve, reject) => {
+    fb.child('item').child(item).on('value',
+      snapshot => {
+        if(snapshot.val().type === "story") {
+          resolve(snapshot.val());
+        }
+        else if(snapshot.val().type === "poll") {
+          resolve(snapshot.val());
+        }
+        else {
+          resolve(getParent(snapshot.val().parent));
+        }
+      },
+      err => reject(err));
   });
-}
+};
 
 ReacterNewsWebAPIUtils = {
 
-  getTopStoriesAndComments: function() {
+  getTopStoriesAndComments: () => {
     StoriesActionCreators.clearStories();
     StoriesActionCreators.setLoading();
     getAllTopStoriesKeys()
       .then(getTopStories)
-      .then(function(topStoriesArray) {
+      .then(topStoriesArray => {
           StoriesActionCreators.receiveStories(topStoriesArray);
           return topStoriesArray;
       })
-      .then(function(topStoriesArray) {
-        topStoriesArray.forEach(function(story) {
+      .then(topStoriesArray =>{
+        topStoriesArray.forEach(story => {
           if(story.kids && story.kids.length > 0) {
             getItems(story.kids, story.id);
           }
@@ -113,10 +108,10 @@ ReacterNewsWebAPIUtils = {
       .then(StoriesActionCreators.stopLoading)
   },
 
-  getStory: function(storyId) {
+  getStory: (storyId) => {
     StoriesActionCreators.setLoading();
     getItem(storyId)
-      .then(function(story) {
+      .then(story => {
         StoriesActionCreators.receiveStory(story);
         if(story.parts && story.parts.length > 0) {
           getItems(story.parts);
@@ -128,36 +123,34 @@ ReacterNewsWebAPIUtils = {
       });
   },
 
-  getUser: function(userId) {
+  getUser: (userId) => {
     UserActionCreators.setLoading();
     getUser(userId)
       .then(UserActionCreators.receiveUser)
       .then(UserActionCreators.stopLoading);
   },
 
-  getUserSubmissions: function(userId, page) {
+  getUserSubmissions: (userId, page) => {
     var start = 30 * (page-1);
     var end = (start + 30);
     StoriesActionCreators.setSubmittedLoading();
     StoriesActionCreators.clearSubmittedStories();
     UserActionCreators.setLoading();
     getUser(userId)
-      .then(function(userDetails) {
+      .then(userDetails => {
         UserActionCreators.receiveUser(userDetails);
         UserActionCreators.stopLoading();
         return userDetails.submitted;
       })
       .then(getTopStories)
-      .then(function(submittedItems) {
+      .then(submittedItems => {
         return submittedItems
-          .filter(function(item) {
-            return item && (item.type === "story" && !item.deleted)
-          })
+          .filter(item => item && (item.type === "story" && !item.deleted))
           .slice(start, end);
       })
-      .then(function(stories) {
+      .then(stories => {
         StoriesActionCreators.receiveSubmittedStories(stories);
-        stories.forEach(function(story) {
+        stories.forEach(story => {
           if(story.kids && story.kids.length > 0) {
             getItems(story.kids, story.id);
           }
@@ -166,26 +159,24 @@ ReacterNewsWebAPIUtils = {
       .then(StoriesActionCreators.stopSubmittedLoading);
   },
 
-  getUserComments: function(userId) {
+  getUserComments: (userId) => {
     UserActionCreators.setLoading();
     CommentsActionCreators.setLoading();
     getUser(userId)
-      .then(function(userDetails) {
+      .then(userDetails => {
         UserActionCreators.receiveUser(userDetails);
         UserActionCreators.stopLoading();
         return userDetails.submitted;
       })
       .then(getTopStories)
-      .then(function(submittedItems) {
+      .then(submittedItems => {
         return submittedItems
-          .filter(function(item) {
-            return item && (item.type === "comment" && !item.deleted)
-          });
+          .filter(item => item && (item.type === "comment" && !item.deleted));
       })
-      .then(function(comments) {
-        comments.forEach(function(comment) {
+      .then(comments =>{
+        comments.forEach(comment => {
           getParent(comment.parent)
-          .then(function(parentResult) {
+          .then(parentResult =>{
               comment.parentId = comment.parent;
               comment.parentStoryDetails = parentResult;
               CommentsActionCreators.receiveComment(comment);
