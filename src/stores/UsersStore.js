@@ -10,9 +10,9 @@ var CHANGE_EVENT = 'change';
 var _users = Immutable.Map();
 var _loading = false;
 
-function _addUser(rawMessages) {
+var _addUser = (rawMessages) => {
   _users = _users.set(rawMessages.id, rawMessages);
-}
+};
 
 var UsersStore = assign({}, EventEmitter.prototype, {
 
@@ -28,17 +28,13 @@ var UsersStore = assign({}, EventEmitter.prototype, {
     this.removeListener(CHANGE_EVENT, callback);
   },
 
-  get: function(id) {
-    return _users.get(id);
-  },
+  get: (id) => _users.get(id),
 
-  getLoadingStatus: function() {
-    return _loading;
-  }
+  getLoadingStatus: () => _loading
 
 });
 
-UsersStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
+UsersStore.dispatchToken = ReacterNewsDispatcher.register(payload => {
   var action = payload.action;
 
   switch(action.type) {

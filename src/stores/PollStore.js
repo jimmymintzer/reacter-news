@@ -9,9 +9,9 @@ var CHANGE_EVENT = 'change';
 
 var _polls = Immutable.Map();
 
-function _addPoll(rawPoll) {
+var _addPoll = (rawPoll) => {
   _polls = _polls.set(rawPoll.id, rawPoll);
-}
+};
 
 var PollStore = assign({}, EventEmitter.prototype, {
 
@@ -27,12 +27,11 @@ var PollStore = assign({}, EventEmitter.prototype, {
     this.removeListener(CHANGE_EVENT, callback);
   },
 
-  getAllPolls: function() {
-    return _polls;
-  }
+  getAllPolls: () => _polls
+
 });
 
-PollStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
+PollStore.dispatchToken = ReacterNewsDispatcher.register(payload => {
   var action = payload.action;
 
   switch(action.type) {

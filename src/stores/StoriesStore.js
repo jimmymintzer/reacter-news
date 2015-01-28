@@ -13,17 +13,17 @@ var _submittedLoading = false;
 var _loading = false;
 var _initialized = false;
 
-function _addStories(rawStories) {
+var _addStories = (rawStories) => {
   _stories = Immutable.List(rawStories);
-}
+};
 
-function _addStory(rawStory) {
+var _addStory = (rawStory) => {
   _stories = _stories.push(rawStory);
-}
+};
 
-function _addSubmittedStories(rawStories) {
+var _addSubmittedStories = (rawStories) => {
   _submitted_stories = Immutable.List(rawStories);
-}
+};
 
 var sortTime = (a, b) => {
   if (a.time < b.time) {
@@ -33,7 +33,7 @@ var sortTime = (a, b) => {
     return -1;
   }
   return 0;
-}
+};
 
 var StoriesStore = assign({}, EventEmitter.prototype, {
 
@@ -49,42 +49,31 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
     this.removeListener(CHANGE_EVENT, callback);
   },
 
-  getLoadingStatus: function() {
-    return _loading;
-  },
+  getLoadingStatus: () => _loading,
 
-  getSubmittedLoadingStatus: function() {
-    return _submittedLoading;
-  },
+  getSubmittedLoadingStatus: () => _submittedLoading,
 
-  getInitializedState: function() {
-    return _initialized;
-  },
+  getInitializedState: () => _initialized,
 
-  getStory: function(itemid) {
+  getStory: (itemid) => {
     return _stories
-      .filter(function(story) {
-        return story.id == itemid;
-      })
+      .filter(story => story.id == itemid)
       .get(0) || {};
   },
 
-  getAllStories: function() {
-    return _stories;
-  },
+  getAllStories: () => _stories,
 
-  getAllSubmittedStories: function() {
-    return _submitted_stories;
-  },
+  getAllSubmittedStories: () => _submitted_stories,
 
-  getStoriesByPage: function(page) {
+  getStoriesByPage: (page) => {
     var start = 30 * (page-1);
     var end = (start + 30);
 
-    return _stories.slice(start, end);
+    return _stories
+      .slice(start, end);
   },
 
-  getStoriesByPageAndSortedTime: function(page) {
+  getStoriesByPageAndSortedTime: (page) => {
     var start = 30 * (page-1);
     var end = (start + 30);
 
@@ -94,51 +83,44 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
       .slice(start, end);
   },
 
-  getAskHNStories: function(page) {
+  getAskHNStories: (page) => {
     var start = 30 * (page-1);
     var end = (start + 30);
 
     return _stories
-      .filter(function(story) {
-        return story.url === '' && story.type !== 'job';
-      })
+      .filter(story => story.url === '' && story.type !== 'job')
       .slice(start, end);
   },
 
-  getShowHNStories: function(page, sort) {
+  getShowHNStories: (page, sort) => {
     var start = 30 * (page-1);
     var end = (start + 30);
 
     var showHNStories = _stories
-      .filter(function(story) {
-        return !story.deleted;
-      })
-      .filter(function(story) {
-        return story && story.title.indexOf('Show HN:') !== -1;
-      })
+      .filter(story => !story.deleted)
+      .filter(story => story && story.title.indexOf('Show HN:') !== -1)
       .slice(start, end);
+
     if(sort) {
-      return showHNStories.sort(sortTime);
+      return showHNStories
+        .sort(sortTime);
     }
     else {
       return showHNStories;
     }
   },
 
-  getJobsStories: function(page) {
+  getJobsStories: (page) => {
     var start = 30 * (page-1);
     var end = (start + 30);
 
     return _stories
-      .filter(function(story) {
-        return story.type === 'job';
-      })
+      .filter(story => story.type === 'job')
       .slice(start, end);
   }
-
 });
 
-StoriesStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
+StoriesStore.dispatchToken = ReacterNewsDispatcher.register(payload => {
   var action = payload.action;
 
   switch(action.type) {

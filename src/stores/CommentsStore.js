@@ -10,11 +10,11 @@ var CHANGE_EVENT = 'change';
 var _comments = Immutable.Map();
 var _loading = false;
 
-function _addComment(rawComments) {
+var _addComment = (rawComments) => {
   if(!rawComments.deleted) {
     _comments = _comments.set(rawComments.id, rawComments);
   }
-}
+};
 
 var sortTime = (a, b) => {
   if(a.time < b.time) {
@@ -40,23 +40,19 @@ var CommentsStore = assign({}, EventEmitter.prototype, {
     this.removeListener(CHANGE_EVENT, callback);
   },
 
-  getCommentById: function(parent) {
-    return _comments.filter(function(comment) {
+  getCommentById: (parent) => {
+    return _comments.filter(comment => {
       if(comment.parentId == parent) {
         return comment;
       }
     });
   },
 
-  getAllComments: function() {
-    return _comments;
-  },
+  getAllComments: () => _comments,
 
-  getLoadingStatus: function() {
-    return _loading;
-  },
+  getLoadingStatus: () => _loading,
 
-  getCommentsByDate: function(page) {
+  getCommentsByDate: (page) => {
     page = page || 1;
     var start = 30 * (page-1);
     var end = (start + 30);
@@ -66,24 +62,20 @@ var CommentsStore = assign({}, EventEmitter.prototype, {
       .slice(start, end);
   },
 
-  getCommentsByUser: function(user, page) {
+  getCommentsByUser: (user, page) => {
     var page = page || 1;
     var start = 10 * (page-1);
     var end = start + 10;
 
     return _comments
-      .filter(function(comment) {
-        return comment.by === user;
-      })
-      .filter(function(comment) {
-          return comment.parentStoryDetails;
-      })
+      .filter(comment => comment.by === user)
+      .filter(comment => comment.parentStoryDetails)
       .sort(sortTime)
       .slice(start, end);
   }
 });
 
-CommentsStore.dispatchToken = ReacterNewsDispatcher.register(function(payload) {
+CommentsStore.dispatchToken = ReacterNewsDispatcher.register(payload => {
   var action = payload.action;
 
   switch(action.type) {
