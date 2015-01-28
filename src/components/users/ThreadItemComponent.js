@@ -41,7 +41,7 @@ var ThreadItemComponent = React.createClass({
         <div className="thread-text">
         {storyText}
         </div>
-        <CommentsComponent comments={this.props.comment.kids} commentsValue={this.props.commentValues}/>
+        <CommentsComponent comments={this.props.comment.kids} commentsValue={this.props.commentValues} daysTime={true}/>
       </div>
     )
 

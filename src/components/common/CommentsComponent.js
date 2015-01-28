@@ -8,7 +8,17 @@ var CommentComponent = React.createClass({
   mixins: [PureRenderMixin],
   render: function(){
     var comment = this.props.comment;
-    var time = moment.unix(comment.time).fromNow();
+    if(this.props.daysTime) {
+      var a = moment();
+      var b = moment(this.props.comment.time * 1000);
+      var time = a.diff(b, 'days');
+      var timeLabel = (time===1)? ' day' : ' days';
+      time = time + timeLabel;
+    }
+    else {
+      var time = moment.unix(comment.time).fromNow();
+    }
+
     var ItemLink = <Link to="item" className="story-link" query={{ id: comment.id }}>Link</Link>;
     var UserLink = <Link to="user" className="story-link" query={{ id: comment.by }}>{comment.by}</Link>;
 
@@ -19,7 +29,8 @@ var CommentComponent = React.createClass({
       <div className="comment">
         <div className="username-row">{UserLink} {time} | {ItemLink}</div>
         <div dangerouslySetInnerHTML={{__html: comment.text}} />
-        <CommentsComponent comments={comment.kids} commentsValue={this.props.commentsValue}/>
+        <CommentsComponent comments={comment.kids} commentsValue={this.props.commentsValue}
+          daysTime={this.props.daysTime}/>
       </div>
     );
   }
@@ -34,9 +45,10 @@ var CommentsComponent = React.createClass({
   },
   mixins: [PureRenderMixin],
   render: function(){
+    var daysTime = this.props.daysTime;
     var commentsArr = this.props.comments.map((comment, index) => {
       var fullComment = this.props.commentsValue.get(comment) || comment;
-      return <CommentComponent key={index} comment={fullComment} commentsValue={this.props.commentsValue}/>
+      return <CommentComponent key={index} comment={fullComment} commentsValue={this.props.commentsValue} daysTime={this.props.daysTime} />
     });
 
     return (
