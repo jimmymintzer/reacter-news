@@ -35,7 +35,7 @@ var JobsComponent = React.createClass({
     document.body.scrollTop = document.documentElement.scrollTop = 0;
   },
   render: function() {
-    document.title = "Jobs | Reacter News";
+    document.title = 'Jobs | Reacter News';
     var jobs = this.state.jobs.map(job => {
       return (
         <li key={job.id}>
@@ -53,17 +53,17 @@ var JobsComponent = React.createClass({
       var nextPage = page + 1;
 
       var link = (this.state.jobs.size === 30) ?
-        <Link to="jobs" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>
+        <Link to='jobs' query={{ p: nextPage }} onClick={this.handleClick}>More</Link>
         : null;
 
       var renderedHTML = (
         <div>
-          <h3 className="job-header">All the jobs listed here are at startups that were at some point funded by
+          <h3 className='job-header'>All the jobs listed here are at startups that were at some point funded by
             Y Combinator. Some are now established companies. Others may be only a few weeks old.</h3>
-          <ol className="stories" start={index}>
+          <ol className='stories' start={index}>
           {jobs.toArray()}
           </ol>
-          <div className="more-link">
+          <div className='more-link'>
           {link}
           </div>
         </div>
@@ -72,7 +72,7 @@ var JobsComponent = React.createClass({
 
     return (
       <div>
-        <div className="main">
+        <div className='main'>
         {renderedHTML}
         </div>
         <SpacerComponent />

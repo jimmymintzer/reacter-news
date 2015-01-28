@@ -20,7 +20,7 @@ var UserItemComponent = React.createClass({
   mixins: [PureRenderMixin],
   render: function() {
 
-    document.title = "Profile: " + this.props.user.id + " | Reacter News";
+    document.title = 'Profile: ' + this.props.user.id + ' | Reacter News';
 
     var createdAt = buildCreatedDate(this.props.user.created);
     var id = this.props.user.id;
@@ -48,11 +48,11 @@ var UserItemComponent = React.createClass({
         </tr>
         <tr>
           <td></td>
-          <td><Link to="submitted" className="underline" query={{ id: author }}>submissions</Link></td>
+          <td><Link to='submitted' className='underline' query={{ id: author }}>submissions</Link></td>
         </tr>
         <tr>
           <td></td>
-          <td><Link to="threads" className="underline" query={{ id: author }}>comments</Link></td>
+          <td><Link to='threads' className='underline' query={{ id: author }}>comments</Link></td>
         </tr>
       </table>
     );

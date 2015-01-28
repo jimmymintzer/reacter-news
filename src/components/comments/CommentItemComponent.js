@@ -17,15 +17,15 @@ var CommentItemComponent = React.createClass({
 
     var author = this.props.comment.by;
 
-    var ellipsisTitle = (this.props.parent.title.length >= 50) ? this.props.parent.title.substring(0, 50) + " ..." : this.props.parent.title;
+    var ellipsisTitle = (this.props.parent.title.length >= 50) ? this.props.parent.title.substring(0, 50) + ' ...' : this.props.parent.title;
 
-    var UserLink = <Link to="user" className="story-link" query={{ id: author }}>{author}</Link>;
+    var UserLink = <Link to='user' className='story-link' query={{ id: author }}>{author}</Link>;
 
-    var ItemLink = <Link to="item" className="story-link" query={{ id: this.props.comment.id }}>link</Link>;
+    var ItemLink = <Link to='item' className='story-link' query={{ id: this.props.comment.id }}>link</Link>;
 
-    var StoryLink = <Link to="item" className="story-link" query={{ id: this.props.parent.id }}>{ellipsisTitle}</Link>;
+    var StoryLink = <Link to='item' className='story-link' query={{ id: this.props.parent.id }}>{ellipsisTitle}</Link>;
 
-    var ParentLink = <Link to="item" className="story-link" query={{ id: this.props.parent.id }}>parent</Link>;
+    var ParentLink = <Link to='item' className='story-link' query={{ id: this.props.parent.id }}>parent</Link>;
 
     var storyText = <div dangerouslySetInnerHTML={{__html: this.props.comment.text}} />;
 
@@ -35,7 +35,7 @@ var CommentItemComponent = React.createClass({
         <div className='comhead'>
         {UserLink} {time} | {ItemLink} | {ParentLink} | on: {StoryLink}
         </div>
-        <div className="comment-text">
+        <div className='comment-text'>
         {storyText}
         </div>
       </div>

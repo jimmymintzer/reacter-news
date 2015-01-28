@@ -13,8 +13,6 @@ var LoaderComponent = require('../common/LoaderComponent');
 var SpacerComponent = require('./../common/SpacerComponent');
 var FooterComponent = require('./../common/FooterComponent');
 
-var _  = require('../../utils/UnderscoreDebounce');
-
 function getStateFromStores(page) {
   return {
     stories: StoriesStore.getShowHNStories(page),
@@ -37,7 +35,7 @@ var ShowHNStoriesComponent = React.createClass({
     return getStateFromStores(page);
   },
   render: function() {
-    document.title = "Ask | Reacter News";
+    document.title = 'Ask | Reacter News';
     var stories = this.state.stories.map((story, index) => {
       var commentByStoryId = this.state.comments.filter(comment => {
         if(comment.parentId === story.id) {
@@ -60,17 +58,17 @@ var ShowHNStoriesComponent = React.createClass({
       var nextPage = page + 1;
 
       var link = (this.state.stories.size === 30) ?
-        <Link to="show" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>
+        <Link to='show' query={{ p: nextPage }} onClick={this.handleClick}>More</Link>
         : null;
 
       var renderedHTML = (
         <div>
-          <h3 className="show-header">Please read the <a href="https://news.ycombinator.com/showhn.html" target="_blank">
-          <u>guidelines</u></a>. The newest Show HNs are <Link to="shownew"><u>here</u></Link>.</h3>
-          <ol className="stories" start={index}>
+          <h3 className='show-header'>Please read the <a href='https://news.ycombinator.com/showhn.html' target='_blank'>
+          <u>guidelines</u></a>. The newest Show HNs are <Link to='shownew'><u>here</u></Link>.</h3>
+          <ol className='stories' start={index}>
           {stories.toArray()}
           </ol>
-          <div className="more-link">
+          <div className='more-link'>
           {link}
           </div>
         </div>
@@ -79,7 +77,7 @@ var ShowHNStoriesComponent = React.createClass({
 
     return (
       <div>
-        <div className="main">
+        <div className='main'>
         {renderedHTML}
         </div>
         <SpacerComponent />

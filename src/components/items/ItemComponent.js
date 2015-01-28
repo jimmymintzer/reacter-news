@@ -11,8 +11,6 @@ var LoaderComponent = require('../common/LoaderComponent');
 var CommentsComponent = require('../common/CommentsComponent');
 var SpacerComponent = require('../common/SpacerComponent');
 var FooterComponent = require('../common/FooterComponent');
-
-var _ = require('../../utils/UnderscoreDebounce');
 var moment = require('moment');
 var Link = Router.Link;
 
@@ -45,26 +43,26 @@ var ItemComponent = React.createClass({
       var renderedHTML = <LoaderComponent />;
     }
     else {
-      if(this.state.item.type === "poll") {
+      if(this.state.item.type === 'poll') {
         var pollsValue = this.state.item.parts.map((part, index) => {
           var poll = this.state.polls.get(part) || {};
-          var pollText = poll.text || "";
+          var pollText = poll.text || '';
           var pollScore = poll.score || 0;
 
-          var pollLabel = pollScore + " ";
+          var pollLabel = pollScore + ' ';
 
-          pollLabel += (poll.score === 1) ? "point" : "points";
+          pollLabel += (poll.score === 1) ? 'point' : 'points';
 
           return (
             <tr key={index}>
               <tr><td>{pollText}</td></tr>
-              <tr><td className="comhead">{pollLabel}</td></tr>
+              <tr><td className='comhead'>{pollLabel}</td></tr>
             </tr>
           );
         });
 
         var polls = (
-          <table className="poll-wrapper">
+          <table className='poll-wrapper'>
           {pollsValue}
           </table>
         )
@@ -81,38 +79,38 @@ var ItemComponent = React.createClass({
     }
 
 
-    if(this.state.item.type === "comment") {
+    if(this.state.item.type === 'comment') {
 
       var comment = this.state.item;
       var time = moment.unix(comment.time).fromNow();
-      var ItemLink = <Link to="item" className="story-link" query={{ id: comment.id }}>Link</Link>;
-      var UserLink = <Link to="user" className="story-link" query={{ id: comment.by }}>{comment.by}</Link>;
+      var ItemLink = <Link to='item' className='story-link' query={{ id: comment.id }}>Link</Link>;
+      var UserLink = <Link to='user' className='story-link' query={{ id: comment.by }}>{comment.by}</Link>;
 
-      document.title = comment.text.replace(/<[^>]*>/g, '').replace(/&#x27;/g, "'") + " | Reacter News";
+      document.title = comment.text.replace(/<[^>]*>/g, '').replace(/&#x27;/g, '\'') + ' | Reacter News';
 
       return (
-        <div className="item-wrapper">
-          <div className="comment-wrapper">
-            <div className="username-row no-padding">{UserLink} {time} | {ItemLink}</div>
+        <div className='item-wrapper'>
+          <div className='comment-wrapper'>
+            <div className='username-row no-padding'>{UserLink} {time} | {ItemLink}</div>
             <div dangerouslySetInnerHTML={{__html: comment.text}} />
             <CommentsComponent comments={this.state.item.kids} commentsValue={this.state.comment} />
           </div>
-          <div className="spacer-padding"></div>
+          <div className='spacer-padding'></div>
           <SpacerComponent />
           <FooterComponent />
         </div>
       );
     }
     else {
-      var stateTitle = this.state.item.title ? this.state.item.title + " | ": "";
+      var stateTitle = this.state.item.title ? this.state.item.title + ' | ': '';
 
-      document.title = stateTitle +  "Reacter News";
+      document.title = stateTitle +  'Reacter News';
 
 
       return (
-        <div className="item-wrapper">
+        <div className='item-wrapper'>
         {renderedHTML}
-          <div className="spacer-padding"></div>
+          <div className='spacer-padding'></div>
           <SpacerComponent />
           <FooterComponent />
         </div>

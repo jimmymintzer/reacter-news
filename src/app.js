@@ -1,6 +1,6 @@
 require('console-polyfill');
 require('es5-shim');
-require("6to5/register");
+require('6to5/register');
 var React = require('react');
 var ReacterNewsApp = require('./components/ReacterNewsApp');
 var StoriesComponent = require('./components/stories/StoriesComponent');
@@ -25,18 +25,18 @@ var DefaultRoute = Router.DefaultRoute;
 var HistoryLocation = Router.HistoryLocation;
 
 var routes = (
-  <Route name="app" path="/" handler={ReacterNewsApp}>
-    <Route name="news" handler={StoriesComponent} />
-    <Route name="newest" handler={NewestStoriesComponent} />
-    <Route name="newcomments" handler={CommentsStoriesComponent} />
-    <Route name="show" handler={ShowHNStoriesComponent} />
-    <Route name="shownew" handler={NewestShowHNStoriesComponent} />
-    <Route name="ask" handler={AskHNStoriesComponent} />
-    <Route name="user" handler={UserComponent} />
-    <Route name="item" handler={ItemComponent} />
-    <Route name="jobs" handler={JobsComponent} />
-    <Route name="submitted" handler={SubmittedComponent} />
-    <Route name="threads" handler={ThreadsComponent} />
+  <Route name='app' path='/' handler={ReacterNewsApp}>
+    <Route name='news' handler={StoriesComponent} />
+    <Route name='newest' handler={NewestStoriesComponent} />
+    <Route name='newcomments' handler={CommentsStoriesComponent} />
+    <Route name='show' handler={ShowHNStoriesComponent} />
+    <Route name='shownew' handler={NewestShowHNStoriesComponent} />
+    <Route name='ask' handler={AskHNStoriesComponent} />
+    <Route name='user' handler={UserComponent} />
+    <Route name='item' handler={ItemComponent} />
+    <Route name='jobs' handler={JobsComponent} />
+    <Route name='submitted' handler={SubmittedComponent} />
+    <Route name='threads' handler={ThreadsComponent} />
     <DefaultRoute handler={StoriesComponent} />
   </Route>
 );

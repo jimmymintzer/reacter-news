@@ -12,13 +12,13 @@ var ReacterNewsApp = React.createClass({
   mixins: [ Router.State ],
   render: function() {
     var routeName = this.getRoutes().reverse()[0].name;
-    var queryString = this.getQuery() || "";
-    var keyName = (this.getRoutes().reverse()[0].name || "news") + (this.getQuery().p || "") + (this.getQuery().id || "");
+    var queryString = this.getQuery() || '';
+    var keyName = (this.getRoutes().reverse()[0].name || 'news') + (this.getQuery().p || '') + (this.getQuery().id || '');
 
     return (
       <div>
         <HeaderComponent name={routeName} queryString={queryString}/>
-        <ReactCSSTransitionGroup transitionName="animate">
+        <ReactCSSTransitionGroup transitionName='animate'>
           <RouteHandler key={keyName}/>
         </ReactCSSTransitionGroup>
       </div>

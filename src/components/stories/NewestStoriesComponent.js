@@ -84,12 +84,6 @@ var NewestStoriesComponent = React.createClass({
       <div>
         <div className="main">
         {renderedHTML}
-          <ol className="stories" start={index}>
-          {stories}
-          </ol>
-          <div className="more-link">
-          {link}
-          </div>
         </div>
         <SpacerComponent />
         <FooterComponent />

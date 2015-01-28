@@ -9,8 +9,6 @@ var CommentItemComponent = require('./CommentItemComponent');
 var LoaderComponent = require('../common/LoaderComponent');
 var SpacerComponent = require('../common/SpacerComponent');
 var FooterComponent = require('../common/FooterComponent');
-
-var _ = require('../../utils/UnderscoreDebounce');
 var Link = Router.Link;
 
 function getStateFromStores() {
@@ -55,11 +53,11 @@ var CommentsStoriesComponent = React.createClass({
       }, this);
 
       var renderedHTML = (
-        <div className="item-wrapper">
-          <div className="comment-wrapper">
+        <div className='item-wrapper'>
+          <div className='comment-wrapper'>
         {comments}
           </div>
-          <div className="spacer-padding"></div>
+          <div className='spacer-padding'></div>
           <SpacerComponent />
           <FooterComponent />
         </div>

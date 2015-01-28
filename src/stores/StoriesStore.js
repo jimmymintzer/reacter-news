@@ -100,7 +100,7 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
 
     return _stories
       .filter(function(story) {
-        return story.url === "" && story.type !== "job";
+        return story.url === '' && story.type !== 'job';
       })
       .slice(start, end);
   },
@@ -114,7 +114,7 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
         return !story.deleted;
       })
       .filter(function(story) {
-        return story && story.title.indexOf("Show HN:") !== -1;
+        return story && story.title.indexOf('Show HN:') !== -1;
       })
       .slice(start, end);
     if(sort) {
@@ -131,7 +131,7 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
 
     return _stories
       .filter(function(story) {
-        return story.type === "job";
+        return story.type === 'job';
       })
       .slice(start, end);
   }

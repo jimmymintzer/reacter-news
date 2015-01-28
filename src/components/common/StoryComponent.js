@@ -6,7 +6,7 @@ var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 
 var buildComhead = function(url) {
   if(!url) {
-    return "";
+    return '';
   }
   var comhead = url
     .replace(/^(http|https):\/\//,'')
@@ -38,7 +38,7 @@ var buildComhead = function(url) {
 };
 
 var buildPoints = function(points) {
-  var pointsLabel = points + " point";
+  var pointsLabel = points + ' point';
 
   pointsLabel += (points !== 1) ? 's' : '';
 
@@ -77,13 +77,13 @@ var StoryComponent = React.createClass({
 
     var author = this.props.story.by;
 
-    var UserLink = <Link to="user" className="story-link" query={{ id: author }}>{author}</Link>;
+    var UserLink = <Link to='user' className='story-link' query={{ id: author }}>{author}</Link>;
 
-    var ItemLink = <Link to="item" className="story-link" query={{ id: this.props.story.id }}>{commentsLabel}</Link>;
+    var ItemLink = <Link to='item' className='story-link' query={{ id: this.props.story.id }}>{commentsLabel}</Link>;
 
     var StoryLink = <a href={ this.props.story.url }>{this.props.story.title}</a>;
 
-    if(this.props.story.type !== "job") {
+    if(this.props.story.type !== 'job') {
       subtext =  (
         <div className='story-subtext'>
           <span>{pointsLabel}</span> by {UserLink} {time} | {ItemLink}

@@ -20,15 +20,15 @@ var ThreadItemComponent = React.createClass({
 
     var author = this.props.comment.by;
 
-    var ellipsisTitle = (this.props.parent.title && this.props.parent.title.length >= 50) ? this.props.parent.title.substring(0, 50) + " ..." : this.props.parent.title;
+    var ellipsisTitle = (this.props.parent.title && this.props.parent.title.length >= 50) ? this.props.parent.title.substring(0, 50) + ' ...' : this.props.parent.title;
 
-    var UserLink = <Link to="user" className="story-link" query={{ id: author }}>{author}</Link>;
+    var UserLink = <Link to='user' className='story-link' query={{ id: author }}>{author}</Link>;
 
-    var ItemLink = <Link to="item" className="story-link" query={{ id: this.props.comment.id }}>link</Link>;
+    var ItemLink = <Link to='item' className='story-link' query={{ id: this.props.comment.id }}>link</Link>;
 
-    var StoryLink = <Link to="item" className="story-link" query={{ id: this.props.parent.id }}>{ellipsisTitle}</Link>;
+    var StoryLink = <Link to='item' className='story-link' query={{ id: this.props.parent.id }}>{ellipsisTitle}</Link>;
 
-    var ParentLink = <Link to="item" className="story-link" query={{ id: this.props.parent.id }}>parent</Link>;
+    var ParentLink = <Link to='item' className='story-link' query={{ id: this.props.parent.id }}>parent</Link>;
 
     var storyText = <div dangerouslySetInnerHTML={{__html: this.props.comment.text}} />;
 
@@ -38,7 +38,7 @@ var ThreadItemComponent = React.createClass({
         <div className='comhead'>
         {UserLink} {timeLabel} | {ItemLink} | {ParentLink} | on: {StoryLink}
         </div>
-        <div className="thread-text">
+        <div className='thread-text'>
         {storyText}
         </div>
         <CommentsComponent comments={this.props.comment.kids} commentsValue={this.props.commentValues} daysTime={true}/>

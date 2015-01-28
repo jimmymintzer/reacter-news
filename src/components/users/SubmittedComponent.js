@@ -13,8 +13,6 @@ var LoaderComponent = require('../common/LoaderComponent');
 var SpacerComponent = require('./../common/SpacerComponent');
 var FooterComponent = require('./../common/FooterComponent');
 
-var _  = require('../../utils/UnderscoreDebounce');
-
 function getStateFromStores(user) {
   return {
     stories: StoriesStore.getAllSubmittedStories(user),
@@ -39,7 +37,7 @@ var SubmittedComponent = React.createClass({
     document.body.scrollTop = document.documentElement.scrollTop = 0;
   },
   render: function() {
-    document.title = "Reacter News";
+    document.title = 'Reacter News';
 
     var stories = this.state.stories.map(story => {
       var commentByStoryId = this.state.comments.filter(comment => {
@@ -64,15 +62,15 @@ var SubmittedComponent = React.createClass({
       var index = (30 * (page-1)) + 1;
       var nextPage = page + 1;
       var link = (this.state.stories.size === 30) ?
-        <Link to="submitted" query={{ id: userId, p: nextPage }} onClick={this.handleClick}>More</Link>
+        <Link to='submitted' query={{ id: userId, p: nextPage }} onClick={this.handleClick}>More</Link>
         : null;
 
       var renderedHTML = (
         <div>
-          <ol className="stories" start={index}>
+          <ol className='stories' start={index}>
           {stories.toArray()}
           </ol>
-          <div className="more-link">
+          <div className='more-link'>
           {link}
           </div>
         </div>
@@ -81,7 +79,7 @@ var SubmittedComponent = React.createClass({
 
     return (
       <div>
-        <div className="main">
+        <div className='main'>
         {renderedHTML}
         </div>
         <SpacerComponent />

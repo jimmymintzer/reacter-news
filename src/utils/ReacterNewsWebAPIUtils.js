@@ -5,7 +5,7 @@ var UserActionCreators = require('../actions/UserActionCreators');
 var PollActionCreators = require('../actions/PollActionCreators');
 var Promise = require('bluebird');
 
-var fb = new Firebase("http://hacker-news.firebaseio.com/v0/");
+var fb = new Firebase('http://hacker-news.firebaseio.com/v0/');
 
 var getAllTopStoriesKeys = () => {
   return new Promise((resolve, reject) => {
@@ -20,10 +20,10 @@ var getItems = (items, storyId) => {
   items.forEach(item => {
     getItem(item)
       .then(itemDetails => {
-        if(itemDetails.type === "pollopt") {
+        if(itemDetails.type === 'pollopt') {
           PollActionCreators.receivePoll(itemDetails);
         }
-        if(itemDetails.type === "comment") {
+        if(itemDetails.type === 'comment') {
           itemDetails.parentId = storyId;
           CommentsActionCreators.receiveComment(itemDetails)
         }
@@ -73,10 +73,10 @@ var getParent = (item) => {
   return new Promise((resolve, reject) => {
     fb.child('item').child(item).on('value',
       snapshot => {
-        if(snapshot.val().type === "story") {
+        if(snapshot.val().type === 'story') {
           resolve(snapshot.val());
         }
-        else if(snapshot.val().type === "poll") {
+        else if(snapshot.val().type === 'poll') {
           resolve(snapshot.val());
         }
         else {
@@ -94,11 +94,12 @@ ReacterNewsWebAPIUtils = {
     StoriesActionCreators.setLoading();
     getAllTopStoriesKeys()
       .then(getTopStories)
+      .then(topStoriesArray => topStoriesArray.filter(story => !story.deleted))
       .then(topStoriesArray => {
           StoriesActionCreators.receiveStories(topStoriesArray);
           return topStoriesArray;
       })
-      .then(topStoriesArray =>{
+      .then(topStoriesArray => {
         topStoriesArray.forEach(story => {
           if(story.kids && story.kids.length > 0) {
             getItems(story.kids, story.id);
@@ -145,7 +146,7 @@ ReacterNewsWebAPIUtils = {
       .then(getTopStories)
       .then(submittedItems => {
         return submittedItems
-          .filter(item => item && (item.type === "story" && !item.deleted))
+          .filter(item => item && (item.type === 'story' && !item.deleted))
           .slice(start, end);
       })
       .then(stories => {
@@ -171,7 +172,7 @@ ReacterNewsWebAPIUtils = {
       .then(getTopStories)
       .then(submittedItems => {
         return submittedItems
-          .filter(item => item && (item.type === "comment" && !item.deleted));
+          .filter(item => item && (item.type === 'comment' && !item.deleted));
       })
       .then(comments =>{
         comments.forEach(comment => {

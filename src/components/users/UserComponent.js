@@ -34,7 +34,7 @@ var UserComponent = React.createClass({
     }
     else {
       var renderedHTML = (
-        <div className="user-component">
+        <div className='user-component'>
           <UserItemComponent user={user} />
         </div>
       );

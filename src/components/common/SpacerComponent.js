@@ -5,7 +5,7 @@ var SpacerComponent = React.createClass({
   mixins: [PureRenderMixin],
   render: function() {
     return (
-      <div className="spacer"></div>
+      <div className='spacer'></div>
     )
   }
 });

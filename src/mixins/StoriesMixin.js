@@ -1,5 +1,4 @@
 var StoriesStore = require('../stores/StoriesStore');
-var _ = require('../utils/UnderscoreDebounce');
 
 module.exports = {
   componentDidMount: function() {

@@ -8,7 +8,6 @@ var ThreadItemComponent = require('./ThreadItemComponent');
 var SpacerComponent = require('../common/SpacerComponent');
 var FooterComponent = require('../common/FooterComponent');
 var LoaderComponent = require('../common/LoaderComponent');
-var _ = require('../../utils/UnderscoreDebounce');
 var Link = Router.Link;
 
 function getStateFromStores(userId, page) {
@@ -23,7 +22,7 @@ var ThreadsComponent = React.createClass({
   mixins: [Router.State, CommentsMixin, GetUserCommentsMixin, PureRenderMixin],
   _setState: function() {
     if(this.isMounted()) {
-      var userId = this.getQuery().id || "";
+      var userId = this.getQuery().id || '';
       var page = this.getQuery().p || 1;
       if(this.isMounted()) {
         this.setState(getStateFromStores(userId, page));
@@ -31,7 +30,7 @@ var ThreadsComponent = React.createClass({
     }
   },
   getInitialState: function() {
-    var userId = this.getQuery().id || "";
+    var userId = this.getQuery().id || '';
     var page = this.getQuery().p || 1;
     return getStateFromStores(userId, page);
   },
@@ -56,18 +55,18 @@ var ThreadsComponent = React.createClass({
     else {
 
       var page = parseInt(this.getQuery().p) || 1;
-      var userId = this.getQuery().id || "";
+      var userId = this.getQuery().id || '';
       var nextPage = page + 1;
       if ( this.state.comments.size === 10 ) {
-        var link = <Link to="threads" query={{id: userId, p: nextPage}} onClick={this.handleClick}>More</Link>;
+        var link = <Link to='threads' query={{id: userId, p: nextPage}} onClick={this.handleClick}>More</Link>;
       }
 
       var renderedHTML = (
         <div>
-          <div className="comment-wrapper">
+          <div className='comment-wrapper'>
           {comments}
           </div>
-          <div className="more-link">
+          <div className='more-link'>
           {link}
           </div>
         </div>
@@ -75,9 +74,9 @@ var ThreadsComponent = React.createClass({
     }
 
     return (
-      <div className="item-wrapper">
+      <div className='item-wrapper'>
         {renderedHTML}
-        <div className="spacer-padding"></div>
+        <div className='spacer-padding'></div>
         <SpacerComponent />
         <FooterComponent />
       </div>
