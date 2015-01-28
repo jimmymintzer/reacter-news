@@ -17,20 +17,31 @@ function getAllTopStoriesKeys() {
   });
 }
 
-function getItems(items, cb) {
+function getItems(items, storyId) {
   items.forEach(function(item) {
-    getItem(item, function(result) {
-      cb(result);
-      if(result && result.kids && result.kids.length > 0) {
-        getItems(result.kids, cb);
-      }
-    });
+    getItem(item)
+      .then(function(itemDetails) {
+        if(itemDetails.type === "pollopt") {
+          PollActionCreators.receivePoll(itemDetails);
+        }
+        if(itemDetails.type === "comment") {
+          itemDetails.parentId = storyId;
+          CommentsActionCreators.receiveComment(itemDetails)
+        }
+        if(itemDetails && itemDetails.kids && itemDetails.kids.length > 0) {
+          getItems(itemDetails.kids, storyId);
+        }
+      });
   });
 }
 
-function getItem(item, cb) {
-  fb.child('item').child(item).on('value', function(snapshot) {
-    cb(snapshot.val());
+function getItem(item) {
+  return new Promise(function(resolve, reject) {
+    fb.child('item').child(item).on('value', function(snapshot) {
+      resolve(snapshot.val());
+    }, function(err) {
+      reject(err);
+    });
   });
 }
 
@@ -69,6 +80,9 @@ function getParent(item) {
       if(snapshot.val().type === "story") {
         resolve(snapshot.val());
       }
+      else if(snapshot.val().type === "poll") {
+        resolve(snapshot.val());
+      }
       else {
         resolve(getParent(snapshot.val().parent));
       }
@@ -92,10 +106,7 @@ ReacterNewsWebAPIUtils = {
       .then(function(topStoriesArray) {
         topStoriesArray.forEach(function(story) {
           if(story.kids && story.kids.length > 0) {
-            getItems(story.kids, function(result) {
-              result.parentId = story.id;
-              CommentsActionCreators.receiveComment(result);
-            });
+            getItems(story.kids, story.id);
           }
         });
       })
@@ -104,21 +115,17 @@ ReacterNewsWebAPIUtils = {
 
   getStory: function(storyId) {
     StoriesActionCreators.setLoading();
-    getItem(storyId, function(story) {
-      StoriesActionCreators.receiveStory(story);
-      if(story.parts && story.parts.length > 0) {
-        getItems(story.parts, function(poll) {
-          PollActionCreators.receivePoll(poll);
-        });
-      }
-      if(story.kids && story.kids.length > 0) {
-        getItems(story.kids, function(result) {
-          result.parentId = story.id;
-          CommentsActionCreators.receiveComment(result);
-        });
-      }
-      StoriesActionCreators.stopLoading();
-    })
+    getItem(storyId)
+      .then(function(story) {
+        StoriesActionCreators.receiveStory(story);
+        if(story.parts && story.parts.length > 0) {
+          getItems(story.parts);
+        }
+        if(story.kids && story.kids.length > 0) {
+          getItems(story.kids, story.id);
+        }
+        StoriesActionCreators.stopLoading();
+      });
   },
 
   getUser: function(userId) {
@@ -152,10 +159,7 @@ ReacterNewsWebAPIUtils = {
         StoriesActionCreators.receiveSubmittedStories(stories);
         stories.forEach(function(story) {
           if(story.kids && story.kids.length > 0) {
-            getItems(story.kids, function(result) {
-              result.parentId = story.id;
-              CommentsActionCreators.receiveComment(result);
-            });
+            getItems(story.kids, story.id);
           }
         });
       })
@@ -186,12 +190,8 @@ ReacterNewsWebAPIUtils = {
               comment.parentStoryDetails = parentResult;
               CommentsActionCreators.receiveComment(comment);
 
-
               if(comment.kids && comment.kids.length > 0) {
-                getItems(comment.kids, function(result) {
-                  result.parentId = comment.parent;
-                  CommentsActionCreators.receiveComment(result);
-                });
+                getItems(comment.kids, comment.parent);
               }
             });
         });
