@@ -98,7 +98,7 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
 
     var showHNStories = _stories
       .filter(story => !story.deleted)
-      .filter(story => story && story.title.indexOf('Show HN:') !== -1)
+      .filter(story => story.title && story.title.indexOf('Show HN:') !== -1)
       .slice(start, end);
 
     if(sort) {

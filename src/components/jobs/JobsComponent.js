@@ -36,9 +36,9 @@ var JobsComponent = React.createClass({
   },
   render: function() {
     document.title = 'Jobs | Reacter News';
-    var jobs = this.state.jobs.map(job => {
+    var jobs = this.state.jobs.map((job, index) => {
       return (
-        <li key={job.id}>
+        <li key={index}>
           <StoryComponent story={job} />
         </li>
       );
