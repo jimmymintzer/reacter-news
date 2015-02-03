@@ -21,3 +21,5 @@ Reacter News is a Hacker News (https://news.ycombinator.com/) clone.
 
 
 ### Known Issues ###
+* User object contains an array of submitted items. If that comment is nested in another comment, it will display twice, 
+both as the top of the comment tree.
