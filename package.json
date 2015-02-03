@@ -6,13 +6,14 @@
   "scripts": {
     "start": "npm run serve | npm run dev",
     "serve": "httpster -p 8080 -s",
-    "dev": "webpack-dev-server --inline --hot --progress --colors --port 8090"
+    "dev": "webpack-dev-server --inline --hot --progress --colors --port 8090",
+    "prod": "webpack -p --progress --colors --config webpack.prod.config.js",
+    "prod-serve": "httpster -p 8080 -d ./dist -s"
   },
   "author": "Jimmy Mintzer",
   "license": "ISC",
   "dependencies": {
     "bluebird": "^2.4.1",
-    "console-polyfill": "^0.1.2",
     "es5-shim": "^4.0.5",
     "firebase": "^2.0.6",
     "font-awesome": "^4.2.0",
@@ -22,8 +23,9 @@
     "react-router": "^0.11.6"
   },
   "devDependencies": {
-    "6to5": "^2.7.4",
-    "6to5-loader": "^1.0.0",
+    "6to5": "^3.3.4",
+    "6to5-core": "^3.3.4",
+    "6to5-loader": "^3.0.0",
     "css-loader": "^0.9.0",
     "file-loader": "^0.8.1",
     "flux": "^2.0.1",

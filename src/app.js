@@ -1,6 +1,4 @@
-require('console-polyfill');
-require('es5-shim');
-require('6to5/register');
+require("6to5/register");
 var React = require('react');
 var ReacterNewsApp = require('./components/ReacterNewsApp');
 var StoriesComponent = require('./components/stories/StoriesComponent');
