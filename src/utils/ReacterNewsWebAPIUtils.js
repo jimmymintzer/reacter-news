@@ -87,7 +87,7 @@ var getParent = (item) => {
   });
 };
 
-ReacterNewsWebAPIUtils = {
+var ReacterNewsWebAPIUtils = {
 
   getTopStoriesAndComments: () => {
     StoriesActionCreators.clearStories();
