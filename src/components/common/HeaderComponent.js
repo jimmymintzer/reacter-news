@@ -1,10 +1,8 @@
 var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 
 var HeaderComponent = React.createClass({
-  mixins:[PureRenderMixin],
   render: function() {
     var name = this.props.name;
 

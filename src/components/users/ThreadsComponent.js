@@ -1,14 +1,12 @@
 var React = require('react');
 var Router = require('react-router');
-var GetUserCommentsMixin = require('../../mixins/GetUserCommentsMixin');
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
-var CommentsMixin = require('../../mixins/CommentsMixin');
 var CommentsStore = require('../../stores/CommentsStore');
 var ThreadItemComponent = require('./ThreadItemComponent');
 var SpacerComponent = require('../common/SpacerComponent');
 var FooterComponent = require('../common/FooterComponent');
 var LoaderComponent = require('../common/LoaderComponent');
 var Link = Router.Link;
+var APIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 
 function getStateFromStores(userId, page) {
   return {
@@ -19,7 +17,17 @@ function getStateFromStores(userId, page) {
 }
 
 var ThreadsComponent = React.createClass({
-  mixins: [Router.State, CommentsMixin, GetUserCommentsMixin, PureRenderMixin],
+  componentDidMount: function() {
+    CommentsStore.addChangeListener(this._onChange);
+  },
+  componentWillUnmount: function() {
+    CommentsStore.removeChangeListener(this._onChange);
+    var userId = query.id || '';
+    APIUtils.getUserComments(userId);
+  },
+  _onChange: function() {
+    this._setState();
+  },
   _setState: function() {
     if(this.isMounted()) {
       var userId = this.getQuery().id || '';

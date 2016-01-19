@@ -2,9 +2,6 @@ var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 
-var StoriesCommentsMixin = require('../../mixins/StoriesCommentsMixin');
-var GetUserSubmissionsMixin = require('../../mixins/GetUserSubmissionsMixin');
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 
 var StoryComponent = require('./../common/StoryComponent');
 var CommentsStore = require('../../stores/CommentsStore');
@@ -12,6 +9,7 @@ var StoriesStore = require('../../stores/StoriesStore');
 var LoaderComponent = require('../common/LoaderComponent');
 var SpacerComponent = require('./../common/SpacerComponent');
 var FooterComponent = require('./../common/FooterComponent');
+var APIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 
 function getStateFromStores(user) {
   return {
@@ -22,7 +20,20 @@ function getStateFromStores(user) {
 }
 
 var SubmittedComponent = React.createClass({
-  mixins: [Router.State, StoriesCommentsMixin, GetUserSubmissionsMixin, PureRenderMixin],
+  componentDidMount: function() {
+    StoriesStore.addChangeListener(this._onChange);
+    CommentsStore.addChangeListener(this._onChange);
+  },
+  componentWillUnmount: function() {
+    StoriesStore.removeChangeListener(this._onChange);
+    CommentsStore.removeChangeListener(this._onChange);
+    var id = query.id || 0;
+    var p = query.p || 1;
+    APIUtils.getUserSubmissions(id, p);
+  },
+  _onChange: function() {
+    this._setState();
+  },
   _setState: function() {
     if(this.isMounted()) {
       var user = this.getQuery().id || 1;

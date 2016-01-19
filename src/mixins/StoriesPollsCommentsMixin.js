@@ -1,7 +1,6 @@
 var StoriesStore = require('../stores/StoriesStore');
 var CommentsStore = require('../stores/CommentsStore');
 var PollStore = require('../stores/PollStore');
-var _ = require('../utils/UnderscoreDebounce');
 
 module.exports = {
   componentDidMount: function() {
@@ -14,8 +13,5 @@ module.exports = {
     CommentsStore.removeChangeListener(this._onChange);
     PollStore.removeChangeListener(this._onChange);
   },
-  _onChange: _.debounce(function () {
-    this._setState();
-  }, 75)
-
+  _onChange: this._setState(),
 };

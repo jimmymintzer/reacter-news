@@ -1,8 +1,5 @@
 var React = require('react');
 var Router = require('react-router');
-var StoriesPollsCommentsMixin = require('../../mixins/StoriesPollsCommentsMixin');
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
-var GetStoryMixin = require('../../mixins/GetStoryMixin');
 var CommentsStore = require('../../stores/CommentsStore');
 var StoriesStore = require('../../stores/StoriesStore');
 var PollStore = require('../../stores/PollStore');
@@ -13,6 +10,7 @@ var SpacerComponent = require('../common/SpacerComponent');
 var FooterComponent = require('../common/FooterComponent');
 var moment = require('moment');
 var Link = Router.Link;
+var APIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 
 function getStateFromStores(id) {
   return {
@@ -25,7 +23,21 @@ function getStateFromStores(id) {
 }
 
 var ItemComponent = React.createClass({
-  mixins: [Router.State, StoriesPollsCommentsMixin, GetStoryMixin, PureRenderMixin],
+  componentDidMount: function() {
+    StoriesStore.addChangeListener(this._onChange);
+    CommentsStore.addChangeListener(this._onChange);
+    PollStore.addChangeListener(this._onChange);
+  },
+  componentWillUnmount: function() {
+    StoriesStore.removeChangeListener(this._onChange);
+    CommentsStore.removeChangeListener(this._onChange);
+    PollStore.removeChangeListener(this._onChange);
+    var id = query.id || '';
+    APIUtils.getStory(id);
+  },
+  _onChange: function() {
+    this._setState();
+  },
   _setState: function() {
     if(this.isMounted()) {
       var id = this.getQuery().id;

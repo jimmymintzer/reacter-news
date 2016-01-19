@@ -3,7 +3,6 @@ var StoriesActionCreators = require('../actions/StoriesActionCreators');
 var CommentsActionCreators = require('../actions/CommentsActionCreators');
 var UserActionCreators = require('../actions/UserActionCreators');
 var PollActionCreators = require('../actions/PollActionCreators');
-var Promise = require('bluebird');
 
 var fb = new Firebase('http://hacker-news.firebaseio.com/v0/');
 
@@ -65,8 +64,7 @@ var getTopStories = (stories) => {
   });
 
   return Promise
-    .settle(promisesArr)
-    .map(story => story.value());
+    .all(promisesArr);
 };
 
 var getParent = (item) => {
@@ -89,7 +87,8 @@ var getParent = (item) => {
 
 var ReacterNewsWebAPIUtils = {
 
-  getTopStoriesAndComments: () => {
+  getTopStories: () => {
+    console.log('getTopStoriesAndComments');
     StoriesActionCreators.clearStories();
     StoriesActionCreators.setLoading();
     getAllTopStoriesKeys()
@@ -99,13 +98,13 @@ var ReacterNewsWebAPIUtils = {
           StoriesActionCreators.receiveStories(topStoriesArray);
           return topStoriesArray;
       })
-      .then(topStoriesArray => {
-        topStoriesArray.forEach(story => {
-          if(story.kids && story.kids.length > 0) {
-            getItems(story.kids, story.id);
-          }
-        });
-      })
+      //.then(topStoriesArray => {
+      //  topStoriesArray.forEach(story => {
+      //    if(story.kids && story.kids.length > 0) {
+      //      getItems(story.kids, story.id);
+      //    }
+      //  });
+      //})
       .then(StoriesActionCreators.stopLoading)
   },
 

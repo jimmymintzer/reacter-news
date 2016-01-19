@@ -1,37 +1,44 @@
-var React = require('react');
+import React, { Component } from 'react';
 var Router = require('react-router');
 var Link = Router.Link;
 
-var StoriesCommentsMixin = require('../../mixins/StoriesCommentsMixin');
-var GetTopStoriesAndCommentsMixin = require('../../mixins/GetTopStoriesAndCommentsMixin');
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
-
 var StoryComponent = require('./../common/StoryComponent');
-var CommentsStore = require('../../stores/CommentsStore');
 var StoriesStore = require('../../stores/StoriesStore');
 var LoaderComponent = require('../common/LoaderComponent');
 var SpacerComponent = require('./../common/SpacerComponent');
 var FooterComponent = require('./../common/FooterComponent');
+var APIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 
 function getStateFromStores(page) {
   return {
     stories: StoriesStore.getStoriesByPage(page),
     loading: StoriesStore.getLoadingStatus(),
     initialized: StoriesStore.getInitializedState(),
-    comments: CommentsStore.getAllComments()
   };
 }
 
 var StoriesComponent = React.createClass({
-  mixins: [Router.State, StoriesCommentsMixin, GetTopStoriesAndCommentsMixin, PureRenderMixin],
+  componentWillMount: function() {
+    APIUtils.getTopStories();
+  },
+  componentDidMount: function() {
+    StoriesStore.addChangeListener(this._onChange);
+  },
+  componentWillUnmount: function() {
+    StoriesStore.removeChangeListener(this._onChange);
+  },
+  _onChange: function() {
+    this._setState() ;
+  },
   _setState: function() {
     if(this.isMounted()) {
-      var page = this.getQuery().p || 1;
+      var page = 1; // this.getQuery().p || 1;
       this.setState(getStateFromStores(page));
     }
   },
   getInitialState: function() {
-    var page = this.getQuery().p || 1;
+    //var page = this.getQuery().p || 1;
+    const page = 1;
     return getStateFromStores(page);
   },
   handleClick: function() {
@@ -41,14 +48,10 @@ var StoriesComponent = React.createClass({
     document.title = 'Reacter News';
 
     var stories = this.state.stories.map((story, index) => {
-      var commentByStoryId = this.state.comments.filter(comment => {
-        if(comment.parentId === story.id) {
-          return comment;
-        }
-      });
+
       return (
         <li key={index}>
-          <StoryComponent story={story} numberOfComments={commentByStoryId.size}/>
+          <StoryComponent story={story} />
         </li>
       );
     });
@@ -57,7 +60,7 @@ var StoriesComponent = React.createClass({
       var renderedHTML = <LoaderComponent />;
     }
     else {
-      var page = parseInt(this.getQuery().p) || 1;
+      var page = 1; // parseInt(this.getQuery().p) || 1;
       var index = (30 * (page-1)) + 1;
       var nextPage = page + 1;
 

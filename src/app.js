@@ -1,43 +1,23 @@
-var React = require('react');
-var ReacterNewsApp = require('./components/ReacterNewsApp');
-var StoriesComponent = require('./components/stories/StoriesComponent');
-var UserComponent = require('./components/users/UserComponent');
-var ItemComponent = require('./components/items/ItemComponent');
-var JobsComponent = require('./components/jobs/JobsComponent');
-var NewestStoriesComponent = require('./components/stories/NewestStoriesComponent');
-var AskHNStoriesComponent = require('./components/askhn/AskHNStoriesComponent');
-var ShowHNStoriesComponent = require('./components/showhn/ShowHNStoriesComponent');
-var NewestShowHNStoriesComponent = require('./components/showhn/NewestShowHNStoriesComponent');
-var CommentsStoriesComponent = require('./components/comments/CommentsStoriesComponent');
-var SubmittedComponent = require('./components/users/SubmittedComponent');
-var ThreadsComponent = require('./components/users/ThreadsComponent');
+import React, { Component } from 'react';
+const HeaderComponent = require('./components/common/HeaderComponent');
+// import { Route, Link } from 'react-router';
 require('../scss/styles.scss');
 require('../node_modules/font-awesome/scss/font-awesome.scss');
 
+export default class App extends Component {
+  render() {
+    // var routeName = this.getRoutes().reverse()[0].name;
+    // var queryString = this.getQuery() || '';
+    // var keyName = (this.getRoutes().reverse()[0].name || 'news') +
+    // (this.getQuery().p || '') + (this.getQuery().id || '');
+    const routeName = '';
+    const queryString = '';
 
-
-var Router = require('react-router');
-var Route = Router.Route;
-var DefaultRoute = Router.DefaultRoute;
-var HistoryLocation = Router.HistoryLocation;
-
-var routes = (
-  <Route name='app' path='/' handler={ReacterNewsApp}>
-    <Route name='news' handler={StoriesComponent} />
-    <Route name='newest' handler={NewestStoriesComponent} />
-    <Route name='newcomments' handler={CommentsStoriesComponent} />
-    <Route name='show' handler={ShowHNStoriesComponent} />
-    <Route name='shownew' handler={NewestShowHNStoriesComponent} />
-    <Route name='ask' handler={AskHNStoriesComponent} />
-    <Route name='user' handler={UserComponent} />
-    <Route name='item' handler={ItemComponent} />
-    <Route name='jobs' handler={JobsComponent} />
-    <Route name='submitted' handler={SubmittedComponent} />
-    <Route name='threads' handler={ThreadsComponent} />
-    <DefaultRoute handler={StoriesComponent} />
-  </Route>
-);
-
-Router.run(routes, function(Handler) {
-  React.render(<Handler />, document.getElementById('container'));
-});
+    return (
+      <div>
+        <HeaderComponent name={routeName} queryString={queryString}/>
+        {this.props.children}
+      </div>
+    );
+  }
+}

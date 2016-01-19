@@ -1,5 +1,4 @@
 var CommentsStore = require('../stores/CommentsStore');
-var _ = require('../utils/UnderscoreDebounce');
 
 module.exports = {
   componentDidMount: function() {
@@ -8,8 +7,5 @@ module.exports = {
   componentWillUnmount: function() {
     CommentsStore.removeChangeListener(this._onChange);
   },
-  _onChange: _.debounce(function () {
-    this._setState();
-  }, 75)
-
+  _onChange: this._setState(),
 };

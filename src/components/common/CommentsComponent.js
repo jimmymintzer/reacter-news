@@ -2,10 +2,8 @@ var React = require('react');
 var moment = require('moment');
 var Router = require('react-router');
 var Link = Router.Link;
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 
 var CommentComponent = React.createClass({
-  mixins: [PureRenderMixin],
   render: function(){
     var comment = this.props.comment;
     if(this.props.daysTime) {
@@ -48,7 +46,6 @@ var CommentsComponent = React.createClass({
       commentsValue: []
     }
   },
-  mixins: [PureRenderMixin],
   render: function(){
     var commentsArr = this.props.comments.map((comment, index) => {
       var fullComment = this.props.commentsValue.get(comment) || comment;

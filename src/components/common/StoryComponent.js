@@ -2,7 +2,6 @@ var React = require('react');
 var moment = require('moment');
 var Router = require('react-router');
 var Link = Router.Link;
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 
 var buildComhead = function(url) {
   if(!url) {
@@ -64,12 +63,11 @@ var buildComments = function(count) {
 };
 
 var StoryComponent = React.createClass({
-  mixins: [PureRenderMixin],
   render: function() {
 
     var pointsLabel = buildPoints(this.props.story.score);
 
-    var commentsLabel = buildComments(this.props.numberOfComments);
+    var commentsLabel = buildComments(this.props.story.descendants);
 
     var comhead = buildComhead(this.props.story.url);
 

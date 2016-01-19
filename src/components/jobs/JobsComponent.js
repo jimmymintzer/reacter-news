@@ -2,16 +2,12 @@ var React = require('react');
 var Router = require('react-router');
 var Link = Router.Link;
 
-var StoriesMixin = require('../../mixins/StoriesMixin');
-var GetTopStoriesAndCommentsMixin = require('../../mixins/GetTopStoriesAndCommentsMixin');
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
-
 var StoryComponent = require('./../common/StoryComponent');
 var StoriesStore = require('../../stores/StoriesStore');
 var LoaderComponent = require('../common/LoaderComponent');
 var SpacerComponent = require('./../common/SpacerComponent');
 var FooterComponent = require('./../common/FooterComponent');
-
+var APIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 
 function getStateFromStores(page) {
   return {
@@ -22,7 +18,18 @@ function getStateFromStores(page) {
 }
 
 var JobsComponent = React.createClass({
-  mixins: [Router.State, StoriesMixin, GetTopStoriesAndCommentsMixin, PureRenderMixin],
+  componentDidMount: function() {
+    StoriesStore.addChangeListener(this._onChange);
+  },
+  componentWillUnmount: function() {
+    StoriesStore.removeChangeListener(this._onChange);
+
+    APIUtils.getTopStoriesAndComments();
+
+  },
+  _onChange: function() {
+    this._setState();
+  },
   _setState: function() {
     var page = this.getQuery().p || 1;
     this.setState(getStateFromStores(page));

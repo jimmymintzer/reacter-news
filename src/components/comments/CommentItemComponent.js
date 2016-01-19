@@ -2,7 +2,6 @@ var React = require('react');
 var moment = require('moment');
 var Router = require('react-router');
 var Link = Router.Link;
-var PureRenderMixin = require('react/addons').addons.PureRenderMixin;
 
 moment.fn.minutesFromNow = function() {
   var r = Math.floor((+new Date() - (+this))/60000);
@@ -10,7 +9,6 @@ moment.fn.minutesFromNow = function() {
 };
 
 var CommentItemComponent = React.createClass({
-  mixin: [PureRenderMixin],
   render: function() {
 
     var time = moment.unix(this.props.comment.time).minutesFromNow();
