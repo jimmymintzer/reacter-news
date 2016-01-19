@@ -2,39 +2,8 @@ var React = require('react');
 var moment = require('moment');
 var Router = require('react-router');
 var Link = Router.Link;
-
-var buildComhead = function(url) {
-  if(!url) {
-    return '';
-  }
-  var comhead = url
-    .replace(/^(http|https):\/\//,'')
-    .replace(/www\./,'')
-    .replace(/\.com.*$/, '.com')
-    .replace(/\.me.*$/, '.me')
-    .replace(/\.net.*$/, '.net')
-    .replace(/\.org.*$/, '.org')
-    .replace(/\.mil.*$/, '.mil')
-    .replace(/\.edu.*$/, '.edu')
-    .replace(/\.de.*$/, '.de')
-    .replace(/\.ca.*$/, '.ca')
-    .replace(/\.co(?!m|\.za).*$/, '.co')
-    .replace(/\.co\.za.*$/, '.co.za')
-    .replace(/\.co\.uk.*$/, '.co.uk')
-    .replace(/\.gov.*$/, '.gov')
-    .replace(/\.cc.*$/, '.cc')
-    .replace(/\.us.*$/, '.us')
-    .replace(/\.io.*$/, '.io')
-    .replace(/\.int.*$/, '.int')
-    .replace(/\.info.*$/, '.info')
-    .replace(/\.fr.*$/, '.fr')
-    .replace(/\.nl.*$/, '.nl')
-    .replace(/\.ai.*$/, '.ai')
-    .replace(/\.nu.*$/, '.nu')
-    .replace(/\.cl.*$/, '.cl');
-  comhead = comhead ? '('+comhead+')' : '';
-  return comhead;
-};
+import Comhead from '../Comhead';
+import TimeElement from '../TimeElement';
 
 var buildPoints = function(points) {
   var pointsLabel = points + ' point';
@@ -69,10 +38,6 @@ var StoryComponent = React.createClass({
 
     var commentsLabel = buildComments(this.props.story.descendants);
 
-    var comhead = buildComhead(this.props.story.url);
-
-    var time = moment.unix(this.props.story.time).fromNow();
-
     var author = this.props.story.by;
 
     var UserLink = <Link to='user' className='story-link' query={{ id: author }}>{author}</Link>;
@@ -84,14 +49,14 @@ var StoryComponent = React.createClass({
     if(this.props.story.type !== 'job') {
       subtext =  (
         <div className='story-subtext'>
-          <span>{pointsLabel}</span> by {UserLink} {time} | {ItemLink}
+          <span>{pointsLabel}</span> by {UserLink} <TimeElement time={this.props.story.time} /> | {ItemLink}
         </div>
       )
     }
     else {
       var subtext = (
         <div className='story-subtext'>
-          {time}
+          <TimeElement time={this.props.story.time} />
         </div>
       )
     }
@@ -99,8 +64,7 @@ var StoryComponent = React.createClass({
     return (
       <div className='story-wrapper'>
         <div className='story-title'>
-          {StoryLink}
-          <span className='comhead'> {comhead} </span>
+          {StoryLink} <Comhead url={this.props.story.url} />
         </div>
         {subtext}
       </div>
