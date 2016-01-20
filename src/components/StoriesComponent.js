@@ -4,8 +4,7 @@ import { Link } from 'react-router';
 import StoryComponent from './StoryComponent';
 import LoaderComponent from './LoaderComponent';
 
-
-const StoriesComponent = ({ loading, initialized, stories }) => {
+const StoriesComponent = ({ loading, initialized, stories, page }) => {
   document.title = 'Reacter News';
 
   const storiesComponents = stories.map((story, index) => {
@@ -21,12 +20,11 @@ const StoriesComponent = ({ loading, initialized, stories }) => {
       <LoaderComponent />
     );
   }
-  const page = 1; // parseInt(this.getQuery().p) || 1;
   const index = (30 * (page - 1)) + 1;
   const nextPage = page + 1;
 
-  const link = (stories.size === 30) ?
-    <Link to="news" query={{ p: nextPage }} onClick={this.handleClick}>More</Link>
+  const link = (stories.length === 30) ?
+    <Link to="news" href="#" query={{ p: nextPage }}>More</Link>
     : null;
 
   return (

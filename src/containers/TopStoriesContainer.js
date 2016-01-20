@@ -8,8 +8,9 @@ import FooterComponent from '../components/FooterComponent';
 import SpacerComponent from '../components/SpacerComponent';
 import StoriesComponent from '../components/StoriesComponent';
 
-function getState() {
-  const stories = StoriesStore.getStoriesByPage(1).toJS() || [];
+function getState(props) {
+  const page = Number(props.location.query.p) || 1;
+  const stories = StoriesStore.getStoriesByPage(page).toJS() || [];
   const loading = StoriesStore.getLoadingStatus() || true;
   const initialized = StoriesStore.getInitializedState() || false;
 
@@ -17,6 +18,7 @@ function getState() {
     stories,
     loading,
     initialized,
+    page,
   };
 }
 
@@ -30,12 +32,17 @@ class TopStoriesContainer extends Component {
     APIUtils.getTopStories();
   }
   render() {
-    const { initialized, loading, stories } = this.props;
+    const { initialized, loading, stories, page } = this.props;
 
     return (
     <div>
       <div className="main">
-        <StoriesComponent stories={stories} loading={loading} initialized={initialized}/>
+        <StoriesComponent
+          stories={stories}
+          loading={loading}
+          initialized={initialized}
+          page={page}
+        />
       </div>
       <SpacerComponent />
       <FooterComponent />
