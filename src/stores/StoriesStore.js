@@ -1,10 +1,9 @@
-var ReacterNewsDispatcher = require('../dispatcher/ReacterNewsDispatcher');
-var ReacterNewsConstants = require('../constants/ReacterNewsConstants');
+import ReacterNewsDispatcher from '../dispatcher/ReacterNewsDispatcher';
+import { ActionTypes } from '../constants/ReacterNewsConstants';
 var EventEmitter = require('events').EventEmitter;
 var assign = require('object-assign');
 var Immutable = require('immutable');
 
-var ActionTypes = ReacterNewsConstants.ActionTypes;
 var CHANGE_EVENT = 'change';
 
 var _stories = Immutable.List();

@@ -1,12 +1,32 @@
 import Firebase from 'firebase';
-var StoriesActionCreators = require('../actions/StoriesActionCreators');
-var CommentsActionCreators = require('../actions/CommentsActionCreators');
-var UserActionCreators = require('../actions/UserActionCreators');
-var PollActionCreators = require('../actions/PollActionCreators');
+import {
+  clearStories,
+  clearSubmittedStories,
+  receiveStories,
+  receiveStory,
+  receiveSubmittedStories,
+  setLoading as storiesSetLoading,
+  setSubmittedLoading,
+  stopLoading as storiesStopLoading,
+  stopSubmittedLoading,
+} from '../actions/StoriesActionCreators';
+import {
+  receiveComment,
+  setLoading as commentSetLoading,
+  stopLoading as commentStopLoading,
+} from '../actions/CommentsActionCreators';
+import {
+  receiveUser,
+  setLoading as userSetLoading,
+  stopLoading as userStopLoading,
+} from '../actions/UserActionCreators';
+import {
+  receivePoll,
+} from '../actions/PollActionCreators';
 
-var fb = new Firebase('http://hacker-news.firebaseio.com/v0/');
+const fb = new Firebase('http://hacker-news.firebaseio.com/v0/');
 
-var getAllTopStoriesKeys = () => {
+const getAllTopStoriesKeys = () => {
   return new Promise((resolve, reject) => {
     fb.child('topstories').on('value',
       snapshot => resolve(snapshot.val()),
@@ -15,7 +35,7 @@ var getAllTopStoriesKeys = () => {
   });
 };
 
-var getNewestKeys = () => {
+const getNewestKeys = () => {
   return new Promise((resolve, reject) => {
     fb.child('newstories').on('value',
       snapshot => resolve(snapshot.val()),
@@ -24,16 +44,16 @@ var getNewestKeys = () => {
   });
 };
 
-var getItems = (items, storyId) => {
+const getItems = (items, storyId) => {
   items.forEach(item => {
     getItem(item)
       .then(itemDetails => {
         if (itemDetails.type === 'pollopt') {
-          PollActionCreators.receivePoll(itemDetails);
+          receivePoll(itemDetails);
         }
         if (itemDetails.type === 'comment') {
           itemDetails.parentId = storyId;
-          CommentsActionCreators.receiveComment(itemDetails)
+          receiveComment(itemDetails);
         }
         if(itemDetails && itemDetails.kids && itemDetails.kids.length > 0) {
           getItems(itemDetails.kids, storyId);
@@ -42,7 +62,7 @@ var getItems = (items, storyId) => {
   });
 };
 
-var getItem = (item) => {
+const getItem = (item) => {
   return new Promise((resolve, reject) => {
     fb.child('item').child(item).on('value',
       snapshot => resolve(snapshot.val()),
@@ -51,7 +71,7 @@ var getItem = (item) => {
   });
 };
 
-var getUser = (userId) => {
+const getUser = (userId) => {
   return new Promise((resolve, reject) => {
     fb.child('user').child(userId).on('value',
       snapshot => resolve(snapshot.val()),
@@ -59,11 +79,11 @@ var getUser = (userId) => {
   });
 };
 
-var getTopStories = (stories) => {
-  var promisesArr = [];
+const getTopStories = (stories) => {
+  const promisesArr = [];
 
   stories.map(story => {
-    var p = new Promise((resolve, reject) => {
+    const p = new Promise((resolve, reject) => {
       fb.child('item').child(story).on('value',
         snapshot => resolve(snapshot.val()),
         err => reject(err)
@@ -76,17 +96,15 @@ var getTopStories = (stories) => {
     .all(promisesArr);
 };
 
-var getParent = (item) => {
+const getParent = (item) => {
   return new Promise((resolve, reject) => {
     fb.child('item').child(item).on('value',
       snapshot => {
-        if(snapshot.val().type === 'story') {
+        if (snapshot.val().type === 'story') {
           resolve(snapshot.val());
-        }
-        else if(snapshot.val().type === 'poll') {
+        } else if (snapshot.val().type === 'poll') {
           resolve(snapshot.val());
-        }
-        else {
+        } else {
           resolve(getParent(snapshot.val().parent));
         }
       },
@@ -94,73 +112,73 @@ var getParent = (item) => {
   });
 };
 
-var ReacterNewsWebAPIUtils = {
+const ReacterNewsWebAPIUtils = {
 
   getTopStories: () => {
-    StoriesActionCreators.clearStories();
-    StoriesActionCreators.setLoading();
+    clearStories();
+    storiesSetLoading();
     getAllTopStoriesKeys()
       .then(getTopStories)
       .then(topStoriesArray => topStoriesArray.filter(story => !story.deleted))
       .then(topStoriesArray => {
-        StoriesActionCreators.receiveStories(topStoriesArray);
+        receiveStories(topStoriesArray);
         return topStoriesArray;
       })
-      //.then(topStoriesArray => {
+      // .then(topStoriesArray => {
       //  topStoriesArray.forEach(story => {
       //    if(story.kids && story.kids.length > 0) {
       //      getItems(story.kids, story.id);
       //    }
       //  });
-      //})
-      .then(StoriesActionCreators.stopLoading);
+      // })
+      .then(storiesStopLoading);
   },
 
   getNewStories: () => {
-    StoriesActionCreators.clearStories();
-    StoriesActionCreators.setLoading();
+    clearStories();
+    storiesSetLoading();
     getNewestKeys()
       .then(getTopStories)
       .then(topStoriesArray => topStoriesArray.filter(story => story && !story.deleted))
       .then(topStoriesArray => {
-        StoriesActionCreators.receiveStories(topStoriesArray);
+        receiveStories(topStoriesArray);
         return topStoriesArray;
       })
-      .then(StoriesActionCreators.stopLoading);
+      .then(storiesStopLoading);
   },
 
   getStory: (storyId) => {
-    StoriesActionCreators.setLoading();
+    storiesSetLoading();
     getItem(storyId)
       .then(story => {
-        StoriesActionCreators.receiveStory(story);
-        if(story.parts && story.parts.length > 0) {
+        receiveStory(story);
+        if (story.parts && story.parts.length > 0) {
           getItems(story.parts);
         }
-        if(story.kids && story.kids.length > 0) {
+        if (story.kids && story.kids.length > 0) {
           getItems(story.kids, story.id);
         }
-        StoriesActionCreators.stopLoading();
+        storiesStopLoading();
       });
   },
 
   getUser: (userId) => {
-    UserActionCreators.setLoading();
+    userSetLoading();
     getUser(userId)
-      .then(UserActionCreators.receiveUser)
-      .then(UserActionCreators.stopLoading);
+      .then(receiveUser)
+      .then(userStopLoading);
   },
 
   getUserSubmissions: (userId, page) => {
-    var start = 30 * (page-1);
-    var end = (start + 30);
-    StoriesActionCreators.setSubmittedLoading();
-    StoriesActionCreators.clearSubmittedStories();
-    UserActionCreators.setLoading();
+    const start = 30 * (page - 1);
+    const end = (start + 30);
+    setSubmittedLoading();
+    clearSubmittedStories();
+    userSetLoading();
     getUser(userId)
       .then(userDetails => {
-        UserActionCreators.receiveUser(userDetails);
-        UserActionCreators.stopLoading();
+        receiveUser(userDetails);
+        userStopLoading();
         return userDetails.submitted;
       })
       .then(getTopStories)
@@ -170,23 +188,23 @@ var ReacterNewsWebAPIUtils = {
           .slice(start, end);
       })
       .then(stories => {
-        StoriesActionCreators.receiveSubmittedStories(stories);
+        receiveSubmittedStories(stories);
         stories.forEach(story => {
-          if(story.kids && story.kids.length > 0) {
+          if (story.kids && story.kids.length > 0) {
             getItems(story.kids, story.id);
           }
         });
       })
-      .then(StoriesActionCreators.stopSubmittedLoading);
+      .then(stopSubmittedLoading);
   },
 
   getUserComments: (userId) => {
-    UserActionCreators.setLoading();
-    CommentsActionCreators.setLoading();
+    userSetLoading();
+    commentSetLoading();
     getUser(userId)
       .then(userDetails => {
-        UserActionCreators.receiveUser(userDetails);
-        UserActionCreators.stopLoading();
+        receiveUser(userDetails);
+        userStopLoading();
         return userDetails.submitted;
       })
       .then(getTopStories)
@@ -194,22 +212,22 @@ var ReacterNewsWebAPIUtils = {
         return submittedItems
           .filter(item => item && (item.type === 'comment' && !item.deleted));
       })
-      .then(comments =>{
+      .then(comments => {
         comments.forEach(comment => {
           getParent(comment.parent)
-          .then(parentResult =>{
-              comment.parentId = comment.parent;
-              comment.parentStoryDetails = parentResult;
-              CommentsActionCreators.receiveComment(comment);
+          .then(parentResult => {
+            comment.parentId = comment.parent;
+            comment.parentStoryDetails = parentResult;
+            receiveComment(comment);
 
-              if(comment.kids && comment.kids.length > 0) {
-                getItems(comment.kids, comment.parent);
-              }
-            });
+            if (comment.kids && comment.kids.length > 0) {
+              getItems(comment.kids, comment.parent);
+            }
+          });
         });
       })
-      .then(CommentsActionCreators.stopLoading);
-  }
+      .then(commentStopLoading);
+  },
 
 };
 

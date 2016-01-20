@@ -1,26 +1,21 @@
-var ReacterNewsDispatcher = require('../dispatcher/ReacterNewsDispatcher');
-var ReacterNewsConstants = require('../constants/ReacterNewsConstants');
+import ReacterNewsDispatcher from '../dispatcher/ReacterNewsDispatcher';
+import { ActionTypes } from '../constants/ReacterNewsConstants';
 
-var ActionTypes = ReacterNewsConstants.ActionTypes;
+export function setLoading() {
+  ReacterNewsDispatcher.handleServerAction({
+    type: ActionTypes.COMMENTS_LOADING,
+  });
+}
 
-module.exports = {
+export function stopLoading() {
+  ReacterNewsDispatcher.handleServerAction({
+    type: ActionTypes.COMMENTS_FINISHED_LOADING,
+  });
+}
 
-  setLoading: function() {
-    ReacterNewsDispatcher.handleServerAction({
-      type: ActionTypes.COMMENTS_LOADING
-    });
-  },
-
-  stopLoading: function() {
-    ReacterNewsDispatcher.handleServerAction({
-      type: ActionTypes.COMMENTS_FINISHED_LOADING
-    });
-  },
-  receiveComment: function(rawComments) {
-    ReacterNewsDispatcher.handleServerAction({
-      type: ActionTypes.RECEIVE_RAW_COMMENT,
-      rawComments: rawComments
-    });
-  }
-
-};
+export function receiveComment(rawComments) {
+  ReacterNewsDispatcher.handleServerAction({
+    type: ActionTypes.RECEIVE_RAW_COMMENT,
+    rawComments,
+  });
+}

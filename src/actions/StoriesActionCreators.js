@@ -1,65 +1,59 @@
-var ReacterNewsDispatcher = require('../dispatcher/ReacterNewsDispatcher');
-var ReacterNewsConstants = require('../constants/ReacterNewsConstants');
+import ReacterNewsDispatcher from '../dispatcher/ReacterNewsDispatcher';
+import { ActionTypes } from '../constants/ReacterNewsConstants';
 
-var ActionTypes = ReacterNewsConstants.ActionTypes;
+export function setLoading() {
+  ReacterNewsDispatcher.handleServerAction({
+    type: ActionTypes.STORIES_LOADING,
+  });
+}
 
-module.exports = {
+export function stopLoading() {
+  ReacterNewsDispatcher.handleServerAction({
+    type: ActionTypes.STORIES_FINISHED_LOADING,
+  });
+}
 
-  setLoading: function() {
-    ReacterNewsDispatcher.handleServerAction({
-      type: ActionTypes.STORIES_LOADING
-    });
-  },
+export function clearStories() {
+  ReacterNewsDispatcher.handleServerAction({
+    type: ActionTypes.CLEAR_STORIES,
+  });
+}
 
-  stopLoading: function() {
-    ReacterNewsDispatcher.handleServerAction({
-      type: ActionTypes.STORIES_FINISHED_LOADING
-    });
-  },
+export function setSubmittedLoading() {
+  ReacterNewsDispatcher.handleServerAction({
+    type: ActionTypes.SUBMITTED_STORIES_LOADING,
+  });
+}
 
-  clearStories: function() {
-    ReacterNewsDispatcher.handleServerAction({
-      type: ActionTypes.CLEAR_STORIES
-    });
-  },
+export function stopSubmittedLoading() {
+  ReacterNewsDispatcher.handleServerAction({
+    type: ActionTypes.SUBMITTED_STORIES_FINISHED_LOADING,
+  });
+}
 
-  setSubmittedLoading: function() {
-    ReacterNewsDispatcher.handleServerAction({
-      type: ActionTypes.SUBMITTED_STORIES_LOADING
-    });
-  },
+export function clearSubmittedStories() {
+  ReacterNewsDispatcher.handleServerAction({
+    type: ActionTypes.CLEAR_SUBMITTED_STORIES,
+  });
+}
 
-  stopSubmittedLoading: function() {
-    ReacterNewsDispatcher.handleServerAction({
-      type: ActionTypes.SUBMITTED_STORIES_FINISHED_LOADING
-    });
-  },
+export function receiveStories(rawStories) {
+  ReacterNewsDispatcher.handleServerAction({
+    type: ActionTypes.RECEIVE_RAW_STORIES,
+    rawStories,
+  });
+}
 
-  clearSubmittedStories: function() {
-    ReacterNewsDispatcher.handleServerAction({
-      type: ActionTypes.CLEAR_SUBMITTED_STORIES
-    });
-  },
+export function receiveStory(rawStory) {
+  ReacterNewsDispatcher.handleServerAction({
+    type: ActionTypes.RECEIVE_RAW_STORY,
+    rawStory,
+  });
+}
 
-  receiveStories: function(rawStories) {
-    ReacterNewsDispatcher.handleServerAction({
-      type: ActionTypes.RECEIVE_RAW_STORIES,
-      rawStories: rawStories
-    });
-  },
-
-  receiveStory: function(rawStory) {
-    ReacterNewsDispatcher.handleServerAction({
-      type: ActionTypes.RECEIVE_RAW_STORY,
-      rawStory: rawStory
-    });
-  },
-
-  receiveSubmittedStories: function(rawStories) {
-    ReacterNewsDispatcher.handleServerAction({
-      type: ActionTypes.RECEIVE_RAW_SUBMITTED_STORIES,
-      rawStories: rawStories
-    });
-  }
-
-};
+export function receiveSubmittedStories(rawStories) {
+  ReacterNewsDispatcher.handleServerAction({
+    type: ActionTypes.RECEIVE_RAW_SUBMITTED_STORIES,
+    rawStories,
+  });
+}

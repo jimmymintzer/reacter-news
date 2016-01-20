@@ -1,15 +1,9 @@
-var ReacterNewsDispatcher = require('../dispatcher/ReacterNewsDispatcher');
-var ReacterNewsConstants = require('../constants/ReacterNewsConstants');
+import ReacterNewsDispatcher from '../dispatcher/ReacterNewsDispatcher';
+import { ActionTypes } from '../constants/ReacterNewsConstants';
 
-var ActionTypes = ReacterNewsConstants.ActionTypes;
-
-module.exports = {
-
-  receivePoll: function(rawPolls) {
-    ReacterNewsDispatcher.handleServerAction({
-      type: ActionTypes.RECEIVE_RAW_POLL,
-      rawPolls: rawPolls
-    });
-  }
-
-};
+export function receivePoll(rawPolls) {
+  ReacterNewsDispatcher.handleServerAction({
+    type: ActionTypes.RECEIVE_RAW_POLL,
+    rawPolls,
+  });
+}

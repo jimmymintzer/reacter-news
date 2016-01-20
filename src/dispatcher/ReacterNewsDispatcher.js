@@ -1,20 +1,17 @@
-var ReacterNewsConstants = require('../constants/ReacterNewsConstants');
-var Dispatcher = require('flux').Dispatcher;
-var assign = require('object-assign');
+import { PayloadSource } from '../constants/ReacterNewsConstants';
+import { Dispatcher } from 'flux';
+import assign from 'object-assign';
 
-var PayloadSource = ReacterNewsConstants.PayloadSource;
+const ReacterNewsDispatcher = assign(new Dispatcher(), {
 
-var ReacterNewsDispatcher = assign(new Dispatcher(), {
-
-  handleServerAction: function(action) {
-    var payload = {
+  handleServerAction(action) {
+    const payload = {
       source: PayloadSource.SERVER_ACTION,
-      action: action,
+      action,
     };
-    console.log('payload', payload);
     this.dispatch(payload);
   },
 
 });
 
-module.exports = ReacterNewsDispatcher;
+export default ReacterNewsDispatcher;

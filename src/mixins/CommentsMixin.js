@@ -1,3 +1,5 @@
+// TODO: DELETE ME
+
 var CommentsStore = require('../stores/CommentsStore');
 
 module.exports = {
