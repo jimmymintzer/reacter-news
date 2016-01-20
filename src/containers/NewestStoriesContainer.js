@@ -10,7 +10,7 @@ import StoriesComponent from '../components/StoriesComponent';
 
 function getState(props) {
   const page = Number(props.location.query.p) || 1;
-  const stories = StoriesStore.getStoriesByPage(page).toJS() || [];
+  const stories = StoriesStore.getStoriesByPageAndSortedTime(page).toJS() || [];
   const loading = StoriesStore.getLoadingStatus() || true;
   const initialized = StoriesStore.getInitializedState() || false;
 
@@ -22,7 +22,7 @@ function getState(props) {
   };
 }
 
-class TopStoriesContainer extends Component {
+class NewestStoriesContainer extends Component {
   static propTypes = {
     initialized: PropTypes.bool,
     loading: PropTypes.bool,
@@ -30,28 +30,28 @@ class TopStoriesContainer extends Component {
     page: PropTypes.number,
   };
   componentWillMount() {
-    APIUtils.getTopStories();
+    APIUtils.getNewStories();
   }
   render() {
     const { initialized, loading, stories, page } = this.props;
 
     return (
-    <div>
-      <div className="main">
-        <StoriesComponent
-          stories={stories}
-          loading={loading}
-          initialized={initialized}
-          page={page}
-        />
+      <div>
+        <div className="main">
+          <StoriesComponent
+            stories={stories}
+            loading={loading}
+            initialized={initialized}
+            page={page}
+          />
+        </div>
+        <SpacerComponent />
+        <FooterComponent />
       </div>
-      <SpacerComponent />
-      <FooterComponent />
-    </div>
     );
   }
 }
 
-TopStoriesContainer = connectToStores(TopStoriesContainer, [StoriesStore], getState);
+NewestStoriesContainer = connectToStores(NewestStoriesContainer, [StoriesStore], getState);
 
-export default TopStoriesContainer;
+export default NewestStoriesContainer;

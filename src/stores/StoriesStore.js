@@ -74,7 +74,7 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
   },
 
   getStoriesByPageAndSortedTime: (page) => {
-    var start = 30 * (page-1);
+    var start = 30 * (page - 1);
     var end = (start + 30);
 
     return _stories

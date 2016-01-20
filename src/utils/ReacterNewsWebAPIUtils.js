@@ -1,4 +1,4 @@
-var Firebase = require('firebase');
+import Firebase from 'firebase';
 var StoriesActionCreators = require('../actions/StoriesActionCreators');
 var CommentsActionCreators = require('../actions/CommentsActionCreators');
 var UserActionCreators = require('../actions/UserActionCreators');
@@ -15,14 +15,23 @@ var getAllTopStoriesKeys = () => {
   });
 };
 
+var getNewestKeys = () => {
+  return new Promise((resolve, reject) => {
+    fb.child('newstories').on('value',
+      snapshot => resolve(snapshot.val()),
+      err => reject(err)
+    );
+  });
+};
+
 var getItems = (items, storyId) => {
   items.forEach(item => {
     getItem(item)
       .then(itemDetails => {
-        if(itemDetails.type === 'pollopt') {
+        if (itemDetails.type === 'pollopt') {
           PollActionCreators.receivePoll(itemDetails);
         }
-        if(itemDetails.type === 'comment') {
+        if (itemDetails.type === 'comment') {
           itemDetails.parentId = storyId;
           CommentsActionCreators.receiveComment(itemDetails)
         }
@@ -88,15 +97,14 @@ var getParent = (item) => {
 var ReacterNewsWebAPIUtils = {
 
   getTopStories: () => {
-    console.log('getTopStoriesAndComments');
     StoriesActionCreators.clearStories();
     StoriesActionCreators.setLoading();
     getAllTopStoriesKeys()
       .then(getTopStories)
       .then(topStoriesArray => topStoriesArray.filter(story => !story.deleted))
       .then(topStoriesArray => {
-          StoriesActionCreators.receiveStories(topStoriesArray);
-          return topStoriesArray;
+        StoriesActionCreators.receiveStories(topStoriesArray);
+        return topStoriesArray;
       })
       //.then(topStoriesArray => {
       //  topStoriesArray.forEach(story => {
@@ -105,7 +113,20 @@ var ReacterNewsWebAPIUtils = {
       //    }
       //  });
       //})
-      .then(StoriesActionCreators.stopLoading)
+      .then(StoriesActionCreators.stopLoading);
+  },
+
+  getNewStories: () => {
+    StoriesActionCreators.clearStories();
+    StoriesActionCreators.setLoading();
+    getNewestKeys()
+      .then(getTopStories)
+      .then(topStoriesArray => topStoriesArray.filter(story => story && !story.deleted))
+      .then(topStoriesArray => {
+        StoriesActionCreators.receiveStories(topStoriesArray);
+        return topStoriesArray;
+      })
+      .then(StoriesActionCreators.stopLoading);
   },
 
   getStory: (storyId) => {

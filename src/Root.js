@@ -12,6 +12,7 @@ import JobsComponent from './components/jobs/JobsComponent';
 import SubmittedComponent from './components/users/SubmittedComponent';
 import ThreadsComponent from './components/users/ThreadsComponent';
 import TopStoriesContainer from './containers/TopStoriesContainer';
+import NewestStoriesContainer from './containers/NewestStoriesContainer';
 
 import App from './App';
 
@@ -28,7 +29,7 @@ export default class Root extends Component {
         <Route component={App}>
           <Route path="/" component={TopStoriesContainer}/>
           <Route path="news" component={TopStoriesContainer}/>
-
+          <Route path="newest" component={NewestStoriesContainer}/>
         </Route>
       </Router>
     );
