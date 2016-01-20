@@ -324,3 +324,9 @@ footer {
     text-decoration: underline;
   }
 }
+
+.insertSpaces {
+  &:before, &:after {
+    content: ' ';
+  }
+}

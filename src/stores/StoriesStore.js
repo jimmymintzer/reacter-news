@@ -168,4 +168,4 @@ StoriesStore.dispatchToken = ReacterNewsDispatcher.register(payload => {
 
 });
 
-module.exports = StoriesStore;
+export default StoriesStore;

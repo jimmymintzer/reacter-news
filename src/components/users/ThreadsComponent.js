@@ -2,9 +2,9 @@ var React = require('react');
 var Router = require('react-router');
 var CommentsStore = require('../../stores/CommentsStore');
 var ThreadItemComponent = require('./ThreadItemComponent');
-var SpacerComponent = require('../common/SpacerComponent');
-var FooterComponent = require('../common/FooterComponent');
-var LoaderComponent = require('../common/LoaderComponent');
+var SpacerComponent = require('../SpacerComponent');
+var FooterComponent = require('../FooterComponent');
+var LoaderComponent = require('../LoaderComponent');
 var Link = Router.Link;
 var APIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 

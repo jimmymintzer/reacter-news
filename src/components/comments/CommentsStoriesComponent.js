@@ -3,9 +3,9 @@ var Router = require('react-router');
 var CommentsStore = require('../../stores/CommentsStore');
 var StoriesStore = require('../../stores/StoriesStore');
 var CommentItemComponent = require('./CommentItemComponent');
-var LoaderComponent = require('../common/LoaderComponent');
-var SpacerComponent = require('../common/SpacerComponent');
-var FooterComponent = require('../common/FooterComponent');
+var LoaderComponent = require('../LoaderComponent');
+var SpacerComponent = require('../SpacerComponent');
+var FooterComponent = require('../FooterComponent');
 var Link = Router.Link;
 var APIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 

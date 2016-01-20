@@ -9,10 +9,11 @@ var ReacterNewsDispatcher = assign(new Dispatcher(), {
   handleServerAction: function(action) {
     var payload = {
       source: PayloadSource.SERVER_ACTION,
-      action: action
+      action: action,
     };
+    console.log('payload', payload);
     this.dispatch(payload);
-  }
+  },
 
 });
 

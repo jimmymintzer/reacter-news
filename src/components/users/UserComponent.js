@@ -2,7 +2,7 @@ var React = require('react');
 var Router = require('react-router');
 var UsersStore = require('../../stores/UsersStore');
 var UserItemComponent = require('./UserItemComponent');
-var LoaderComponent = require('../common/LoaderComponent');
+var LoaderComponent = require('../LoaderComponent');
 var APIUtils = require('../../utils/ReacterNewsWebAPIUtils');
 
 function getStateFromStores(id) {

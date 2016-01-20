@@ -192,4 +192,4 @@ var ReacterNewsWebAPIUtils = {
 
 };
 
-module.exports = ReacterNewsWebAPIUtils;
+export default ReacterNewsWebAPIUtils;

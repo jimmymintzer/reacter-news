@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Router, Route } from 'react-router';
-import StoriesComponent from './components/stories/StoriesComponent';
+import StoriesComponent from './components/StoriesComponent';
 import NewestStoriesComponent from './components/stories/NewestStoriesComponent';
 import CommentsStoriesComponent from './components/comments/CommentsStoriesComponent';
 import ShowHNStoriesComponent from './components/showhn/ShowHNStoriesComponent';
@@ -11,6 +11,7 @@ import ItemComponent from './components/items/ItemComponent';
 import JobsComponent from './components/jobs/JobsComponent';
 import SubmittedComponent from './components/users/SubmittedComponent';
 import ThreadsComponent from './components/users/ThreadsComponent';
+import TopStoriesContainer from './containers/TopStoriesContainer';
 
 import App from './App';
 
@@ -25,8 +26,8 @@ export default class Root extends Component {
     return (
       <Router history={history}>
         <Route component={App}>
-          <Route path="/" component={StoriesComponent}/>
-          <Route path="news" component={StoriesComponent}/>
+          <Route path="/" component={TopStoriesContainer}/>
+          <Route path="news" component={TopStoriesContainer}/>
 
         </Route>
       </Router>
