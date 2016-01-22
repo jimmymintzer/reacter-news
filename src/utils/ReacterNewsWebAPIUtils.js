@@ -53,6 +53,24 @@ const getShowKeys = () => {
   });
 };
 
+const getAskKeys = () => {
+  return new Promise((resolve, reject) => {
+    fb.child('askstories').on('value',
+      snapshot => resolve(snapshot.val()),
+      err => reject(err)
+    );
+  });
+};
+
+const getJobsKeys = () => {
+  return new Promise((resolve, reject) => {
+    fb.child('jobstories').on('value',
+      snapshot => resolve(snapshot.val()),
+      err => reject(err)
+    );
+  });
+};
+
 const getItems = (items, storyId) => {
   items.forEach(item => {
     getItem(item)
@@ -160,6 +178,32 @@ const ReacterNewsWebAPIUtils = {
     clearStories();
     storiesSetLoading();
     getShowKeys()
+      .then(getTopStories)
+      .then(topStoriesArray => topStoriesArray.filter(story => story && !story.deleted))
+      .then(topStoriesArray => {
+        receiveStories(topStoriesArray);
+        return topStoriesArray;
+      })
+      .then(storiesStopLoading);
+  },
+
+  getAskStories: () => {
+    clearStories();
+    storiesSetLoading();
+    getAskKeys()
+      .then(getTopStories)
+      .then(topStoriesArray => topStoriesArray.filter(story => story && !story.deleted))
+      .then(topStoriesArray => {
+        receiveStories(topStoriesArray);
+        return topStoriesArray;
+      })
+      .then(storiesStopLoading);
+  },
+
+  getJobsStories: () => {
+    clearStories();
+    storiesSetLoading();
+    getJobsKeys()
       .then(getTopStories)
       .then(topStoriesArray => topStoriesArray.filter(story => story && !story.deleted))
       .then(topStoriesArray => {
