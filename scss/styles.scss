@@ -65,10 +65,14 @@ header {
     }
   }
 
-  .heading a{
-    color: $main-button-color;
-    font-weight: bold;
-    text-decoration: none;
+  .heading {
+    padding: 0 0 0 5px;
+    a {
+
+      color: $main-button-color;
+      font-weight: bold;
+      text-decoration: none;
+    }
   }
 }
 
