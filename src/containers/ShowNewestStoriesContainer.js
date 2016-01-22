@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { Link } from 'react-router';
 import connectToStores from '../utils/connectToStores';
 
 import StoriesStore from '../stores/StoriesStore';
@@ -7,10 +8,11 @@ import APIUtils from '../utils/ReacterNewsWebAPIUtils';
 import FooterComponent from '../components/FooterComponent';
 import SpacerComponent from '../components/SpacerComponent';
 import StoriesComponent from '../components/StoriesComponent';
+import Spacer from '../components/Spacer';
 
 function getState(props) {
   const page = Number(props.location.query.p) || 1;
-  const stories = StoriesStore.getStoriesByPage(page).toJS() || [];
+  const stories = StoriesStore.getStoriesByPageAndSortedTime(page).toJS() || [];
   const loading = StoriesStore.getLoadingStatus() || true;
   const initialized = StoriesStore.getInitializedState() || false;
 
@@ -22,7 +24,7 @@ function getState(props) {
   };
 }
 
-class TopStoriesContainer extends Component {
+class ShowStoriesContainer extends Component {
   static propTypes = {
     initialized: PropTypes.bool,
     loading: PropTypes.bool,
@@ -31,30 +33,30 @@ class TopStoriesContainer extends Component {
     location: PropTypes.object,
   };
   componentWillMount() {
-    APIUtils.getTopStories();
+    APIUtils.getShowStories();
   }
   render() {
     const { initialized, loading, stories, page, location } = this.props;
-    const linkTo = (location.pathname === '/') ? '/news' : location.pathname;
+    const linkTo = location.pathname || '/';
 
     return (
-    <div>
-      <div className="main">
-        <StoriesComponent
-          stories={stories}
-          loading={loading}
-          initialized={initialized}
-          page={page}
-          linkTo={linkTo}
-        />
+      <div>
+        <div className="main">
+          <StoriesComponent
+            stories={stories}
+            loading={loading}
+            initialized={initialized}
+            page={page}
+            linkTo={linkTo}
+          />
+        </div>
+        <SpacerComponent />
+        <FooterComponent />
       </div>
-      <SpacerComponent />
-      <FooterComponent />
-    </div>
     );
   }
 }
 
-TopStoriesContainer = connectToStores(TopStoriesContainer, [StoriesStore], getState);
+ShowStoriesContainer = connectToStores(ShowStoriesContainer, [StoriesStore], getState);
 
-export default TopStoriesContainer;
+export default ShowStoriesContainer;

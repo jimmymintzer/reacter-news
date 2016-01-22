@@ -28,12 +28,14 @@ class NewestStoriesContainer extends Component {
     loading: PropTypes.bool,
     stories: PropTypes.array,
     page: PropTypes.number,
+    location: PropTypes.object
   };
   componentWillMount() {
     APIUtils.getNewStories();
   }
   render() {
-    const { initialized, loading, stories, page } = this.props;
+    const { initialized, loading, stories, page, location } = this.props;
+    const linkTo = location.pathname || '/';
 
     return (
       <div>
@@ -43,6 +45,7 @@ class NewestStoriesContainer extends Component {
             loading={loading}
             initialized={initialized}
             page={page}
+            linkTo={linkTo}
           />
         </div>
         <SpacerComponent />

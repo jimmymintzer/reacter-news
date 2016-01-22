@@ -1,6 +1,5 @@
 import keyMirror from 'keymirror';
 
-
 export const ActionTypes = keyMirror({
   RECEIVE_RAW_STORIES: null,
   RECEIVE_RAW_SUBMITTED_STORIES: null,

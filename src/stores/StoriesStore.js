@@ -1,30 +1,31 @@
+// TODO: Convert to es6 and fix eslint errors
 import ReacterNewsDispatcher from '../dispatcher/ReacterNewsDispatcher';
 import { ActionTypes } from '../constants/ReacterNewsConstants';
-var EventEmitter = require('events').EventEmitter;
-var assign = require('object-assign');
-var Immutable = require('immutable');
+import { EventEmitter } from 'events';
+import assign from 'object-assign';
+import { List as list } from 'immutable';
 
-var CHANGE_EVENT = 'change';
+const CHANGE_EVENT = 'change';
 
-var _stories = Immutable.List();
-var _submitted_stories = Immutable.List();
-var _submittedLoading = false;
-var _loading = false;
-var _initialized = false;
+let _stories = list();
+let _submittedStories = list();
+let _submittedLoading = false;
+let _loading = false;
+let _initialized = false;
 
-var _addStories = (rawStories) => {
-  _stories = Immutable.List(rawStories);
+const _addStories = (rawStories) => {
+  _stories = list(rawStories);
 };
 
-var _addStory = (rawStory) => {
+const _addStory = (rawStory) => {
   _stories = _stories.push(rawStory);
 };
 
-var _addSubmittedStories = (rawStories) => {
-  _submitted_stories = Immutable.List(rawStories);
+const _addSubmittedStories = (rawStories) => {
+  _submittedStories = list(rawStories);
 };
 
-var sortTime = (a, b) => {
+const sortTime = (a, b) => {
   if (a.time < b.time) {
     return 1;
   }
@@ -34,17 +35,17 @@ var sortTime = (a, b) => {
   return 0;
 };
 
-var StoriesStore = assign({}, EventEmitter.prototype, {
+const StoriesStore = assign({}, EventEmitter.prototype, {
 
-  emitChange: function() {
+  emitChange() {
     this.emit(CHANGE_EVENT);
   },
 
-  addChangeListener: function(callback) {
+  addChangeListener(callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
-  removeChangeListener: function(callback) {
+  removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   },
 
@@ -56,25 +57,25 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
 
   getStory: (itemid) => {
     return _stories
-      .filter(story => story.id == itemid)
+      .filter(story => story.id === itemid)
       .get(0) || {};
   },
 
   getAllStories: () => _stories,
 
-  getAllSubmittedStories: () => _submitted_stories,
+  getAllSubmittedStories: () => _submittedStories,
 
   getStoriesByPage: (page) => {
-    var start = 30 * (page-1);
-    var end = (start + 30);
+    const start = 30 * (page - 1);
+    const end = (start + 30);
 
     return _stories
       .slice(start, end);
   },
 
   getStoriesByPageAndSortedTime: (page) => {
-    var start = 30 * (page - 1);
-    var end = (start + 30);
+    const start = 30 * (page - 1);
+    const end = (start + 30);
 
     return _stories
       .slice()
@@ -83,8 +84,8 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
   },
 
   getAskHNStories: (page) => {
-    var start = 30 * (page-1);
-    var end = (start + 30);
+    const start = 30 * (page - 1);
+    const end = (start + 30);
 
     return _stories
       .filter(story => story.url === '' && story.type !== 'job')
@@ -92,37 +93,35 @@ var StoriesStore = assign({}, EventEmitter.prototype, {
   },
 
   getShowHNStories: (page, sort) => {
-    var start = 30 * (page-1);
-    var end = (start + 30);
+    const start = 30 * (page - 1);
+    const end = (start + 30);
 
-    var showHNStories = _stories
+    const showHNStories = _stories
       .filter(story => !story.deleted)
       .filter(story => story.title && story.title.indexOf('Show HN:') !== -1)
       .slice(start, end);
 
-    if(sort) {
+    if (sort) {
       return showHNStories
         .sort(sortTime);
     }
-    else {
-      return showHNStories;
-    }
+    return showHNStories;
   },
 
   getJobsStories: (page) => {
-    var start = 30 * (page-1);
-    var end = (start + 30);
+    const start = 30 * (page - 1);
+    const end = (start + 30);
 
     return _stories
       .filter(story => story.type === 'job')
       .slice(start, end);
-  }
+  },
 });
 
 StoriesStore.dispatchToken = ReacterNewsDispatcher.register(payload => {
-  var action = payload.action;
+  const action = payload.action;
 
-  switch(action.type) {
+  switch (action.type) {
     case ActionTypes.RECEIVE_RAW_STORIES:
       _addStories(action.rawStories);
       StoriesStore.emitChange();
@@ -158,13 +157,12 @@ StoriesStore.dispatchToken = ReacterNewsDispatcher.register(payload => {
       StoriesStore.emitChange();
       break;
     case ActionTypes.CLEAR_SUBMITTED_STORIES:
-      _submitted_stories = [];
+      _submittedStories = [];
       StoriesStore.emitChange();
       break;
     default:
       break;
   }
-
 });
 
 export default StoriesStore;

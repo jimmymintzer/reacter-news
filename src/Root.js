@@ -2,7 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { Router, Route } from 'react-router';
 import TopStoriesContainer from './containers/TopStoriesContainer';
 import NewestStoriesContainer from './containers/NewestStoriesContainer';
-
+import ShowStoriesContainer from './containers/ShowStoriesContainer';
+import ShowNewestStoriesContainer from './containers/ShowNewestStoriesContainer';
 import App from './App';
 
 export default class Root extends Component {
@@ -19,6 +20,8 @@ export default class Root extends Component {
           <Route path="/" component={TopStoriesContainer}/>
           <Route path="news" component={TopStoriesContainer}/>
           <Route path="newest" component={NewestStoriesContainer}/>
+          <Route path="show" component={ShowStoriesContainer}/>
+          <Route path="shownew" component={ShowNewestStoriesContainer}/>
         </Route>
       </Router>
     );

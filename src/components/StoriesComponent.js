@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import StoryComponent from './StoryComponent';
 import LoaderComponent from './LoaderComponent';
 
-const StoriesComponent = ({ loading, initialized, stories, page }) => {
+const StoriesComponent = ({ loading, initialized, stories, page, linkTo }) => {
   document.title = 'Reacter News';
 
   const storiesComponents = stories.map((story, index) => {
@@ -24,7 +24,7 @@ const StoriesComponent = ({ loading, initialized, stories, page }) => {
   const nextPage = page + 1;
 
   const link = (stories.length === 30) ?
-    <Link to="news" href="#" query={{ p: nextPage }}>More</Link>
+    <Link to={linkTo} href="#" query={{ p: nextPage }}>More</Link>
     : null;
 
   return (

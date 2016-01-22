@@ -1,3 +1,5 @@
+// TODO: Convert to es6 and fix eslint errors
+
 import ReacterNewsDispatcher from '../dispatcher/ReacterNewsDispatcher';
 import { ActionTypes } from '../constants/ReacterNewsConstants';
 var EventEmitter = require('events').EventEmitter;

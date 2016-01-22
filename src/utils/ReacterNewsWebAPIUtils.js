@@ -44,6 +44,15 @@ const getNewestKeys = () => {
   });
 };
 
+const getShowKeys = () => {
+  return new Promise((resolve, reject) => {
+    fb.child('showstories').on('value',
+      snapshot => resolve(snapshot.val()),
+      err => reject(err)
+    );
+  });
+};
+
 const getItems = (items, storyId) => {
   items.forEach(item => {
     getItem(item)
@@ -138,6 +147,19 @@ const ReacterNewsWebAPIUtils = {
     clearStories();
     storiesSetLoading();
     getNewestKeys()
+      .then(getTopStories)
+      .then(topStoriesArray => topStoriesArray.filter(story => story && !story.deleted))
+      .then(topStoriesArray => {
+        receiveStories(topStoriesArray);
+        return topStoriesArray;
+      })
+      .then(storiesStopLoading);
+  },
+
+  getShowStories: () => {
+    clearStories();
+    storiesSetLoading();
+    getShowKeys()
       .then(getTopStories)
       .then(topStoriesArray => topStoriesArray.filter(story => story && !story.deleted))
       .then(topStoriesArray => {
