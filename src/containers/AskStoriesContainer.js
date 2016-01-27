@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import connectToStores from '../utils/connectToStores';
 
 import StoriesStore from '../stores/StoriesStore';
-import APIUtils from '../utils/ReacterNewsWebAPIUtils';
+import { getAskStories } from '../utils/ReacterNewsWebAPIUtils';
 
 import FooterComponent from '../components/FooterComponent';
 import SpacerComponent from '../components/SpacerComponent';
@@ -31,7 +31,7 @@ class AskStoriesContainer extends Component {
     location: PropTypes.object,
   };
   componentWillMount() {
-    APIUtils.getAskStories();
+    getAskStories();
   }
   render() {
     const { initialized, loading, stories, page, location } = this.props;

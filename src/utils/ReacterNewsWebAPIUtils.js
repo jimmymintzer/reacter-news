@@ -106,23 +106,6 @@ const getUser = (userId) => {
   });
 };
 
-const getTopStories = (stories) => {
-  const promisesArr = [];
-
-  stories.map(story => {
-    const p = new Promise((resolve, reject) => {
-      fb.child('item').child(story).on('value',
-        snapshot => resolve(snapshot.val()),
-        err => reject(err)
-      );
-    });
-    promisesArr.push(p);
-  });
-
-  return Promise
-    .all(promisesArr);
-};
-
 const getParent = (item) => {
   return new Promise((resolve, reject) => {
     fb.child('item').child(item).on('value',
@@ -139,161 +122,159 @@ const getParent = (item) => {
   });
 };
 
+export async function getTopStories() {
+  try {
+    await clearStories();
+    await storiesSetLoading();
+    const keys = await getAllTopStoriesKeys();
+    const promises = keys.map((key) => getItem(key));
+    const stories = await Promise.all(promises);
+    await receiveStories(stories);
+    await storiesStopLoading();
+  } catch (err) {
+    console.log('getTopStoriesAsync Error', err);
+  }
+}
+
+export async function getNewestStories() {
+  try {
+    await clearStories();
+    await storiesSetLoading();
+    const keys = await getNewestKeys();
+    const promises = keys.map((key) => getItem(key));
+    const stories = await Promise.all(promises);
+    await receiveStories(stories);
+    await storiesStopLoading();
+  } catch (err) {
+    console.log('getTopStoriesAsync Error', err);
+  }
+}
+
+export async function getShowStories() {
+  try {
+    await clearStories();
+    await storiesSetLoading();
+    const keys = await getShowKeys();
+    const promises = keys.map((key) => getItem(key));
+    const stories = await Promise.all(promises);
+    await receiveStories(stories);
+    await storiesStopLoading();
+  } catch (err) {
+    console.log('getTopStoriesAsync Error', err);
+  }
+}
+
+export async function getAskStories() {
+  try {
+    await clearStories();
+    await storiesSetLoading();
+    const keys = await getAskKeys();
+    const promises = keys.map((key) => getItem(key));
+    const stories = await Promise.all(promises);
+    await receiveStories(stories);
+    await storiesStopLoading();
+  } catch (err) {
+    console.log('getTopStoriesAsync Error', err);
+  }
+}
+
+export async function getJobsStories() {
+  try {
+    await clearStories();
+    await storiesSetLoading();
+    const keys = await getJobsKeys();
+    const promises = keys.map((key) => getItem(key));
+    const stories = await Promise.all(promises);
+    await receiveStories(stories);
+    await storiesStopLoading();
+  } catch (err) {
+    console.log('getTopStoriesAsync Error', err);
+  }
+}
+
 const ReacterNewsWebAPIUtils = {
 
-  getTopStories: () => {
-    clearStories();
-    storiesSetLoading();
-    getAllTopStoriesKeys()
-      .then(getTopStories)
-      .then(topStoriesArray => topStoriesArray.filter(story => !story.deleted))
-      .then(topStoriesArray => {
-        receiveStories(topStoriesArray);
-        return topStoriesArray;
-      })
-      // .then(topStoriesArray => {
-      //  topStoriesArray.forEach(story => {
-      //    if(story.kids && story.kids.length > 0) {
-      //      getItems(story.kids, story.id);
-      //    }
-      //  });
-      // })
-      .then(storiesStopLoading);
-  },
-
-  getNewStories: () => {
-    clearStories();
-    storiesSetLoading();
-    getNewestKeys()
-      .then(getTopStories)
-      .then(topStoriesArray => topStoriesArray.filter(story => story && !story.deleted))
-      .then(topStoriesArray => {
-        receiveStories(topStoriesArray);
-        return topStoriesArray;
-      })
-      .then(storiesStopLoading);
-  },
-
-  getShowStories: () => {
-    clearStories();
-    storiesSetLoading();
-    getShowKeys()
-      .then(getTopStories)
-      .then(topStoriesArray => topStoriesArray.filter(story => story && !story.deleted))
-      .then(topStoriesArray => {
-        receiveStories(topStoriesArray);
-        return topStoriesArray;
-      })
-      .then(storiesStopLoading);
-  },
-
-  getAskStories: () => {
-    clearStories();
-    storiesSetLoading();
-    getAskKeys()
-      .then(getTopStories)
-      .then(topStoriesArray => topStoriesArray.filter(story => story && !story.deleted))
-      .then(topStoriesArray => {
-        receiveStories(topStoriesArray);
-        return topStoriesArray;
-      })
-      .then(storiesStopLoading);
-  },
-
-  getJobsStories: () => {
-    clearStories();
-    storiesSetLoading();
-    getJobsKeys()
-      .then(getTopStories)
-      .then(topStoriesArray => topStoriesArray.filter(story => story && !story.deleted))
-      .then(topStoriesArray => {
-        receiveStories(topStoriesArray);
-        return topStoriesArray;
-      })
-      .then(storiesStopLoading);
-  },
-
-  getStory: (storyId) => {
-    storiesSetLoading();
-    getItem(storyId)
-      .then(story => {
-        receiveStory(story);
-        if (story.parts && story.parts.length > 0) {
-          getItems(story.parts);
-        }
-        if (story.kids && story.kids.length > 0) {
-          getItems(story.kids, story.id);
-        }
-        storiesStopLoading();
-      });
-  },
-
-  getUser: (userId) => {
-    userSetLoading();
-    getUser(userId)
-      .then(receiveUser)
-      .then(userStopLoading);
-  },
-
-  getUserSubmissions: (userId, page) => {
-    const start = 30 * (page - 1);
-    const end = (start + 30);
-    setSubmittedLoading();
-    clearSubmittedStories();
-    userSetLoading();
-    getUser(userId)
-      .then(userDetails => {
-        receiveUser(userDetails);
-        userStopLoading();
-        return userDetails.submitted;
-      })
-      .then(getTopStories)
-      .then(submittedItems => {
-        return submittedItems
-          .filter(item => item && (item.type === 'story' && !item.deleted))
-          .slice(start, end);
-      })
-      .then(stories => {
-        receiveSubmittedStories(stories);
-        stories.forEach(story => {
-          if (story.kids && story.kids.length > 0) {
-            getItems(story.kids, story.id);
-          }
-        });
-      })
-      .then(stopSubmittedLoading);
-  },
-
-  getUserComments: (userId) => {
-    userSetLoading();
-    commentSetLoading();
-    getUser(userId)
-      .then(userDetails => {
-        receiveUser(userDetails);
-        userStopLoading();
-        return userDetails.submitted;
-      })
-      .then(getTopStories)
-      .then(submittedItems => {
-        return submittedItems
-          .filter(item => item && (item.type === 'comment' && !item.deleted));
-      })
-      .then(comments => {
-        comments.forEach(comment => {
-          getParent(comment.parent)
-          .then(parentResult => {
-            comment.parentId = comment.parent;
-            comment.parentStoryDetails = parentResult;
-            receiveComment(comment);
-
-            if (comment.kids && comment.kids.length > 0) {
-              getItems(comment.kids, comment.parent);
-            }
-          });
-        });
-      })
-      .then(commentStopLoading);
-  },
+  //getStory: (storyId) => {
+  //  storiesSetLoading();
+  //  getItem(storyId)
+  //    .then(story => {
+  //      receiveStory(story);
+  //      if (story.parts && story.parts.length > 0) {
+  //        getItems(story.parts);
+  //      }
+  //      if (story.kids && story.kids.length > 0) {
+  //        getItems(story.kids, story.id);
+  //      }
+  //      storiesStopLoading();
+  //    });
+  //},
+  //
+  //getUser: (userId) => {
+  //  userSetLoading();
+  //  getUser(userId)
+  //    .then(receiveUser)
+  //    .then(userStopLoading);
+  //},
+  //
+  //getUserSubmissions: (userId, page) => {
+  //  const start = 30 * (page - 1);
+  //  const end = (start + 30);
+  //  setSubmittedLoading();
+  //  clearSubmittedStories();
+  //  userSetLoading();
+  //  getUser(userId)
+  //    .then(userDetails => {
+  //      receiveUser(userDetails);
+  //      userStopLoading();
+  //      return userDetails.submitted;
+  //    })
+  //    .then(getTopStories)
+  //    .then(submittedItems => {
+  //      return submittedItems
+  //        .filter(item => item && (item.type === 'story' && !item.deleted))
+  //        .slice(start, end);
+  //    })
+  //    .then(stories => {
+  //      receiveSubmittedStories(stories);
+  //      stories.forEach(story => {
+  //        if (story.kids && story.kids.length > 0) {
+  //          getItems(story.kids, story.id);
+  //        }
+  //      });
+  //    })
+  //    .then(stopSubmittedLoading);
+  //},
+  //
+  //getUserComments: (userId) => {
+  //  userSetLoading();
+  //  commentSetLoading();
+  //  getUser(userId)
+  //    .then(userDetails => {
+  //      receiveUser(userDetails);
+  //      userStopLoading();
+  //      return userDetails.submitted;
+  //    })
+  //    .then(getTopStories)
+  //    .then(submittedItems => {
+  //      return submittedItems
+  //        .filter(item => item && (item.type === 'comment' && !item.deleted));
+  //    })
+  //    .then(comments => {
+  //      comments.forEach(comment => {
+  //        getParent(comment.parent)
+  //        .then(parentResult => {
+  //          comment.parentId = comment.parent;
+  //          comment.parentStoryDetails = parentResult;
+  //          receiveComment(comment);
+  //
+  //          if (comment.kids && comment.kids.length > 0) {
+  //            getItems(comment.kids, comment.parent);
+  //          }
+  //        });
+  //      });
+  //    })
+  //    .then(commentStopLoading);
+  //},
 
 };
 

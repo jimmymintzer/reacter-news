@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import connectToStores from '../utils/connectToStores';
 
 import StoriesStore from '../stores/StoriesStore';
-import APIUtils from '../utils/ReacterNewsWebAPIUtils';
+import { getTopStories } from '../utils/ReacterNewsWebAPIUtils';
 
 import FooterComponent from '../components/FooterComponent';
 import SpacerComponent from '../components/SpacerComponent';
@@ -31,7 +31,7 @@ class TopStoriesContainer extends Component {
     location: PropTypes.object,
   };
   componentWillMount() {
-    APIUtils.getTopStories();
+    getTopStories();
   }
   render() {
     const { initialized, loading, stories, page, location } = this.props;

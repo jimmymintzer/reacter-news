@@ -1,14 +1,12 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
 import connectToStores from '../utils/connectToStores';
 
 import StoriesStore from '../stores/StoriesStore';
-import APIUtils from '../utils/ReacterNewsWebAPIUtils';
+import { getShowStories } from '../utils/ReacterNewsWebAPIUtils';
 
 import FooterComponent from '../components/FooterComponent';
 import SpacerComponent from '../components/SpacerComponent';
 import StoriesComponent from '../components/StoriesComponent';
-import Spacer from '../components/Spacer';
 
 function getState(props) {
   const page = Number(props.location.query.p) || 1;
@@ -33,7 +31,7 @@ class ShowStoriesContainer extends Component {
     location: PropTypes.object,
   };
   componentWillMount() {
-    APIUtils.getShowStories();
+    getShowStories();
   }
   render() {
     const { initialized, loading, stories, page, location } = this.props;

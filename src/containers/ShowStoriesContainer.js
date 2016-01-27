@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import connectToStores from '../utils/connectToStores';
 
 import StoriesStore from '../stores/StoriesStore';
-import APIUtils from '../utils/ReacterNewsWebAPIUtils';
+import { getShowStories } from '../utils/ReacterNewsWebAPIUtils';
 
 import FooterComponent from '../components/FooterComponent';
 import SpacerComponent from '../components/SpacerComponent';
@@ -33,7 +33,7 @@ class ShowStoriesContainer extends Component {
     location: PropTypes.object,
   };
   componentWillMount() {
-    APIUtils.getShowStories();
+    getShowStories();
   }
   render() {
     const { initialized, loading, stories, page, location } = this.props;
