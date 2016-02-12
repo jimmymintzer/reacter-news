@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import connectToStores from '../utils/connectToStores';
 
-import StoriesStore from '../stores/StoriesStore';
+import StoriesStore from '../stores/ItemsStore';
 import { getShowStories } from '../utils/ReacterNewsWebAPIUtils';
 
 import FooterComponent from '../components/FooterComponent';

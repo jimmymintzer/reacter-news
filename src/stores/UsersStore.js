@@ -1,44 +1,42 @@
-// TODO: Convert to es6 and fix eslint errors
-
 import ReacterNewsDispatcher from '../dispatcher/ReacterNewsDispatcher';
 import { ActionTypes } from '../constants/ReacterNewsConstants';
-var EventEmitter = require('events').EventEmitter;
-var assign = require('object-assign');
-var Immutable = require('immutable');
+import { EventEmitter } from 'events';
+import assign from 'object-assign';
+import { Map } from 'immutable';
 
-var CHANGE_EVENT = 'change';
+const CHANGE_EVENT = 'change';
 
-var _users = Immutable.Map();
-var _loading = false;
+let _users = new Map();
+let _loading = false;
 
-var _addUser = (rawMessages) => {
+const _addUser = (rawMessages) => {
   _users = _users.set(rawMessages.id, rawMessages);
 };
 
-var UsersStore = assign({}, EventEmitter.prototype, {
+const UsersStore = assign({}, EventEmitter.prototype, {
 
-  emitChange: function() {
+  emitChange() {
     this.emit(CHANGE_EVENT);
   },
 
-  addChangeListener: function(callback) {
+  addChangeListener(callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
-  removeChangeListener: function(callback) {
+  removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   },
 
   get: (id) => _users.get(id),
 
-  getLoadingStatus: () => _loading
+  getLoadingStatus: () => _loading,
 
 });
 
 UsersStore.dispatchToken = ReacterNewsDispatcher.register(payload => {
-  var action = payload.action;
+  const action = payload.action;
 
-  switch(action.type) {
+  switch (action.type) {
     case ActionTypes.RECEIVE_USER:
       _addUser(action.rawMessages);
       UsersStore.emitChange();
@@ -54,7 +52,6 @@ UsersStore.dispatchToken = ReacterNewsDispatcher.register(payload => {
     default:
       break;
   }
-
 });
 
 module.exports = UsersStore;

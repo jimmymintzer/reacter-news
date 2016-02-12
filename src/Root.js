@@ -6,6 +6,8 @@ import ShowStoriesContainer from './containers/ShowStoriesContainer';
 import ShowNewestStoriesContainer from './containers/ShowNewestStoriesContainer';
 import AskStoriesContainer from './containers/AskStoriesContainer';
 import JobsStoriesContainer from './containers/JobsStoriesContainer';
+import StoryContainer from './containers/StoryContainer';
+import UserContainer from './containers/UserContainer';
 
 import App from './App';
 
@@ -27,6 +29,8 @@ export default class Root extends Component {
           <Route path="shownew" component={ShowNewestStoriesContainer}/>
           <Route path="ask" component={AskStoriesContainer}/>
           <Route path="jobs" component={JobsStoriesContainer}/>
+          <Route path="item" component={StoryContainer}/>
+          <Route path="user" component={UserContainer}/>
         </Route>
       </Router>
     );

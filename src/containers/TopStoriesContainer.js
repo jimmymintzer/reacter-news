@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import connectToStores from '../utils/connectToStores';
 
-import StoriesStore from '../stores/StoriesStore';
+import StoriesStore from '../stores/ItemsStore';
 import { getTopStories } from '../utils/ReacterNewsWebAPIUtils';
 
 import FooterComponent from '../components/FooterComponent';

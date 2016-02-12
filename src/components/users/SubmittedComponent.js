@@ -5,7 +5,7 @@ var Link = Router.Link;
 
 var StoryComponent = require('./../StoryComponent');
 var CommentsStore = require('../../stores/CommentsStore');
-var StoriesStore = require('../../stores/StoriesStore');
+var StoriesStore = require('../../stores/ItemsStore');
 var LoaderComponent = require('../LoaderComponent');
 var SpacerComponent = require('./../SpacerComponent');
 var FooterComponent = require('./../FooterComponent');
