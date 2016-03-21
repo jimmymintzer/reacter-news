@@ -12,6 +12,8 @@ let _items = new Map({
   showstories: new Map(),
   askstories: new Map(),
   jobstories: new Map(),
+  comments: new Map(),
+  items: new List(),
 });
 let _loading = Boolean(false);
 
@@ -27,8 +29,22 @@ const setItems = (action, type) => {
   const { items, page } = action;
 
   _items = _items.setIn([type, page], new List(items));
-  console.log('items', _items.toJS());
+  // console.log('items', _items.toJS());
 };
+
+const setItem = (action, type) => {
+  const { item } = action;
+  _items = _items.updateIn([type], list => list.concat(item));
+  // console.log('items', _items.toJS());
+};
+
+const setGenericItems = (action, type) => {
+  const { items } = action;
+
+  _items = _items.updateIn([type], list => list.concat(...items));
+  // console.log('items', _items.toJS());
+};
+
 
 const sortTime = (a, b) => {
   if (a.time < b.time) {
@@ -56,9 +72,13 @@ const ItemsStore = assign({}, EventEmitter.prototype, {
 
   getLoadingStatus: () => _loading,
 
+  getItem: (id) => _items.get('items').filter(item => item.id === id).first(),
+
+  getGenericItems: () => _items.get('items').toJS(),
+
   getItems: (page, type, sort) => {
-    const topStories = _items.get(type);
-    let items = topStories.get(page);
+    const itemsType = _items.get(type);
+    let items = itemsType.get(page);
 
     if (items && !!sort) {
       items = items.sort(sortTime);
@@ -99,6 +119,14 @@ ItemsStore.dispatchToken = register(payload => {
       break;
     case Constants.SET_JOB_STORIES:
       setItems(action, 'jobstories');
+      ItemsStore.emitChange();
+      break;
+    case Constants.SET_ITEM:
+      setItem(action, 'items');
+      ItemsStore.emitChange();
+      break;
+    case Constants.SET_ITEMS:
+      setGenericItems(action, 'items');
       ItemsStore.emitChange();
       break;
     default:

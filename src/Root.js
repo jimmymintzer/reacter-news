@@ -3,7 +3,7 @@ import { Router, Route } from 'react-router';
 import TopStoriesContainer from './containers/TopStoriesContainer';
 import NewestStoriesContainer from './containers/NewStoriesContainer';
 import ShowStoriesContainer from './containers/ShowStoriesContainer';
-import ShowNewestStoriesContainer from './containers/ShowNewestStoriesContainer';
+import ShowNewestStoriesContainer from './containers/ShowNewStoriesContainer';
 import AskStoriesContainer from './containers/AskStoriesContainer';
 import JobsStoriesContainer from './containers/JobsStoriesContainer';
 import StoryContainer from './containers/StoryContainer';

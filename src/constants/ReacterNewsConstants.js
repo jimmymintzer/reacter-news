@@ -8,6 +8,8 @@ export default keyMirror({
   SET_SHOW_STORIES: null,
   SET_ASK_STORIES: null,
   SET_JOB_STORIES: null,
+  SET_ITEM: null,
+  SET_ITEMS: null,
 
   USER_LOADING: null,
   USER_FINISH_LOADING: null,

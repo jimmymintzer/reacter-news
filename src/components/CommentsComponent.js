@@ -1,16 +1,30 @@
 import React, { PropTypes } from 'react';
 import CommentComponent from './CommentComponent';
 
-const CommentsComponent = ({ kids, action }) => {
-  if (!kids) {
+const CommentsComponent = ({ kids, items }) => {
+  if (!kids || kids.length === 0) {
     return <div />;
   }
 
-  if (kids.length > 0) {
-    action(kids);
-  }
+  const kidsVals = kids.map((kid) => {
+    return items
+      .filter(item => {
+        if (kid === item.id) {
+          return item;
+        }
+      })
+      .shift();
+  });
+
+
   return (
-    <div className="comment-wrapper"></div>
+    <div className="comment-wrapper">
+      {kidsVals.map(kid => {
+        if (kid) {
+          return <CommentComponent key={kid.id} comment={kid} items={items}/>;
+        }
+      })}
+    </div>
   );
 };
 

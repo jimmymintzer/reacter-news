@@ -1,7 +1,7 @@
 import moment from 'moment';
 import React, { PropTypes } from 'react';
 
-const TimeElement = ({ time }) => {
+const DaysAgoElement = ({ time }) => {
   const currentTime = moment();
   const userTimeCreated = moment.unix(time);
   const numberOfDays = Number(-1) * userTimeCreated.diff(currentTime, 'days');
@@ -11,8 +11,8 @@ const TimeElement = ({ time }) => {
   );
 };
 
-TimeElement.propTypes = {
-  time: PropTypes.number.isRequired,
+DaysAgoElement.propTypes = {
+  time: PropTypes.number,
 };
 
-export default TimeElement;
+export default DaysAgoElement;

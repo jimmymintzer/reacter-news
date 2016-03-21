@@ -1,19 +1,19 @@
 import React, { Component, PropTypes } from 'react';
 import connectToStores from '../utils/connectToStores';
-import StoriesStore from '../stores/ItemsStore';
-import { getStory } from '../utils/ReacterNewsWebAPIUtils';
+import ItemsStore from '../stores/ItemsStore';
+import { getItemInfo } from '../actions/ItemsActions';
 import ItemComponent from '../components/ItemComponent';
 
 function getState(props) { // props) {
   const id = Number(props.location.query.id) || -1;
-  const story = StoriesStore.getStory(id);
-  const initialized = StoriesStore.getInitializedState();
-  const loading = StoriesStore.getLoadingStatus();
+  const story = ItemsStore.getItem(id);
+  const loading = ItemsStore.getLoadingStatus();
+  const items = ItemsStore.getGenericItems();
 
   return {
     story,
-    initialized,
     loading,
+    items,
   };
 }
 
@@ -21,30 +21,37 @@ class StoryContainer extends Component {
   static propTypes = {
     location: PropTypes.object,
     story: PropTypes.object,
-    initialized: PropTypes.bool,
     loading: PropTypes.bool,
-    comments: PropTypes.object,
+    items: PropTypes.array,
   };
-  componentWillMount() {
+  componentDidMount() {
     const id = Number(this.props.location.query.id) || -1;
-    getStory(id);
+
+    getItemInfo(id);
+  }
+  componentDidUpdate(prevProps) {
+    const oldId = Number(prevProps.location.query.id) || -1;
+    const id = Number(this.props.location.query.id) || -1;
+
+    if (oldId !== id) {
+      getItemInfo(id);
+    }
   }
   render() {
-    const { story, initialized, loading } = this.props;
-    console.log('story', story);
+    const { story, loading, items } = this.props;
+
     return (
       <div>
         <ItemComponent
           item={story}
-          initialized={initialized}
           loading={loading}
-          action={getComments}
+          items={items}
         />
       </div>
     );
   }
 }
 
-StoryContainer = connectToStores(StoryContainer, [StoriesStore], getState);
+StoryContainer = connectToStores(StoryContainer, [ItemsStore], getState);
 
 export default StoryContainer;

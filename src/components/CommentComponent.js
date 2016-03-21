@@ -1,16 +1,22 @@
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
 import CommentsComponent from './CommentsComponent';
+import UserLink from './UserLink';
+import ItemLink from './ItemLink';
+import Spacer from './Spacer';
 
-const CommentComponent = ({ comment, comments }) => {
-  const ItemLink = <Link to="item" className="story-link" query={{ id: comment.id }}>Link</Link>;
-  const UserLink = <Link to="user" className="story-link" query={{ id: comment.by }}>{comment.by}</Link>;
-
+const CommentComponent = ({ comment, items }) => {
+  if (comment.deleted) {
+    return <span />;
+  }
   return (
     <div className="comment">
-      <div className="username-row">{UserLink} | {ItemLink}</div>
+      <div className="username-row">
+        <UserLink author={comment.by}/>
+        <Spacer />
+        <ItemLink id={comment.id} time={comment.time}/>
+      </div>
       <div dangerouslySetInnerHTML={{ __html: comment.text }} />
-      <CommentsComponent comments={comment.kids} comments={comments}/>
+      <CommentsComponent kids={comment.kids} items={items} />
     </div>
   );
 };

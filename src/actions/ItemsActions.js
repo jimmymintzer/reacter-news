@@ -1,6 +1,6 @@
 import { dispatch } from '../AppDispatcher';
 import Constants from '../constants/ReacterNewsConstants';
-import { getKeys, getItems } from '../utils/ReacterNewsWebAPIUtils';
+import { getKeys, getItem, getItems } from '../utils/ReacterNewsWebAPIUtils';
 import { getStartIndex, NUM_PER_PAGE } from '../utils/CommonUtils';
 
 async function getGenericItems(page, type, constant) {
@@ -17,6 +17,48 @@ async function getGenericItems(page, type, constant) {
     action: {
       items,
       page,
+    },
+  });
+
+  dispatch({
+    type: Constants.ITEMS_FINISH_LOADING,
+  });
+}
+
+async function getRecursiveItems(kids) {
+  if (kids) {
+    const itemVals = await getItems(kids);
+
+    itemVals.forEach(async function(item) {
+      if (item.kids) {
+        await getRecursiveItems(item.kids);
+      }
+    });
+
+    dispatch({
+      type: Constants.SET_ITEMS,
+      action: {
+        items: itemVals,
+      },
+    });
+  }
+}
+
+export async function getItemInfo(id) {
+  dispatch({
+    type: Constants.ITEMS_LOADING,
+  });
+
+  const item = await getItem(id);
+
+  if (item.kids) {
+    getRecursiveItems(item.kids);
+  }
+
+  dispatch({
+    type: Constants.SET_ITEM,
+    action: {
+      item,
     },
   });
 

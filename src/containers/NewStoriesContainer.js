@@ -22,7 +22,6 @@ function getState(props) {
 
 class NewestStoriesContainer extends Component {
   static propTypes = {
-    initialized: PropTypes.bool,
     loading: PropTypes.bool,
     stories: PropTypes.array,
     page: PropTypes.number,
@@ -42,7 +41,7 @@ class NewestStoriesContainer extends Component {
     }
   }
   render() {
-    const { initialized, loading, stories, page, location } = this.props;
+    const { loading, stories, page, location } = this.props;
     const linkTo = location.pathname || '/';
 
     return (
@@ -51,7 +50,6 @@ class NewestStoriesContainer extends Component {
           <StoriesComponent
             stories={stories}
             loading={loading}
-            initialized={initialized}
             page={page}
             linkTo={linkTo}
           />

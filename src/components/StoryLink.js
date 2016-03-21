@@ -1,14 +1,14 @@
 import React, { PropTypes } from 'react';
 
-const UserLink = ({ url, title }) => {
+const StoryLink = ({ url, title }) => {
   return (
     <a href={ url }>{title}</a>
   );
 };
 
-UserLink.propTypes = {
+StoryLink.propTypes = {
   url: PropTypes.string,
   title: PropTypes.string,
 };
 
-export default UserLink;
+export default StoryLink;

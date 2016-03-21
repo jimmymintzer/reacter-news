@@ -12,7 +12,6 @@ function getStateFromStores() {
   return {
     stories: StoriesStore.getAllStories(),
     loading: StoriesStore.getLoadingStatus(),
-    initialized: StoriesStore.getInitializedState(),
     comments: CommentsStore.getCommentsByDate()
   };
 }
@@ -42,7 +41,7 @@ var CommentsStoriesComponent = React.createClass({
     return getStateFromStores();
   },
   render: function() {
-    if(this.state.loading && !this.state.initialized) {
+    if(this.state.loading) {
       var renderedHTML = (
         <LoaderComponent />
       );

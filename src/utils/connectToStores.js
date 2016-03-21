@@ -1,40 +1,33 @@
 import React, { Component } from 'react';
-import shallowEqual from 'react-pure-render/shallowEqual';
+import shallowCompare from 'react-addons-shallow-compare';
 
-export default function connectToStores(DisplayComponent, stores, getState) {
+export default function connectToStores(OriginalComponent, stores, getState) {
   return class StoreConnector extends Component {
 
     constructor(props) {
       super(props);
-      this.handleStoresChanged = this.handleStoresChanged.bind(this);
 
       this.state = getState(props);
     }
 
     componentWillMount() {
-      stores.forEach(store =>
-        store.addChangeListener(this.handleStoresChanged)
-      );
+      stores.forEach(store => store.addChangeListener(this.handleStoresChanged));
     }
 
-    componentWillReceiveProps(nextProps) {
-      if (!shallowEqual(nextProps, this.props)) {
-        this.setState(getState(nextProps));
-      }
+    shouldComponentUpdate(nextProps, nextState) {
+      return shallowCompare(this, nextProps, nextState);
     }
 
     componentWillUnmount() {
-      stores.forEach(store =>
-        store.removeChangeListener(this.handleStoresChanged)
-      );
+      stores.forEach(store => store.removeChangeListener(this.handleStoresChanged));
     }
 
-    handleStoresChanged() {
+    handleStoresChanged = () => {
       this.setState(getState(this.props));
-    }
+    };
 
     render() {
-      return <DisplayComponent {...this.props} {...this.state} />;
+      return <OriginalComponent {...this.props} {...this.state} />;
     }
   };
 }
