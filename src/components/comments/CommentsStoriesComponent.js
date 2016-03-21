@@ -1,6 +1,5 @@
 var React = require('react');
 var Router = require('react-router');
-var CommentsStore = require('../../stores/CommentsStore');
 var StoriesStore = require('../../stores/ItemsStore');
 var CommentItemComponent = require('./CommentItemComponent');
 var LoaderComponent = require('../LoaderComponent');

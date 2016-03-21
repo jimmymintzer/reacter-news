@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Router, Route } from 'react-router';
 import TopStoriesContainer from './containers/TopStoriesContainer';
-import NewestStoriesContainer from './containers/NewestStoriesContainer';
+import NewestStoriesContainer from './containers/NewStoriesContainer';
 import ShowStoriesContainer from './containers/ShowStoriesContainer';
 import ShowNewestStoriesContainer from './containers/ShowNewestStoriesContainer';
 import AskStoriesContainer from './containers/AskStoriesContainer';

@@ -3,7 +3,6 @@ import connectToStores from '../utils/connectToStores';
 import StoriesStore from '../stores/ItemsStore';
 import { getStory } from '../utils/ReacterNewsWebAPIUtils';
 import ItemComponent from '../components/ItemComponent';
-import { getComments } from '../actions/CommentsActionCreators';
 
 function getState(props) { // props) {
   const id = Number(props.location.query.id) || -1;

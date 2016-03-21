@@ -1,6 +1,5 @@
 var React = require('react');
 var Router = require('react-router');
-var CommentsStore = require('../../stores/CommentsStore');
 var ThreadItemComponent = require('./ThreadItemComponent');
 var SpacerComponent = require('../SpacerComponent');
 var FooterComponent = require('../FooterComponent');

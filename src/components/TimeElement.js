@@ -10,7 +10,7 @@ const TimeElement = ({ time }) => {
 };
 
 TimeElement.propTypes = {
-  time: PropTypes.number.isRequired,
+  time: PropTypes.number,
 };
 
 export default TimeElement;

@@ -1,5 +1,5 @@
-import ReacterNewsDispatcher from '../dispatcher/ReacterNewsDispatcher';
-import { ActionTypes } from '../constants/ReacterNewsConstants';
+import { register } from '../AppDispatcher';
+import Constants from '../constants/ReacterNewsConstants';
 import { EventEmitter } from 'events';
 import assign from 'object-assign';
 import { Map } from 'immutable';
@@ -7,10 +7,20 @@ import { Map } from 'immutable';
 const CHANGE_EVENT = 'change';
 
 let _users = new Map();
-let _loading = false;
+let _loading = Boolean(false);
 
-const _addUser = (rawMessages) => {
-  _users = _users.set(rawMessages.id, rawMessages);
+const startLoading = () => {
+  _loading = Boolean(true);
+};
+
+const stopLoading = () => {
+  _loading = Boolean(false);
+};
+
+const setUser = (action) => {
+  const { user } = action;
+
+  _users = _users.setIn([user.id], user);
 };
 
 const UsersStore = assign({}, EventEmitter.prototype, {
@@ -27,26 +37,26 @@ const UsersStore = assign({}, EventEmitter.prototype, {
     this.removeListener(CHANGE_EVENT, callback);
   },
 
-  get: (id) => _users.get(id),
+  get: (id) => _users.get(id) || {},
 
   getLoadingStatus: () => _loading,
 
 });
 
-UsersStore.dispatchToken = ReacterNewsDispatcher.register(payload => {
-  const action = payload.action;
+UsersStore.dispatchToken = register(payload => {
+  const { type, action = {} } = payload;
 
-  switch (action.type) {
-    case ActionTypes.RECEIVE_USER:
-      _addUser(action.rawMessages);
+  switch (type) {
+    case Constants.USER_LOADING:
+      startLoading();
       UsersStore.emitChange();
       break;
-    case ActionTypes.USER_LOADING:
-      _loading = true;
+    case Constants.USER_FINISH_LOADING:
+      stopLoading();
       UsersStore.emitChange();
       break;
-    case ActionTypes.USER_FINISHED_LOADING:
-      _loading = false;
+    case Constants.SET_USER_INFO:
+      setUser(action);
       UsersStore.emitChange();
       break;
     default:

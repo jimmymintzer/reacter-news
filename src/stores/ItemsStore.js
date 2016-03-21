@@ -1,28 +1,33 @@
-// TODO: Convert to es6 and fix eslint errors
-import ReacterNewsDispatcher from '../dispatcher/ReacterNewsDispatcher';
-import { ActionTypes } from '../constants/ReacterNewsConstants';
+import { register } from '../AppDispatcher';
+import Constants from '../constants/ReacterNewsConstants';
 import { EventEmitter } from 'events';
 import assign from 'object-assign';
-import { List as list } from 'immutable';
+import { Map, List } from 'immutable';
 
 const CHANGE_EVENT = 'change';
 
-let _stories = list();
-let _submittedStories = list();
-let _submittedLoading = false;
-let _loading = false;
-let _initialized = false;
+let _items = new Map({
+  topstories: new Map(),
+  newstories: new Map(),
+  showstories: new Map(),
+  askstories: new Map(),
+  jobstories: new Map(),
+});
+let _loading = Boolean(false);
 
-const _addStories = (rawStories) => {
-  _stories = list(rawStories);
+const startLoading = () => {
+  _loading = Boolean(true);
 };
 
-const _addStory = (rawStory) => {
-  _stories = _stories.push(rawStory);
+const stopLoading = () => {
+  _loading = Boolean(false);
 };
 
-const _addSubmittedStories = (rawStories) => {
-  _submittedStories = list(rawStories);
+const setItems = (action, type) => {
+  const { items, page } = action;
+
+  _items = _items.setIn([type, page], new List(items));
+  console.log('items', _items.toJS());
 };
 
 const sortTime = (a, b) => {
@@ -35,7 +40,7 @@ const sortTime = (a, b) => {
   return 0;
 };
 
-const StoriesStore = assign({}, EventEmitter.prototype, {
+const ItemsStore = assign({}, EventEmitter.prototype, {
 
   emitChange() {
     this.emit(CHANGE_EVENT);
@@ -51,119 +56,54 @@ const StoriesStore = assign({}, EventEmitter.prototype, {
 
   getLoadingStatus: () => _loading,
 
-  getSubmittedLoadingStatus: () => _submittedLoading,
+  getItems: (page, type, sort) => {
+    const topStories = _items.get(type);
+    let items = topStories.get(page);
 
-  getInitializedState: () => _initialized,
-
-  getStory: (itemid) => {
-    return _stories
-      .filter(story => story.id === itemid)
-      .get(0) || {};
-  },
-
-  getAllStories: () => _stories,
-
-  getAllSubmittedStories: () => _submittedStories,
-
-  getStoriesByPage: (page) => {
-    const start = 30 * (page - 1);
-    const end = (start + 30);
-
-    return _stories
-      .slice(start, end);
-  },
-
-  getStoriesByPageAndSortedTime: (page) => {
-    const start = 30 * (page - 1);
-    const end = (start + 30);
-
-    return _stories
-      .slice()
-      .sort(sortTime)
-      .slice(start, end);
-  },
-
-  getAskHNStories: (page) => {
-    const start = 30 * (page - 1);
-    const end = (start + 30);
-
-    return _stories
-      .filter(story => story.url === '' && story.type !== 'job')
-      .slice(start, end);
-  },
-
-  getShowHNStories: (page, sort) => {
-    const start = 30 * (page - 1);
-    const end = (start + 30);
-
-    const showHNStories = _stories
-      .filter(story => !story.deleted)
-      .filter(story => story.title && story.title.indexOf('Show HN:') !== -1)
-      .slice(start, end);
-
-    if (sort) {
-      return showHNStories
-        .sort(sortTime);
+    if (items && !!sort) {
+      items = items.sort(sortTime);
     }
-    return showHNStories;
+
+    return (items) ? items.toJS() : [];
   },
 
-  getJobsStories: (page) => {
-    const start = 30 * (page - 1);
-    const end = (start + 30);
-
-    return _stories
-      .filter(story => story.type === 'job')
-      .slice(start, end);
-  },
 });
 
-StoriesStore.dispatchToken = ReacterNewsDispatcher.register(payload => {
-  const action = payload.action;
+ItemsStore.dispatchToken = register(payload => {
+  const { type, action = {} } = payload;
 
-  switch (action.type) {
-    case ActionTypes.RECEIVE_RAW_STORIES:
-      _addStories(action.rawStories);
-      StoriesStore.emitChange();
+  switch (type) {
+    case Constants.ITEMS_LOADING:
+      startLoading();
+      ItemsStore.emitChange();
       break;
-    case ActionTypes.RECEIVE_RAW_SUBMITTED_STORIES:
-      _addSubmittedStories(action.rawStories);
-      StoriesStore.emitChange();
+    case Constants.ITEMS_FINISH_LOADING:
+      stopLoading();
+      ItemsStore.emitChange();
       break;
-    case ActionTypes.RECEIVE_RAW_STORY:
-      _addStory(action.rawStory);
-      StoriesStore.emitChange();
+    case Constants.SET_TOP_STORIES:
+      setItems(action, 'topstories');
+      ItemsStore.emitChange();
       break;
-    case ActionTypes.STORIES_LOADING:
-      _loading = true;
-      StoriesStore.emitChange();
+    case Constants.SET_NEW_STORIES:
+      setItems(action, 'newstories');
+      ItemsStore.emitChange();
       break;
-    case ActionTypes.STORIES_FINISHED_LOADING:
-      console.log('done');
-      _loading = false;
-      _initialized = true;
-      StoriesStore.emitChange();
+    case Constants.SET_SHOW_STORIES:
+      setItems(action, 'showstories');
+      ItemsStore.emitChange();
       break;
-    case ActionTypes.CLEAR_STORIES:
-      _loading = false;
-      _initialized = false;
-      StoriesStore.emitChange();
+    case Constants.SET_ASK_STORIES:
+      setItems(action, 'askstories');
+      ItemsStore.emitChange();
       break;
-    case ActionTypes.SUBMITTED_STORIES_LOADING:
-      _submittedLoading = true;
-      StoriesStore.emitChange();
-      break;
-    case ActionTypes.SUBMITTED_STORIES_FINISHED_LOADING:
-      _submittedLoading = false;
-      StoriesStore.emitChange();
-      break;
-    case ActionTypes.CLEAR_SUBMITTED_STORIES:
-      _submittedStories = [];
-      StoriesStore.emitChange();
+    case Constants.SET_JOB_STORIES:
+      setItems(action, 'jobstories');
+      ItemsStore.emitChange();
       break;
     default:
       break;
   }
 });
 
-export default StoriesStore;
+export default ItemsStore;

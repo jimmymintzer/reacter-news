@@ -1,13 +1,15 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router';
 import LoaderComponent from './LoaderComponent';
+// TODO: Changed from years ago to # of days
+import DaysAgoElement from './DaysAgoElement';
 
 const UserComponent = ({ loading, user }) => {
   if (loading) {
     return <LoaderComponent />;
   }
   if (user) {
-    const { createdAt, id, karma, about, author } = user;
+    const { created, id, karma, about, author } = user;
 
     return (
       <div className="user-component">
@@ -19,7 +21,7 @@ const UserComponent = ({ loading, user }) => {
             </tr>
             <tr>
               <td>created:</td>
-              <td>{createdAt}</td>
+              <td><DaysAgoElement time={created} /></td>
             </tr>
             <tr>
               <td>karma:</td>

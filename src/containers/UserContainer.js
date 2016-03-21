@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import connectToStores from '../utils/connectToStores';
 
 import UserStore from '../stores/UsersStore';
-import { getUserDetails } from '../utils/ReacterNewsWebAPIUtils';
+import { getUserInfo } from '../actions/UserActions';
 
 import UserComponent from '../components/UserComponent';
 
@@ -23,9 +23,18 @@ class UserContainer extends Component {
     user: PropTypes.object,
     loading: PropTypes.bool,
   };
-  componentWillMount() {
+  componentDidMount() {
     const id = this.props.location.query.id || '';
-    getUserDetails(id);
+
+    getUserInfo(id);
+  }
+  componentDidUpdate(prevProps) {
+    const oldId = prevProps.location.query.id || '';
+    const id = this.props.location.query.id || '';
+
+    if (oldId !== id) {
+      getUserInfo(id);
+    }
   }
   render() {
     const { loading, user } = this.props;

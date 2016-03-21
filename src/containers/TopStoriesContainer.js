@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import connectToStores from '../utils/connectToStores';
 
-import StoriesStore from '../stores/ItemsStore';
-import { getTopStories } from '../utils/ReacterNewsWebAPIUtils';
+import ItemsStore from '../stores/ItemsStore';
+import { getTopStories } from '../actions/ItemsActions';
 
 import FooterComponent from '../components/FooterComponent';
 import SpacerComponent from '../components/SpacerComponent';
@@ -10,14 +10,12 @@ import StoriesComponent from '../components/StoriesComponent';
 
 function getState(props) {
   const page = Number(props.location.query.p) || 1;
-  const stories = StoriesStore.getStoriesByPage(page).toJS() || [];
-  const loading = StoriesStore.getLoadingStatus() || true;
-  const initialized = StoriesStore.getInitializedState() || false;
+  const stories = ItemsStore.getItems(page, 'topstories');
+  const loading = ItemsStore.getLoadingStatus();
 
   return {
     stories,
     loading,
-    initialized,
     page,
   };
 }
@@ -30,8 +28,18 @@ class TopStoriesContainer extends Component {
     page: PropTypes.number,
     location: PropTypes.object,
   };
-  componentWillMount() {
-    getTopStories();
+  componentDidMount() {
+    const page = Number(this.props.location.query.p) || 1;
+
+    getTopStories(page);
+  }
+  componentDidUpdate(prevProps) {
+    const oldPage = Number(prevProps.location.query.p) || 1;
+    const page = Number(this.props.location.query.p) || 1;
+
+    if (oldPage !== page) {
+      getTopStories(page);
+    }
   }
   render() {
     const { initialized, loading, stories, page, location } = this.props;
@@ -55,6 +63,6 @@ class TopStoriesContainer extends Component {
   }
 }
 
-TopStoriesContainer = connectToStores(TopStoriesContainer, [StoriesStore], getState);
+TopStoriesContainer = connectToStores(TopStoriesContainer, [ItemsStore], getState);
 
 export default TopStoriesContainer;
