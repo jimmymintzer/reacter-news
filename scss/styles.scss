@@ -28,6 +28,10 @@ a:visited {
   color: $a-link-color;
 }
 
+pre {
+  overflow: auto;
+}
+
 header {
   background: $main-color;
   min-height: 24px;
@@ -327,3 +331,4 @@ footer {
     content: ' ';
   }
 }
+

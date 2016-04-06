@@ -29,22 +29,13 @@ const setItems = (action, type) => {
   const { items, page } = action;
 
   _items = _items.setIn([type, page], new List(items));
-  // console.log('items', _items.toJS());
 };
 
 const setItem = (action, type) => {
-  const { item } = action;
+  const { item, kids } = action;
+  item.kidsValues = kids;
   _items = _items.updateIn([type], list => list.concat(item));
-  // console.log('items', _items.toJS());
 };
-
-const setGenericItems = (action, type) => {
-  const { items } = action;
-
-  _items = _items.updateIn([type], list => list.concat(...items));
-  // console.log('items', _items.toJS());
-};
-
 
 const sortTime = (a, b) => {
   if (a.time < b.time) {
@@ -123,10 +114,6 @@ ItemsStore.dispatchToken = register(payload => {
       break;
     case Constants.SET_ITEM:
       setItem(action, 'items');
-      ItemsStore.emitChange();
-      break;
-    case Constants.SET_ITEMS:
-      setGenericItems(action, 'items');
       ItemsStore.emitChange();
       break;
     default:

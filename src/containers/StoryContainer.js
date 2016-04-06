@@ -7,8 +7,8 @@ import ItemComponent from '../components/ItemComponent';
 function getState(props) { // props) {
   const id = Number(props.location.query.id) || -1;
   const story = ItemsStore.getItem(id);
+  const items = story && story.kidsValues;
   const loading = ItemsStore.getLoadingStatus();
-  const items = ItemsStore.getGenericItems();
 
   return {
     story,

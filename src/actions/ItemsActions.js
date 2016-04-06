@@ -25,48 +25,37 @@ async function getGenericItems(page, type, constant) {
   });
 }
 
-async function getRecursiveItems(kids) {
-  if (kids) {
-    const itemVals = await getItems(kids);
-
-    itemVals.forEach(async function(item) {
-      if (item.kids) {
-        await getRecursiveItems(item.kids);
-      }
-    });
-
-    dispatch({
-      type: Constants.SET_ITEMS,
-      action: {
-        items: itemVals,
-      },
-    });
-  }
-}
-
 export async function getItemInfo(id) {
   dispatch({
     type: Constants.ITEMS_LOADING,
   });
 
   const item = await getItem(id);
+  const queue = [];
+  const kids = [];
 
   if (item.kids) {
-    getRecursiveItems(item.kids);
+    queue.push(...item.kids);
+    while (queue.length > 0) {
+      const fetchedItem = await getItem(queue.shift());
+      kids.push(fetchedItem);
+      if (fetchedItem.kids) {
+        queue.push(...fetchedItem.kids);
+      }
+    }
+    dispatch({
+      type: Constants.SET_ITEM,
+      action: {
+        item,
+        kids,
+      },
+    });
+
+    dispatch({
+      type: Constants.ITEMS_FINISH_LOADING,
+    });
   }
-
-  dispatch({
-    type: Constants.SET_ITEM,
-    action: {
-      item,
-    },
-  });
-
-  dispatch({
-    type: Constants.ITEMS_FINISH_LOADING,
-  });
 }
-
 export async function getTopStories(page) {
   getGenericItems(page, 'topstories', Constants.SET_TOP_STORIES);
 }
