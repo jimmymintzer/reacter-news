@@ -54,6 +54,18 @@ export async function getItemInfo(id) {
     dispatch({
       type: Constants.ITEMS_FINISH_LOADING,
     });
+  } else {
+    dispatch({
+      type: Constants.SET_ITEM,
+      action: {
+        item,
+        kids,
+      },
+    });
+
+    dispatch({
+      type: Constants.ITEMS_FINISH_LOADING,
+    });
   }
 }
 export async function getTopStories(page) {

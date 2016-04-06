@@ -7,13 +7,13 @@ import ItemComponent from '../components/ItemComponent';
 function getState(props) { // props) {
   const id = Number(props.location.query.id) || -1;
   const story = ItemsStore.getItem(id);
-  const items = story && story.kidsValues;
+  const kids = story && story.kidsValues;
   const loading = ItemsStore.getLoadingStatus();
 
   return {
     story,
     loading,
-    items,
+    kids,
   };
 }
 
@@ -22,7 +22,7 @@ class StoryContainer extends Component {
     location: PropTypes.object,
     story: PropTypes.object,
     loading: PropTypes.bool,
-    items: PropTypes.array,
+    kids: PropTypes.array,
   };
   componentDidMount() {
     const id = Number(this.props.location.query.id) || -1;
@@ -38,14 +38,14 @@ class StoryContainer extends Component {
     }
   }
   render() {
-    const { story, loading, items } = this.props;
+    const { story, loading, kids } = this.props;
 
     return (
       <div>
         <ItemComponent
           item={story}
           loading={loading}
-          items={items}
+          items={kids}
         />
       </div>
     );
