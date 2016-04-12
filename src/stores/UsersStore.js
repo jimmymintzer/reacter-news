@@ -1,59 +1,89 @@
-var ReacterNewsDispatcher = require('../dispatcher/ReacterNewsDispatcher');
-var ReacterNewsConstants = require('../constants/ReacterNewsConstants');
-var EventEmitter = require('events').EventEmitter;
-var assign = require('object-assign');
-var Immutable = require('immutable');
+import { register } from '../AppDispatcher';
+import Constants from '../constants/ReacterNewsConstants';
+import { EventEmitter } from 'events';
+import assign from 'object-assign';
+import { Map } from 'immutable';
+import { getStartIndex, NUM_PER_PAGE } from '../utils/CommonUtils';
 
-var ActionTypes = ReacterNewsConstants.ActionTypes;
-var CHANGE_EVENT = 'change';
+const CHANGE_EVENT = 'change';
 
-var _users = Immutable.Map();
-var _loading = false;
+let _users = new Map();
+let _loading = Boolean(false);
 
-var _addUser = (rawMessages) => {
-  _users = _users.set(rawMessages.id, rawMessages);
+const startLoading = () => {
+  _loading = Boolean(true);
 };
 
-var UsersStore = assign({}, EventEmitter.prototype, {
+const stopLoading = () => {
+  _loading = Boolean(false);
+};
 
-  emitChange: function() {
+const setUser = (action) => {
+  const { user } = action;
+
+  _users = _users.setIn([user.id], user);
+};
+
+const setSubmissions = (action) => {
+  const { user } = action;
+  _users = _users.set(user.id, user);
+};
+
+const UsersStore = assign({}, EventEmitter.prototype, {
+
+  emitChange() {
     this.emit(CHANGE_EVENT);
   },
 
-  addChangeListener: function(callback) {
+  addChangeListener(callback) {
     this.on(CHANGE_EVENT, callback);
   },
 
-  removeChangeListener: function(callback) {
+  removeChangeListener(callback) {
     this.removeListener(CHANGE_EVENT, callback);
   },
 
-  get: (id) => _users.get(id),
+  get: (id) => _users.get(id) || {},
 
-  getLoadingStatus: () => _loading
+  getLoadingStatus: () => _loading,
+
+  getSubmittedItems: (id, page, type) => {
+    const start = getStartIndex(page);
+    const submissions = _users.get(id);
+
+    return (submissions) ? submissions
+      .submitted
+      .slice()
+      .filter(submission => submission.type === type)
+      .filter(submission => !submission.deleted)
+      .splice(start, NUM_PER_PAGE) : [];
+  },
 
 });
 
-UsersStore.dispatchToken = ReacterNewsDispatcher.register(payload => {
-  var action = payload.action;
+UsersStore.dispatchToken = register(payload => {
+  const { type, action = {} } = payload;
 
-  switch(action.type) {
-    case ActionTypes.RECEIVE_USER:
-      _addUser(action.rawMessages);
+  switch (type) {
+    case Constants.USER_LOADING:
+      startLoading();
       UsersStore.emitChange();
       break;
-    case ActionTypes.USER_LOADING:
-      _loading = true;
+    case Constants.USER_FINISH_LOADING:
+      stopLoading();
       UsersStore.emitChange();
       break;
-    case ActionTypes.USER_FINISHED_LOADING:
-      _loading = false;
+    case Constants.SET_USER_INFO:
+      setUser(action);
+      UsersStore.emitChange();
+      break;
+    case Constants.SET_USER_SUBMISSIONS:
+      setSubmissions(action);
       UsersStore.emitChange();
       break;
     default:
       break;
   }
-
 });
 
 module.exports = UsersStore;

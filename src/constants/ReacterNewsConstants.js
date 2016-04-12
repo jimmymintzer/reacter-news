@@ -1,30 +1,18 @@
-var keyMirror = require('keymirror');
+import keyMirror from 'keymirror';
 
-module.exports = {
+export default keyMirror({
+  ITEMS_LOADING: null,
+  ITEMS_FINISH_LOADING: null,
+  SET_TOP_STORIES: null,
+  SET_NEW_STORIES: null,
+  SET_SHOW_STORIES: null,
+  SET_ASK_STORIES: null,
+  SET_JOB_STORIES: null,
+  SET_ITEM: null,
+  SET_ITEMS: null,
 
-  ActionTypes: keyMirror({
-    RECEIVE_RAW_STORIES: null,
-    RECEIVE_RAW_SUBMITTED_STORIES: null,
-    RECEIVE_RAW_STORY: null,
-    RECEIVE_RAW_COMMENT: null,
-    RECEIVE_RAW_POLL: null,
-    RECEIVE_RAW_JOBS: null,
-    STORIES_LOADING: null,
-    STORIES_FINISHED_LOADING: null,
-    SUBMITTED_STORIES_LOADING: null,
-    SUBMITTED_STORIES_FINISHED_LOADING: null,
-    CLEAR_SUBMITTED_STORIES: null,
-    CLEAR_STORIES: null,
-    RECEIVE_USER: null,
-    USER_LOADING: null,
-    USER_FINISHED_LOADING: null,
-    COMMENTS_LOADING: null,
-    COMMENTS_FINISHED_LOADING: null
-  }),
-
-  PayloadSource: keyMirror({
-    SERVER_ACTION: null,
-    VIEW_ACTION: null
-  })
-
-};
+  USER_LOADING: null,
+  USER_FINISH_LOADING: null,
+  SET_USER_INFO: null,
+  SET_USER_SUBMISSIONS: null,
+});
