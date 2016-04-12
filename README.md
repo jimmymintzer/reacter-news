@@ -4,12 +4,10 @@ Reacter News is a Hacker News (https://news.ycombinator.com/) clone.
 
 #### It uses:
 * react
-* flux pattern
+* flux
 * react-router
-* bluebird promises
 * Webpack
-* es5-shim
-* 6to5
+* babel
 * Firebase HN API
 
 ### How do I get set up? ###
@@ -18,8 +16,3 @@ Reacter News is a Hacker News (https://news.ycombinator.com/) clone.
   * npm install
   * npm start
   * open browser to http://localhost:8080
-
-
-### Known Issues ###
-* User object contains an array of submitted items. If that comment is nested in another comment, it will display twice, 
-both as the top of the comment tree.
