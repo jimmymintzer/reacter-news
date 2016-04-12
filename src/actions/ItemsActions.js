@@ -34,6 +34,10 @@ export async function getItemInfo(id) {
   const queue = [];
   const kids = [];
 
+  if (item.parts) {
+    item.parts = await getItems(item.parts);
+  }
+
   if (item.kids) {
     queue.push(...item.kids);
     while (queue.length > 0) {
@@ -43,11 +47,11 @@ export async function getItemInfo(id) {
         queue.push(...fetchedItem.kids);
       }
     }
+    item.kidsValues = kids;
     dispatch({
       type: Constants.SET_ITEM,
       action: {
         item,
-        kids,
       },
     });
 

@@ -3,11 +3,10 @@ import { Link } from 'react-router';
 
 import Spacer from './Spacer';
 
-const HeaderComponent = ({ pathname }) => {
+const HeaderComponent = ({ pathname, queryParams }) => {
   let showNewStyle = { display: 'none' };
   let submittedNewStyle = { display: 'none' };
   let threadsNewStyle = { display: 'none' };
-  let query;
   let queryTitle;
 
   switch (pathname) {
@@ -15,13 +14,11 @@ const HeaderComponent = ({ pathname }) => {
       showNewStyle = { display: 'inline-block' };
       break;
     case 'submitted':
-      query = this.props.queryString.id;
-      queryTitle = query + '\'s submissions';
+      queryTitle = queryParams.id + '\'s submissions';
       submittedNewStyle = { display: 'inline-block' };
       break;
     case 'threads':
-      query = this.props.queryString.id;
-      queryTitle = query + '\'s comments';
+      queryTitle = queryParams.id + '\'s comments';
       threadsNewStyle = { display: 'inline-block' };
       break;
     default:
@@ -47,10 +44,13 @@ const HeaderComponent = ({ pathname }) => {
               <Link to="newest" activeClassName="active">new</Link>
             </li>
             <Spacer element={<li>|</li>} />
-            <li>
-              <Link to="newcomments" activeClassName="active">comments</Link>
-            </li>
-            <Spacer element={<li>|</li>} />
+            {/*
+              No real API for this functionality
+             <li>
+             <Link to="newcomments" activeClassName="active">comments</Link>
+             </li>
+             <Spacer element={<li>|</li>} />
+            */}
             <li>
               <Link to="show" activeClassName="active">show</Link>
             </li>
@@ -68,11 +68,11 @@ const HeaderComponent = ({ pathname }) => {
             </li>
             <Spacer element={<li style={submittedNewStyle}>|</li>} />
             <li style={submittedNewStyle}>
-              <Link to="submitted" query={{ id: query }}>{queryTitle}</Link>
+              <Link to="submitted" activeClassName="active" query={queryParams}>{queryTitle}</Link>
             </li>
             <Spacer element={<li style={threadsNewStyle}>|</li>} />
             <li style={threadsNewStyle}>
-              <Link to="threads" query={{ id: query }}>{queryTitle}</Link>
+              <Link to="threads" query={{ id: queryParams }}>{queryTitle}</Link>
             </li>
           </ul>
         </li>

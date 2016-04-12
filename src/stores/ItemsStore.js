@@ -32,8 +32,7 @@ const setItems = (action, type) => {
 };
 
 const setItem = (action, type) => {
-  const { item, kids } = action;
-  item.kidsValues = kids;
+  const { item } = action;
   _items = _items.updateIn([type], list => list.concat(item));
 };
 

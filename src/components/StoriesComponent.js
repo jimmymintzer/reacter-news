@@ -4,12 +4,12 @@ import { Link } from 'react-router';
 import StoryComponent from './StoryComponent';
 import LoaderComponent from './LoaderComponent';
 
-const StoriesComponent = ({ loading, stories, page, linkTo }) => {
+const StoriesComponent = ({ loading, stories, page, linkTo, userId }) => {
   document.title = 'Reacter News';
 
-  const storiesComponents = stories.map((story, index) => {
+  const storiesComponents = stories.map((story) => {
     return (
-      <li key={index}>
+      <li key={story.id}>
         <StoryComponent story={story} />
       </li>
     );
@@ -22,9 +22,10 @@ const StoriesComponent = ({ loading, stories, page, linkTo }) => {
   }
   const index = (30 * (page - 1)) + 1;
   const nextPage = page + 1;
+  const queryObj = (userId) ? { p: nextPage, id: userId } : { p: nextPage };
 
   const link = (stories.length === 30) ?
-    <Link to={linkTo} href="#" query={{ p: nextPage }}>More</Link>
+    <Link to={linkTo} href="#" query={queryObj}>More</Link>
     : null;
 
   return (

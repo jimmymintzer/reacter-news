@@ -6,11 +6,18 @@ import CommentsLink from './CommentsLink';
 import UserLink from './UserLink';
 import StoryLink from './StoryLink';
 import Spacer from './Spacer';
+import ItemLink from './ItemLink';
 
 const StoryComponent = ({ story }) => {
   let subtext;
 
-  if (story.type !== 'job') {
+  if (story.type === 'job') {
+    subtext = (
+      <div className="story-subtext">
+        <ItemLink id={story.id} time={story.time} />
+      </div>
+    );
+  } else {
     subtext = (
       <div className="story-subtext">
         <PointsElement points={story.score} />
@@ -19,12 +26,6 @@ const StoryComponent = ({ story }) => {
         <Spacer element={<TimeElement time={story.time} />}/>
         <Spacer element={'|'}/>
         <Spacer element={<CommentsLink id={story.id} descendants={story.descendants} />}/>
-      </div>
-    );
-  } else {
-    subtext = (
-      <div className="story-subtext">
-        <TimeElement time={story.time} />
       </div>
     );
   }

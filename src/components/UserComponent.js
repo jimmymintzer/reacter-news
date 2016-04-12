@@ -9,7 +9,7 @@ const UserComponent = ({ loading, user }) => {
     return <LoaderComponent />;
   }
   if (user) {
-    const { created, id, karma, about, author } = user;
+    const { created, id, karma, about } = user;
 
     return (
       <div className="user-component">
@@ -34,15 +34,18 @@ const UserComponent = ({ loading, user }) => {
             <tr>
               <td></td>
               <td>
-                <Link to="submitted" className="underline" query={{ id: author }}>submissions</Link>
+                <Link to="submitted" className="underline" query={{ id }}>submissions</Link>
               </td>
             </tr>
+            {/*
+              TODO: Fetch all thread comments
             <tr>
               <td></td>
               <td>
-                <Link to="threads" className="underline" query={{ id: author }}>comments</Link>
+                <Link to="threads" className="underline" query={{ id: id }}>comments</Link>
               </td>
             </tr>
+            */}
           </tbody>
         </table>
       </div>

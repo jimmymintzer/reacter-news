@@ -14,4 +14,5 @@ export default keyMirror({
   USER_LOADING: null,
   USER_FINISH_LOADING: null,
   SET_USER_INFO: null,
+  SET_USER_SUBMISSIONS: null,
 });

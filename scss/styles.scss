@@ -190,8 +190,8 @@ footer {
         a {
           color: $a-link-color;
         }
-      }
 
+      }
     }
   }
 }
@@ -245,7 +245,19 @@ footer {
   }
 
   .poll-wrapper {
-    padding: 20px 0 5px 0;
+    padding: 10px 0 5px 20px;
+
+    .poll-subtext {
+      color: $a-link-color;
+      font-size: 9px;
+      a {
+        color: $a-link-color;
+      }
+    }
+
+    .poll-element {
+      padding: 10px 0 0 0;
+    }
   }
 
   .username-row {
@@ -308,7 +320,8 @@ footer {
   background: $main-background;
   padding: 20px 0;
 
-  .fa.fa-refresh {
+  .fa.fa-spin {
+    color: $main-color;
     font-size: 100px;
   }
 }
@@ -332,3 +345,9 @@ footer {
   }
 }
 
+.ask-hn-comment {
+  font-size: 10pt;
+  font-family: Verdana, Geneva, sans-serif;
+  color: $a-link-color;
+  margin: 10px 0 0 0;
+}
