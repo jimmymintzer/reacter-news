@@ -8,7 +8,6 @@ import { useScrollToTop } from 'scroll-behavior';
 
 import Root from './Root';
 
-const history = process.env.NODE_ENV === 'production' ?
-  useScrollToTop(createHashHistory)() : useScrollToTop(createHistory)();
+const history = useScrollToTop(createHashHistory)({ queryKey: false });
 
 ReactDOM.render(<Root history={history} />, document.getElementById('root'));
